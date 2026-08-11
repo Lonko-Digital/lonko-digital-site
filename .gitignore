@@ -1,0 +1,18 @@
+# Local / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Environment (must never ship)
+.env
+.env.*
+
+# Internal QA evidence must not ship in the public repository
+docs/qa_*/
+**/qa_62c_*/
+
+# Python
+__pycache__/
+*.pyc
