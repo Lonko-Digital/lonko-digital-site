@@ -30,8 +30,9 @@ Static public website for **Lonko Digital**. This repository is intentionally se
 
 - **Stack:** HTML, CSS, minimal vanilla JavaScript
 - **Hosting target:** GitHub Pages (free tier)
-- **No backend, database, Node runtime, analytics, or tracking scripts**
+- **No backend, database, or Node runtime**
 - **No server-side contact form**
+- **Google Tag Manager:** container `GTM-53DPJ88F` is installed sitewide as the tag-management foundation only. No Google Ads, GA4, Meta Pixel, LinkedIn Insight Tag, or other analytics/advertising tags are currently configured to fire through it.
 
 ```
 /
