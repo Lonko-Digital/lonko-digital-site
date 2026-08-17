@@ -76,16 +76,11 @@ Run the public safety audit:
 python scripts/public_safety_audit.py
 ```
 
-## GitHub Pages deployment (when approved)
+## GitHub Pages deployment
 
-**Do not enable Pages until publication is approved.**
+**This public site is live** at `https://lonko-digital.github.io/lonko-digital-site/`.
 
-1. Ensure this directory’s contents are on the default branch (`main`) of the public `lonko-digital-site` repository under the Lonko-Digital organization.
-2. In GitHub: **Settings → Pages**
-   - **Source:** Deploy from a branch
-   - **Branch:** `main` / `/ (root)`
-3. Site URL: `https://lonko-digital.github.io/lonko-digital-site/`
-4. HTTPS is enabled by default on GitHub Pages.
+GitHub Pages is configured from the default branch (`main`) at repository root. HTTPS is enabled by default on GitHub Pages.
 
 ### Custom domain (future)
 
@@ -132,4 +127,4 @@ Publishing governance is maintained internally by Lonko Digital. Public-facing s
 
 ## Status
 
-Step 62C.5I prepared package; **not published.**
+Public company website is **published** via GitHub Pages at `https://lonko-digital.github.io/lonko-digital-site/`.

@@ -166,6 +166,15 @@ button:focus-visible {
   flex-shrink: 0;
 }
 
+.brand-logo {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.4rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #000;
+}
+
 .nav-toggle {
   display: none;
   border: 1px solid var(--border);
@@ -678,6 +687,28 @@ button:focus-visible {
 }
 
 .status-mark--private .status-tick {
+  opacity: 1;
+  height: 2px;
+  width: 0.55rem;
+}
+
+.status-mark--validated {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.status-mark--validated .status-tick {
+  opacity: 1;
+  height: 2px;
+  width: 0.55rem;
+}
+
+.status-mark--progress {
+  color: var(--status-moderate);
+  font-weight: 650;
+}
+
+.status-mark--progress .status-tick {
   opacity: 1;
   height: 2px;
   width: 0.55rem;
