@@ -967,8 +967,13 @@ main.legal-page {
 }
 
 .footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.6rem 0.2rem;
   color: var(--text-muted);
   text-decoration: none;
+  box-sizing: border-box;
 }
 
 .footer-links a:hover {
@@ -1362,8 +1367,15 @@ main.legal-page {
 }
 
 .contact-email-block a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 0.1rem;
   font-weight: 700;
+  font-size: inherit;
+  line-height: inherit;
   text-decoration-thickness: 1.5px;
+  box-sizing: border-box;
 }
 
 main.legal-page.section--reading {
