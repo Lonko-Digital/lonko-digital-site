@@ -1535,18 +1535,21 @@ main.legal-page.section--reading h2 {
 
   .convergence-stages {
     grid-template-columns: 1fr;
-    gap: 1.1rem;
+    /* Was 1.1rem — too much air between stages on a stacked motif */
+    gap: 0.35rem;
     max-width: 22rem;
     margin-inline: auto;
   }
 
   .convergence-label {
-    margin-bottom: 0.65rem;
+    /* Was 0.65rem — keep label→graphic tight so stages read as one composition */
+    margin-bottom: 0.3rem;
   }
 
   .convergence-visual {
-    min-height: 3.5rem;
+    min-height: 0;
     justify-content: center;
+    align-items: flex-start;
   }
 
   .convergence-svg {
