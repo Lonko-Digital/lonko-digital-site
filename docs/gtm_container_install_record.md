@@ -1,9 +1,27 @@
 # GTM Container Install Record — Lonko Digital Public Site
 
-**Date:** 2026-08-15  
 **Container ID:** `GTM-53DPJ88F`  
 **Scope:** Public company website (`lonko-digital-site`) only  
-**Status:** Installed and validated in local source — awaiting Alex review / deploy for live verification
+
+### Current live status (updated 2026-08-22)
+
+Container install remains sitewide. **Tags are now configured and firing** through the published container (confirmed via live `gtm.js` inspection). As of this update:
+
+| Tag | ID |
+| --- | --- |
+| Google Analytics 4 (GA4) | `G-Y8T0Q59191` |
+| Google Ads tag | `AW-18390009990` |
+| LinkedIn Insight Tag | Partner ID `10662377` |
+| GA4 Event `site_click` | Measurement ID `G-Y8T0Q59191` |
+| GA4 Event `site_scroll_depth` | Measurement ID `G-Y8T0Q59191` |
+
+No Meta Pixel is configured. Public description of these tags: [Privacy Policy](../privacy/).
+
+---
+
+## Original install note (2026-08-15)
+
+**Status at install:** Installed and validated in local source — container-only; no analytics/advertising tags configured inside GTM at that time.
 
 ---
 
@@ -37,7 +55,7 @@ Official Google placement used:
 - Head script immediately after charset + viewport (as high as practical)
 - Noscript iframe immediately after `<body>`
 
-**No** Google Ads, GA4, Meta, LinkedIn, or conversion tags were added. GTM is container-only.
+At install time, **no** Google Ads, GA4, Meta, LinkedIn, or conversion tags were added in source HTML. Tag configuration lives in the GTM container UI / published container, not as hard-coded vendor snippets in page HTML.
 
 ---
 
@@ -56,7 +74,7 @@ Every public HTML page receives exactly one GTM-53DPJ88F installation (script + 
 
 ---
 
-## Files changed
+## Files changed (original install)
 
 - `includes/gtm-head.html` *(created)*
 - `includes/gtm-body.html` *(created)*
@@ -66,11 +84,11 @@ Every public HTML page receives exactly one GTM-53DPJ88F installation (script + 
 - `404.html`
 - `about/index.html`
 - `contact/index.html`
-- `privacy/index.html` *(GTM snippet only; policy copy not edited)*
+- `privacy/index.html` *(GTM snippet at install; policy later updated 2026-08-22 to describe live tags)*
 - `terms/index.html`
 - `docs/gtm_container_install_record.md` *(this file)*
 
-**Not changed:** private `marketing-agent/` platform; site CSS; layout; SEO; navigation; Privacy Policy wording.
+**Not changed at install:** private `marketing-agent/` platform; site CSS; layout; SEO; navigation.
 
 ---
 
@@ -89,27 +107,25 @@ See `tests/test_public_safety_audit.py` for regression coverage.
 
 ## Validation performed
 
-Local source (all 6 HTML pages):
+Local source (all 6 HTML pages) at install:
 
 - [x] `GTM-53DPJ88F` present exactly **twice** per page (script + noscript)
 - [x] Exactly one head block and one noscript block per page
 - [x] Head snippet inside `<head>`; noscript immediately after `<body>`
-- [x] No hard-coded Google Ads / GA4 / Meta / LinkedIn tags introduced
+- [x] No hard-coded Google Ads / GA4 / Meta / LinkedIn vendor snippets introduced in HTML (tags managed in GTM)
 - [x] `python scripts/public_safety_audit.py` — **PASS**
 - [x] `python scripts/sync_gtm_snippets.py` — **OK** (idempotent)
 
-Live site (`https://lonko-digital.github.io/lonko-digital-site/`):
-
-- Live GTM validation **not available yet** — local source updated; deploy/push not performed in this step. This is **not** a failure of the install. Live home returned HTTP 200 with `GTM-53DPJ88F` count **0**.
+Live container inspection (2026-08-22): published `gtm.js` for `GTM-53DPJ88F` includes GA4, Google Ads, LinkedIn Insight, and the two GA4 custom events listed above.
 
 ---
 
 ## Privacy Policy
 
-Policy copy was **not** modified in this step. See Alex report for what is now inaccurate and recommended wording for approval.
+Updated **2026-08-22** so public wording matches the live tags (GA4, Google Ads tag, LinkedIn Insight Tag). Effective date on the Privacy Policy page: August 22, 2026. Cookie-consent / CMP decisions remain a separate attorney-review item and are out of scope for this documentation update.
 
 ---
 
 ## Stop line
 
-GTM foundation install complete in source. No tags configured inside GTM. No further tracking steps started.
+GTM foundation remains installed sitewide. Live container currently fires GA4, a Google Ads tag, and a LinkedIn Insight Tag as documented above. Do not edit GTM from this repo without an explicit tracking/governance task.

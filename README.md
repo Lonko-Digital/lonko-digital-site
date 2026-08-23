@@ -32,7 +32,7 @@ Static public website for **Lonko Digital**. This repository is intentionally se
 - **Hosting target:** GitHub Pages (free tier)
 - **No backend, database, or Node runtime**
 - **No server-side contact form**
-- **Google Tag Manager:** container `GTM-53DPJ88F` is installed sitewide as the tag-management foundation only. No Google Ads, GA4, Meta Pixel, LinkedIn Insight Tag, or other analytics/advertising tags are currently configured to fire through it.
+- **Google Tag Manager:** container `GTM-53DPJ88F` is installed sitewide and currently fires Google Analytics 4 (`G-Y8T0Q59191`), a Google Ads tag (`AW-18390009990`), and a LinkedIn Insight Tag (partner ID `10662377`), plus GA4 custom events for link/button clicks and scroll depth. No Meta Pixel is configured. See the Privacy Policy for the public description of these tags.
 
 ```
 /
