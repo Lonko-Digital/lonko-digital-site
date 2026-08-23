@@ -1497,6 +1497,12 @@ main.legal-page.section--reading h2 {
   min-height: 4.5rem;
 }
 
+.convergence-stage--decision .convergence-visual {
+  /* Resolve stroke sits near the top of a short canvas — don't vertically center it in the stage min-height */
+  align-items: flex-start;
+  min-height: 0;
+}
+
 .convergence-svg {
   display: block;
   width: min(100%, 11rem);
