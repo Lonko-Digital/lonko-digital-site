@@ -726,19 +726,22 @@ button:focus-visible {
   opacity: 0.65;
 }
 
-/* Illustrative confidence label — NOT platform status (keep separate) */
-.status-pill.status-moderate {
+/* Illustrative confidence label — NOT platform status (keep separate from K2 marks) */
+.status-pill.status-moderate,
+.illustrative-confidence {
   display: inline-block;
-  font-size: 0.78rem;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.01em;
   text-transform: none;
-  border-radius: 0.25rem;
-  padding: 0.2rem 0.45rem;
+  border-radius: 0;
+  padding: 0.15rem 0 0.15rem 0.55rem;
   margin-bottom: 0.35rem;
-  background: color-mix(in srgb, var(--status-moderate) 12%, transparent);
-  color: var(--status-moderate);
-  border: 1px solid color-mix(in srgb, var(--status-moderate) 35%, transparent);
+  background: transparent;
+  color: var(--text-muted);
+  border: 0;
+  border-left: 2px solid color-mix(in srgb, var(--status-moderate) 55%, var(--border));
 }
 
 @media (max-width: 768px) {
