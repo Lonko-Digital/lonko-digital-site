@@ -719,7 +719,7 @@ button:focus-visible {
 }
 
 .status-mark--roadmap {
-  color: color-mix(in srgb, var(--text-muted) 78%, var(--bg));
+  color: color-mix(in srgb, var(--text-muted) 90%, var(--bg));
 }
 
 .status-mark--roadmap .status-tick {
