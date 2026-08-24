@@ -1531,12 +1531,13 @@ main.legal-page.section--reading h2 {
 
 @media (max-width: 900px) {
   .section-convergence {
-    padding-top: 2.35rem;
-    padding-bottom: 1.85rem;
+    /* Extra top air so the motif reads as its own visual moment after the prior section */
+    padding-top: 3.85rem;
+    padding-bottom: 2.15rem;
   }
 
   .section-convergence .section-header {
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.45rem;
   }
 
   .convergence-stages {
@@ -1559,7 +1560,8 @@ main.legal-page.section--reading h2 {
   }
 
   .convergence-svg {
-    width: min(100%, 12rem);
+    /* Was 12rem — enlarge so the motif is the section’s visual centerpiece, not a small inset */
+    width: min(100%, 19rem);
     margin-inline: auto;
   }
 
