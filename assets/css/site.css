@@ -1535,6 +1535,7 @@ main.legal-page.section--reading h2 {
     grid-template-columns: 1fr;
     gap: 50px;
     max-width: 22rem;
+    margin-top: 50px;
     margin-inline: auto;
   }
 
