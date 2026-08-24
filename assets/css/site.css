@@ -1542,20 +1542,33 @@ main.legal-page.section--reading h2 {
 
   .convergence-stages {
     grid-template-columns: 1fr;
-    /* Was 1.1rem — too much air between stages on a stacked motif */
-    gap: 0.35rem;
+    gap: 10px;
     max-width: 22rem;
     margin-inline: auto;
   }
 
+  .convergence-stage {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+
   .convergence-label {
-    /* Was 0.65rem — keep label→graphic tight so stages read as one composition */
-    margin-bottom: 0.3rem;
+    margin-bottom: 5px;
+    flex-shrink: 0;
   }
 
   .convergence-visual {
-    min-height: 0;
+    flex: 1 1 auto;
+    /* Match Evidence/Intelligence SVG canvas height so all three stage boxes align */
+    min-height: calc(min(100%, 19rem) * 72 / 160);
     justify-content: center;
+    align-items: flex-start;
+  }
+
+  .convergence-stage--decision .convergence-visual {
+    min-height: calc(min(100%, 19rem) * 72 / 160);
     align-items: flex-start;
   }
 
