@@ -1497,12 +1497,6 @@ main.legal-page.section--reading h2 {
   min-height: 4.5rem;
 }
 
-.convergence-stage--decision .convergence-visual {
-  /* Resolve stroke sits near the top of a short canvas — don't vertically center it in the stage min-height */
-  align-items: flex-start;
-  min-height: 0;
-}
-
 .convergence-svg {
   display: block;
   width: min(100%, 11rem);
@@ -1561,14 +1555,16 @@ main.legal-page.section--reading h2 {
 
   .convergence-visual {
     flex: 1 1 auto;
-    /* Match Evidence/Intelligence SVG canvas height so all three stage boxes align */
-    min-height: calc(min(100%, 19rem) * 72 / 160);
+    /* Match Evidence/Intelligence canvas (19rem × 72/160). 100% here is height, not width. */
+    height: calc(19rem * 72 / 160);
+    min-height: calc(19rem * 72 / 160);
     justify-content: center;
     align-items: flex-start;
   }
 
   .convergence-stage--decision .convergence-visual {
-    min-height: calc(min(100%, 19rem) * 72 / 160);
+    height: calc(19rem * 72 / 160);
+    min-height: calc(19rem * 72 / 160);
     align-items: flex-start;
   }
 
@@ -1580,6 +1576,14 @@ main.legal-page.section--reading h2 {
 
   .section-convergence + .section--illustrative {
     padding-top: 2.15rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .convergence-stage--decision .convergence-visual {
+    /* Resolve stroke sits near the top of a short canvas — don't vertically center it in the stage min-height */
+    align-items: flex-start;
+    min-height: 0;
   }
 }
 
