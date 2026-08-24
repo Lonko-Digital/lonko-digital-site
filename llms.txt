@@ -1,0 +1,21 @@
+# Lonko Digital
+
+> Lonko Digital is building a marketing intelligence platform that turns fragmented marketing evidence into clear decisions businesses can act on.
+
+Lonko Digital is an early-stage company. This website is informational and does not currently offer public customer accounts, subscriptions, or commercial software access.
+
+## What exists today
+
+- Google Ads: Private Reference Implementation (private, not publicly available)
+- LinkedIn Ads: In Development
+- Additional marketing intelligence capabilities: Roadmap
+
+## Contact
+
+lonkodigital@gmail.com
+
+## Learn more
+
+- About: /about/
+- Privacy Policy: /privacy/
+- Terms of Use: /terms/
