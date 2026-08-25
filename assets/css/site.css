@@ -58,6 +58,23 @@ html {
   }
 }
 
+/* K5: Source Serif 4 — H1/H2 headline accent only (self-hosted, Latin subset, 600/700) */
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("../fonts/source-serif-4-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("../fonts/source-serif-4-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
@@ -65,6 +82,11 @@ body {
   line-height: 1.65;
   color: var(--text);
   background: var(--bg);
+}
+
+h1,
+h2 {
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
 
 img {
