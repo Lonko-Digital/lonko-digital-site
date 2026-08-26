@@ -32,19 +32,78 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "https://lonko-digital.github.io/lonko-digital-site/#organization",
     "name": "Lonko Digital",
     "url": "https://lonko-digital.github.io/lonko-digital-site/",
     "logo": "https://lonko-digital.github.io/lonko-digital-site/assets/images/lonko-logo.png",
-    "description": "Lonko Digital is building a marketing intelligence platform that turns fragmented marketing evidence into clear decisions businesses can act on."
+    "description": "Lonko Digital is building a marketing intelligence platform that turns fragmented marketing evidence into clear decisions businesses can act on.",
+    "sameAs": [
+      "https://github.com/Lonko-Digital"
+    ],
+    "knowsAbout": [
+      "Marketing Intelligence",
+      "Google Ads",
+      "LinkedIn Ads",
+      "Marketing Analytics"
+    ],
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "Google Ads",
+        "value": "Private Reference Implementation"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "LinkedIn Ads",
+        "value": "In Development"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Broader marketing intelligence capabilities",
+        "value": "Roadmap"
+      }
+    ],
+    "founder": {
+      "@type": "Person",
+      "name": "Alex",
+      "description": "Lonko Digital was founded by Alex, who leads the company's product vision, marketing intelligence strategy, and overall direction."
+    }
   }
   </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://lonko-digital.github.io/lonko-digital-site/#website",
     "name": "Lonko Digital",
     "url": "https://lonko-digital.github.io/lonko-digital-site/",
-    "description": "Public company website for Lonko Digital."
+    "description": "Public company website for Lonko Digital.",
+    "inLanguage": "en-US",
+    "publisher": {
+      "@id": "https://lonko-digital.github.io/lonko-digital-site/#organization"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Lonko Digital | Marketing Intelligence for Better Decisions",
+    "description": "Lonko Digital is building a marketing intelligence platform that turns fragmented marketing evidence into clear decisions businesses can act on.",
+    "url": "https://lonko-digital.github.io/lonko-digital-site/",
+    "inLanguage": "en-US",
+    "isPartOf": {
+      "@id": "https://lonko-digital.github.io/lonko-digital-site/#website"
+    },
+    "about": {
+      "@id": "https://lonko-digital.github.io/lonko-digital-site/#organization"
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [
+        ".identity-primary"
+      ]
+    }
   }
   </script>
   <script>
