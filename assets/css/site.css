@@ -1731,4 +1731,182 @@ main.legal-page.section--reading h2 {
   }
 }
 
+/* —— Visible breadcrumbs —— */
+.breadcrumbs {
+  margin: 0 0 0.85rem;
+}
+
+.breadcrumbs ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.45rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.breadcrumbs li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  content: "›";
+  color: color-mix(in srgb, var(--text-muted) 75%, var(--border));
+  font-weight: 500;
+  speak: never;
+}
+
+.breadcrumbs a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.breadcrumbs a:hover,
+.breadcrumbs a:focus-visible {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.breadcrumbs [aria-current="page"] {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.hero .breadcrumbs {
+  margin-bottom: 0.75rem;
+}
+
+.legal-page .breadcrumbs {
+  margin-bottom: 0.65rem;
+}
+
+/* —— Related reading (Insights articles) —— */
+.related-reading {
+  margin-top: 2rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--border);
+}
+
+.related-reading-label {
+  margin: 0 0 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: inherit;
+}
+
+.related-reading-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.related-reading-list a {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.related-reading-list a:hover,
+.related-reading-list a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1.5px;
+}
+
+.related-reading-list .excerpt {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* —— Capability card icons (abstract line marks) —— */
+.capability-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 0 0 0.55rem;
+}
+
+.capability-card-head .status-row {
+  margin: 0;
+  padding-top: 0.15rem;
+}
+
+.capability-icon {
+  display: block;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.capability-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.capability-card:has(.status-mark--private) .capability-icon,
+.capability-card:has(.status-mark--dev) .capability-icon {
+  color: var(--text);
+  opacity: 0.85;
+}
+
+.capability-card:has(.status-mark--roadmap) .capability-icon {
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+
+/* —— Insights pillar mark (decorative) —— */
+.article-pillar {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.pillar-icon {
+  display: block;
+  flex-shrink: 0;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.2rem;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.pillar-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* —— CTA trust proximity —— */
+.cta-trust {
+  margin: 0.85rem 0 0;
+  max-width: 34rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.section-closing .cta-trust {
+  margin-top: 1rem;
+}
+
 
