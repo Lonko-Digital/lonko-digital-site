@@ -24,7 +24,8 @@ Static public website for **Lonko Digital**. This repository is intentionally se
 
 - **GitHub organization:** Lonko-Digital
 - **Public repository:** lonko-digital-site
-- **Expected GitHub Pages URL:** https://lonko-digital.github.io/lonko-digital-site/
+- **Custom domain:** https://lonkodigital.com/
+- **Legacy GitHub Pages URL:** https://lonko-digital.github.io/lonko-digital-site/ (redirects once custom domain is active)
 
 ## Architecture
 
@@ -78,17 +79,15 @@ python scripts/public_safety_audit.py
 
 ## GitHub Pages deployment
 
-**This public site is live** at `https://lonko-digital.github.io/lonko-digital-site/`.
+**This public site is live** at `https://lonkodigital.com/` (GitHub Pages + custom domain).
 
-GitHub Pages is configured from the default branch (`main`) at repository root. HTTPS is enabled by default on GitHub Pages.
+GitHub Pages is configured from the default branch (`main`) at repository root. A root `CNAME` file maps the site to `lonkodigital.com`. After DNS propagates, enable **Enforce HTTPS** in the repository Pages settings if it is not already available.
 
-### Custom domain (future)
+### Custom domain
 
-Custom domain setup is optional and not required for publication. If added later:
-
-1. Add a `CNAME` file with the confirmed domain — only after domain ownership is confirmed.
-2. Configure DNS per [GitHub Pages custom domain documentation](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
-3. Enable “Enforce HTTPS” after DNS propagates.
+1. Root `CNAME` contains `lonkodigital.com`.
+2. DNS: apex A records to GitHub Pages IPs; `www` CNAME to the GitHub Pages host.
+3. Enable “Enforce HTTPS” after DNS propagates (manual Pages setting).
 
 ## Future Public Executive Showcase
 
@@ -127,4 +126,4 @@ Publishing governance is maintained internally by Lonko Digital. Public-facing s
 
 ## Status
 
-Public company website is **published** via GitHub Pages at `https://lonko-digital.github.io/lonko-digital-site/`.
+Public company website is **published** via GitHub Pages at `https://lonkodigital.com/`.

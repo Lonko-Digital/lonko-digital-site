@@ -65,6 +65,7 @@ DOTENV_PATTERN: tuple[str, re.Pattern[str]] = (
 ALLOWLIST_SUBSTRINGS = [
     "lonkodigital@gmail.com",
     "lonko-digital.github.io",
+    "lonkodigital.com",
     "REQUIRES LEGAL REVIEW",
     "contact.example.json",
     "lonko-public-appearance",

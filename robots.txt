@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lonko-digital.github.io/lonko-digital-site/sitemap.xml
+Sitemap: https://lonkodigital.com/sitemap.xml
