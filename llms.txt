@@ -17,5 +17,6 @@ lonkodigital@gmail.com
 ## Learn more
 
 - About: /about/
+- Insights: educational articles on marketing data and decision-making — /insights/
 - Privacy Policy: /privacy/
 - Terms of Use: /terms/
