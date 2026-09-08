@@ -1193,6 +1193,51 @@ main.legal-page {
   max-width: 40rem;
 }
 
+.section-quick-answers {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.section-quick-answers .section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-quick-answers .section-header h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+.quick-answers {
+  display: grid;
+  gap: 0;
+}
+
+.quick-answer {
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.quick-answer:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.quick-answer h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.quick-answer p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+  max-width: 40rem;
+}
+
 .framework-list--questions li {
   padding-top: 1.15rem;
   padding-bottom: 1.15rem;
