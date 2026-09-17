@@ -12,6 +12,15 @@ Thumbs.db
 # Internal QA evidence must not ship in the public repository
 docs/qa_*/
 **/qa_62c_*/
+docs/_lh_*
+docs/_perf_test/
+docs/_psi_*
+docs/_chronicles_*
+
+# Chronicles local-only fixtures (never ship to main)
+chronicles/_local_fixtures/
+chronicles/content/**
+!chronicles/content/.gitkeep
 
 # Python
 __pycache__/

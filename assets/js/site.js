@@ -72,8 +72,61 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function initConvergenceMotion() {
+    var section = document.querySelector(".section-convergence");
+    if (!section) return;
+
+    var reduceMotion =
+      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      return;
+    }
+
+    section.classList.add("convergence--pending");
+
+    var played = false;
+    function play() {
+      if (played) return;
+      played = true;
+      section.classList.remove("convergence--pending");
+      section.classList.add("convergence--play");
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (!entries[i].isIntersecting) continue;
+          play();
+          observer.disconnect();
+          break;
+        }
+      },
+      {
+        threshold: 0.28,
+        rootMargin: "0px 0px -8% 0px"
+      }
+    );
+
+    observer.observe(section);
+
+    // If already in view at boot (deep link / short viewport), play without waiting for another scroll.
+    var rect = section.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    if (rect.top < vh * 0.72 && rect.bottom > vh * 0.18) {
+      play();
+      observer.disconnect();
+    }
+  }
+
+  function boot() {
     initTheme();
     initNav();
-  });
+    initConvergenceMotion();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();

@@ -75,6 +75,15 @@ html {
   font-display: swap;
 }
 
+/* Source Serif 4 Regular (Text/Roman) — Chronicles article body only */
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("../fonts/source-serif-4-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
@@ -1802,6 +1811,79 @@ main.legal-page.section--reading h2 {
   stroke: var(--brand-red);
 }
 
+/* K4 — one-shot resolve motion (progressive enhancement; static without JS) */
+.section-convergence.convergence--pending .convergence-stage {
+  opacity: 0;
+  transform: translateY(0.45rem);
+}
+
+.section-convergence.convergence--pending .convergence-resolve-line {
+  stroke-dasharray: 112;
+  stroke-dashoffset: 112;
+}
+
+.section-convergence.convergence--play .convergence-stage {
+  /* Hold pending look through animation-delay (forwards alone flashes full opacity). */
+  opacity: 0;
+  transform: translateY(0.45rem);
+  animation: convergence-stage-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.section-convergence.convergence--play .convergence-stage:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.section-convergence.convergence--play .convergence-stage:nth-child(2) {
+  animation-delay: 0.32s;
+}
+
+.section-convergence.convergence--play .convergence-stage:nth-child(3) {
+  animation-delay: 0.58s;
+}
+
+.section-convergence.convergence--play .convergence-resolve-line {
+  stroke-dasharray: 112;
+  stroke-dashoffset: 112;
+  animation: convergence-line-draw 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.68s;
+}
+
+@keyframes convergence-stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.45rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes convergence-line-draw {
+  from {
+    stroke-dashoffset: 112;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-convergence.convergence--pending .convergence-stage,
+  .section-convergence.convergence--play .convergence-stage {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .section-convergence.convergence--pending .convergence-resolve-line,
+  .section-convergence.convergence--play .convergence-resolve-line {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
 @media (max-width: 900px) {
   .section-convergence {
     /* Extra top air so the motif reads as its own visual moment after the prior section */
@@ -2080,6 +2162,1005 @@ main.legal-page.section--reading h2 {
 
 .section-closing .cta-trust {
   margin-top: 1rem;
+}
+
+/* =============================================================================
+   Chronicles — editorial publication surface
+   Scoped under .chronicles-* / .story-* to avoid Insights collisions.
+   Brand red only for CTAs, active pills, and semantic highlights.
+   ============================================================================= */
+
+/* —— Chronicles home: masthead —— */
+.chronicles-home {
+  padding-bottom: 2.5rem;
+}
+
+.chronicles-masthead {
+  margin: 0 0 1.75rem;
+  max-width: 42rem;
+}
+
+.chronicles-masthead h1 {
+  margin: 0 0 0.55rem;
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.chronicles-masthead .lede,
+.chronicles-masthead p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+/* —— Search (home + search page) —— */
+.chronicles-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: stretch;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 0 1.35rem;
+  box-sizing: border-box;
+}
+
+.chronicles-search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: stretch;
+  width: 100%;
+  max-width: 36rem;
+}
+
+.chronicles-search-input,
+.chronicles-search input[type="search"],
+.chronicles-search input[type="text"] {
+  flex: 1 1 12rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--text);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  box-sizing: border-box;
+}
+
+.chronicles-search-input:focus,
+.chronicles-search input[type="search"]:focus,
+.chronicles-search input[type="text"]:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-color: color-mix(in srgb, var(--focus) 45%, var(--border));
+}
+
+.chronicles-search .btn,
+.chronicles-search-submit {
+  flex: 0 0 auto;
+  min-height: 2.75rem;
+  padding: 0.7rem 1.15rem;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--brand-red);
+  border: 1px solid transparent;
+  border-radius: 0.55rem;
+  cursor: pointer;
+}
+
+.chronicles-search .btn:hover,
+.chronicles-search-submit:hover {
+  background: var(--brand-red-hover);
+}
+
+@media (max-width: 560px) {
+  .chronicles-search,
+  .chronicles-search-form {
+    max-width: none;
+    flex-direction: column;
+  }
+
+  .chronicles-search-input,
+  .chronicles-search input[type="search"],
+  .chronicles-search input[type="text"],
+  .chronicles-search .btn,
+  .chronicles-search-submit {
+    width: 100%;
+  }
+}
+
+/* —— Topic pills (horizontal scroll, ~44px tap targets) —— */
+.chronicles-topics {
+  margin: 0 0 2rem;
+  min-width: 0;
+}
+
+.chronicles-topics-label {
+  margin: 0 0 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chronicles-topic-pills {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.15rem 0 0.45rem;
+  list-style: none;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.chronicles-topic-pills::-webkit-scrollbar {
+  height: 4px;
+}
+
+.chronicles-topic-pills a,
+.chronicles-topic-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-height: 2.75rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.chronicles-topic-pills a:hover,
+.chronicles-topic-pill:hover {
+  color: var(--text);
+  text-decoration: none;
+  border-color: color-mix(in srgb, var(--text-muted) 35%, var(--border));
+}
+
+.chronicles-topic-pills a[aria-current="page"],
+.chronicles-topic-pills a.is-active,
+.chronicles-topic-pill.is-active,
+.chronicles-topic-pill[aria-current="page"] {
+  color: #fff;
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+.chronicles-topic-pills a[aria-current="page"]:hover,
+.chronicles-topic-pills a.is-active:hover,
+.chronicles-topic-pill.is-active:hover,
+.chronicles-topic-pill[aria-current="page"]:hover {
+  color: #fff;
+  background: var(--brand-red-hover);
+  border-color: var(--brand-red-hover);
+}
+
+/* —— Hero grid: Feature 60% + stacked Standards 40% (desktop) —— */
+.chronicles-intro {
+  margin: 0 0 1.75rem;
+}
+
+.chronicles-featured-hero {
+  margin: 0 0 2.75rem;
+}
+
+.chronicles-featured-grid,
+.chronicles-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 1.75rem 2rem;
+  align-items: start;
+  max-width: 72rem;
+}
+
+.chronicles-featured-primary,
+.chronicles-hero-feature {
+  min-width: 0;
+}
+
+.chronicles-featured-standards,
+.chronicles-hero-standards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+@media (max-width: 900px) {
+  .chronicles-featured-grid,
+  .chronicles-hero {
+    grid-template-columns: 1fr;
+    max-width: none;
+    width: 100%;
+    gap: 1.5rem;
+  }
+}
+
+/* —— Story / card components (build markup) —— */
+.chronicles-card,
+.story-feature,
+.story-standard,
+.story-compact {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.chronicles-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.chronicles-card-link:hover .chronicles-card-title,
+.chronicles-card-link:focus-visible .chronicles-card-title {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--text-muted);
+}
+
+.chronicles-card-media,
+.story-media {
+  display: block;
+  margin: 0 0 1rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg-elevated) 70%, var(--border));
+  aspect-ratio: 16 / 9;
+}
+
+.story-feature .chronicles-card-media,
+.story-feature .story-media {
+  aspect-ratio: 16 / 9;
+  margin-bottom: 1.15rem;
+}
+
+.story-standard .chronicles-card-media,
+.story-standard .story-media {
+  aspect-ratio: 3 / 2;
+  margin-bottom: 0.75rem;
+}
+
+.story-compact .chronicles-card-media,
+.story-compact .story-media,
+.chronicles-card-media--compact {
+  aspect-ratio: 16 / 10;
+  margin-bottom: 0.65rem;
+}
+
+.chronicles-card-media img,
+.story-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chronicles-card-meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.chronicles-card-title {
+  margin: 0 0 0.4rem;
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.story-feature .chronicles-card-title {
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+}
+
+.chronicles-card-deck {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.chronicles-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .chronicles-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  .chronicles-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.chronicles-section {
+  margin: 0 0 2.75rem;
+}
+
+.chronicles-section h2 {
+  margin: 0 0 1.15rem;
+}
+
+.chronicles-editorial-close {
+  margin: 2rem 0 1rem;
+  text-align: center;
+}
+
+.chronicles-close-line {
+  margin: 0;
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  font-size: 1.35rem;
+}
+
+.chronicles-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.chronicles-page-link {
+  font-weight: 600;
+}
+
+html:has(.chronicles-index),
+html:has(.chronicles-article),
+html:has(.chronicles-search-page) {
+  overflow-x: clip;
+}
+
+body:has(.chronicles-index),
+body:has(.chronicles-article),
+body:has(.chronicles-search-page) {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* legacy story-* link styles retained below for compatibility */
+
+.story-feature a.story-link,
+.story-standard a.story-link,
+.story-compact a.story-link,
+.story-feature .story-title a,
+.story-standard .story-title a,
+.story-compact .story-title a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.story-feature .story-title a:hover,
+.story-standard .story-title a:hover,
+.story-compact .story-title a:hover,
+.story-feature .story-title a:focus-visible,
+.story-standard .story-title a:focus-visible,
+.story-compact .story-title a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--text-muted);
+}
+
+.story-media {
+  display: block;
+  margin: 0 0 1rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg-elevated) 70%, var(--border));
+  aspect-ratio: 16 / 9;
+}
+
+.story-feature .story-media {
+  aspect-ratio: 16 / 9;
+  margin-bottom: 1.15rem;
+}
+
+.story-standard .story-media {
+  aspect-ratio: 3 / 2;
+  margin-bottom: 0.75rem;
+}
+
+.story-compact .story-media {
+  aspect-ratio: 16 / 10;
+  margin-bottom: 0.65rem;
+}
+
+.story-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.5rem;
+  margin: 0 0 0.45rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.story-meta-sep {
+  color: color-mix(in srgb, var(--text-muted) 70%, var(--border));
+  user-select: none;
+}
+
+.story-kicker {
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.story-title {
+  margin: 0 0 0.45rem;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.story-feature .story-title {
+  font-size: clamp(1.65rem, 3.2vw, 2.25rem);
+}
+
+.story-standard .story-title {
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+}
+
+.story-compact .story-title {
+  font-size: 1.05rem;
+  letter-spacing: -0.015em;
+}
+
+.story-excerpt {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.story-standard .story-excerpt {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.story-compact .story-excerpt {
+  display: none;
+}
+
+.story-standard + .story-standard {
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--border);
+}
+
+/* —— Section headings (Owners / Guides / From Lonko / Latest) —— */
+.chronicles-section {
+  margin: 0 0 2.5rem;
+}
+
+.chronicles-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1.15rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.chronicles-section-title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.chronicles-section-more {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.chronicles-section-more:hover,
+.chronicles-section-more:focus-visible {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+.chronicles-story-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem 1.35rem;
+}
+
+.chronicles-story-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chronicles-story-list > li {
+  padding: 1.05rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.chronicles-story-list > li:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 900px) {
+  .chronicles-story-grid {
+    grid-template-columns: 1fr;
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  .chronicles-story-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* —— Editorial close —— */
+.chronicles-close {
+  margin: 2.75rem 0 0;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid var(--border);
+  max-width: 36rem;
+}
+
+.chronicles-close h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.chronicles-close p {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.chronicles-close .btn {
+  text-decoration: none;
+}
+
+/* —— Article page —— */
+.chronicles-article {
+  padding-bottom: 3rem;
+}
+
+.chronicles-article-header {
+  margin: 0 auto 1.75rem;
+  max-width: 42rem;
+}
+
+.chronicles-article-header .story-meta,
+.chronicles-article-header .story-kicker {
+  margin-bottom: 0.65rem;
+}
+
+.chronicles-article-header h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.85rem, 4vw, 2.55rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.chronicles-article-dek {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.12rem;
+  line-height: 1.5;
+}
+
+.chronicles-article-hero-media {
+  margin: 0 auto 1.75rem;
+  max-width: 48rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg-elevated) 70%, var(--border));
+  aspect-ratio: 16 / 9;
+}
+
+.chronicles-article-hero-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chronicles-article-body {
+  margin: 0 auto;
+  max-width: 40rem; /* ~38–42rem reading column */
+  font-family: "Source Serif 4", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.chronicles-article-body > * + * {
+  margin-top: 1.15em;
+}
+
+.chronicles-article-body h2,
+.chronicles-article-body h3 {
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: 1.85em;
+  margin-bottom: 0.55em;
+}
+
+.chronicles-article-body h2 {
+  font-size: 1.45rem;
+}
+
+.chronicles-article-body h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.chronicles-article-body p {
+  margin: 0;
+}
+
+.chronicles-article-body a {
+  color: var(--text);
+  text-decoration-color: color-mix(in srgb, var(--text-muted) 75%, transparent);
+}
+
+.chronicles-article-body ul,
+.chronicles-article-body ol {
+  margin: 0;
+  padding-left: 1.35em;
+}
+
+.chronicles-article-body li + li {
+  margin-top: 0.35em;
+}
+
+.chronicles-article-body blockquote,
+.chronicles-pullquote {
+  margin: 1.75rem 0;
+  padding: 0.15rem 0 0.15rem 1.05rem;
+  border: 0;
+  border-left: 3px solid var(--brand-red);
+}
+
+.chronicles-article-body blockquote p,
+.chronicles-pullquote p {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.4vw, 1.45rem);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.chronicles-callout {
+  margin: 1.65rem 0;
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--bg-elevated) 55%, var(--bg));
+  border-left: 2px solid color-mix(in srgb, var(--text-muted) 45%, var(--border));
+}
+
+.chronicles-callout-label {
+  margin: 0 0 0.35rem;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chronicles-callout p:last-child {
+  margin: 0;
+}
+
+.chronicles-article-body figure {
+  margin: 1.75rem 0;
+}
+
+.chronicles-article-body figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chronicles-article-body figcaption,
+.chronicles-caption {
+  margin-top: 0.55rem;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.chronicles-article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.chronicles-article-body th,
+.chronicles-article-body td {
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.chronicles-article-body th {
+  font-weight: 650;
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg-elevated) 40%, var(--bg));
+}
+
+.chronicles-article-body .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+}
+
+/* —— Share controls (lightweight) —— */
+.chronicles-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  margin: 2rem auto 0;
+  max-width: 40rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  /* Isolate share chrome from long-form layout invalidation */
+  contain: layout style;
+}
+
+.chronicles-share-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chronicles-share a,
+.chronicles-share button,
+.chronicles-share-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.25rem 0.55rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  contain: layout style;
+  transition: none;
+}
+
+.chronicles-share a:hover,
+.chronicles-share button:hover,
+.chronicles-share-btn:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+/* Long articles: skip rendering off-screen blocks so share clicks paint faster (INP). */
+body:has(.chronicles-article-page) {
+  scroll-behavior: auto;
+}
+
+body:has(.chronicles-article-page) .site-header {
+  contain: layout style;
+}
+
+.chronicles-article-body > * {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 4.5rem;
+}
+
+.chronicles-sources,
+.chronicles-related {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 10rem;
+}
+
+/* —— Pagination —— */
+.chronicles-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  margin: 2.25rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.chronicles-pagination a {
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.chronicles-pagination a:hover,
+.chronicles-pagination a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--text-muted);
+}
+
+.chronicles-pagination .is-disabled,
+.chronicles-pagination [aria-disabled="true"] {
+  color: var(--text-muted);
+  pointer-events: none;
+  text-decoration: none;
+  opacity: 0.65;
+}
+
+.chronicles-pagination-status {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* —— Search results page —— */
+.chronicles-search-page .chronicles-masthead {
+  margin-bottom: 1.25rem;
+}
+
+.chronicles-search-summary {
+  margin: 0 0 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.chronicles-search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chronicles-search-results > li {
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.chronicles-search-results > li:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.chronicles-search-results .story-title {
+  font-size: 1.2rem;
+}
+
+.chronicles-search-results .story-excerpt {
+  margin-top: 0.35rem;
+  font-size: 0.98rem;
+}
+
+/* —— Zero-result state —— */
+.chronicles-empty {
+  margin: 1.5rem 0 2rem;
+  padding: 1.5rem 0;
+  max-width: 34rem;
+}
+
+.chronicles-empty h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+.chronicles-empty p {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.chronicles-empty a:not(.btn) {
+  font-weight: 500;
+}
+
+/* —— Mobile 360–430: no horizontal overflow; pills scroll —— */
+@media (max-width: 900px) {
+  .chronicles-home,
+  .chronicles-article,
+  .chronicles-search-page {
+    overflow-x: clip;
+  }
+
+  .chronicles-home .container,
+  .chronicles-article .container,
+  .chronicles-search-page .container,
+  .chronicles-topics,
+  .chronicles-hero,
+  .chronicles-story-grid,
+  .chronicles-section,
+  .chronicles-article-body,
+  .chronicles-article-header {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .chronicles-topic-pills {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .chronicles-card-media img,
+  .chronicles-article-hero img,
+  .story-feature img,
+  .story-standard img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 430px) {
+  .chronicles-article-body {
+    font-size: 1.05rem;
+    line-height: 1.68;
+  }
+
+  .chronicles-article-body .table-wrap {
+    margin-inline: 0;
+  }
+}
+
+/* —— Reduced motion: no essential Chronicles animation —— */
+@media (prefers-reduced-motion: reduce) {
+  .chronicles-home *,
+  .chronicles-article *,
+  .chronicles-search-page * {
+    scroll-behavior: auto;
+  }
 }
 
 

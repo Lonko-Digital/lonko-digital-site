@@ -1,39 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://lonkodigital.com/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/about/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/insights/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/insights/why-clicks-dont-feel-like-progress/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/insights/what-working-actually-means/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/insights/clicks-but-no-leads/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/insights/real-cost-of-not-tracking-conversions/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/insights/marketing-data-second-job/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/insights/what-to-look-at-first/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/privacy/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/terms/</loc>
-  </url>
-  <url>
-    <loc>https://lonkodigital.com/contact/</loc>
-  </url>
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://lonkodigital.com/sitemap-pages.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://lonkodigital.com/sitemap-chronicles.xml</loc>
+  </sitemap>
+</sitemapindex>
