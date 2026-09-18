@@ -185,19 +185,24 @@ jobs:
           Synthetic Drive → Actions → PR verification. DO NOT MERGE.
           "
           git push -u origin HEAD
-          PR_URL=$(gh pr create \
+          # Requires: Settings → Actions → General → Workflow permissions →
+          # "Allow GitHub Actions to create and approve pull requests"
+          if ! PR_URL=$(gh pr create \
             --base main \
             --title "SMOKE (do not merge): Chronicles Drive bridge — ${SLUG}" \
-            --body "$(cat <<EOF
-          ## Chronicles Drive cloud smoke
+            --body "## Chronicles Drive cloud smoke
 
           Synthetic package only. **Do not merge.**
 
           Verifies: Drive Inbox → Action → validation → staging/build → PR → Processed → audit.
 
           Close this PR after Cursor Web / Alex confirm the chain.
-          EOF
-          )")
+          "); then
+            echo "WARN: gh pr create failed (often Actions PR permission disabled)." >&2
+            echo "Branch pushed: $BRANCH" >&2
+            echo "Open PR manually: https://github.com/${GITHUB_REPOSITORY}/compare/main...${BRANCH}?expand=1" >&2
+            exit 1
+          fi
           echo "Opened: $PR_URL"
 
       - name: Confirm main unchanged tip
