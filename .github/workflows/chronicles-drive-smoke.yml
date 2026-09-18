@@ -1,10 +1,19 @@
 name: Chronicles Drive cloud smoke
 
-# One-shot synthetic cloud smoke: build package → upload Drive Inbox → ingest → PR.
+# Synthetic cloud smoke: ensure package in Drive Inbox → ingest → PR → Processed.
 # Never merges. Close the PR without merging after verification.
+#
+# Upload constraint: Google service accounts have no My Drive quota. Prefer a
+# Shared Drive for Lonko Chronicles/*. If Inbox is My Drive, place the package
+# folder manually once (from bridge/fixtures/cloud-smoke/) then re-run.
 
 on:
   workflow_dispatch:
+    inputs:
+      assume_uploaded:
+        description: "Package already in Drive Inbox (skip SA upload attempt)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -47,23 +56,75 @@ jobs:
           done
           echo "All four Drive secrets are present."
 
-      - name: Build + upload synthetic package to Drive Inbox
+      - name: Diagnose Inbox + ensure smoke package present
         env:
           DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}
           DRIVE_INBOX_FOLDER_ID: ${{ secrets.DRIVE_INBOX_FOLDER_ID }}
+          ASSUME_UPLOADED: ${{ inputs.assume_uploaded }}
         run: |
           set -euo pipefail
           python scripts/build_bridge_smoke_package.py
           python - <<'PY'
-          import json, sys
+          import json, os, sys
           from pathlib import Path
           sys.path.insert(0, "scripts")
-          from chronicles_bridge.drive import upload_package_to_inbox
-          pkg = Path("bridge/smoke-package/bridge-cloud-smoke-synthetic-signal")
-          info = upload_package_to_inbox(pkg)
-          print(json.dumps(info, indent=2))
-          Path("/tmp/smoke-upload.json").write_text(json.dumps(info), encoding="utf-8")
+          from chronicles_bridge.drive import (
+              _service,
+              list_inbox_folders,
+              upload_package_to_inbox,
+          )
+
+          SLUG = "bridge-cloud-smoke-synthetic-signal"
+          pkg = Path("bridge/smoke-package") / SLUG
+          if not pkg.is_dir():
+              pkg = Path("bridge/fixtures/cloud-smoke") / SLUG
+          service = _service()
+          inbox_id = os.environ["DRIVE_INBOX_FOLDER_ID"]
+          meta = service.files().get(
+              fileId=inbox_id,
+              fields="id,name,driveId,owners,mimeType",
+              supportsAllDrives=True,
+          ).execute()
+          print("Inbox meta:", json.dumps(meta, indent=2))
+          existing = {f["name"]: f for f in list_inbox_folders(service)}
+          print("Inbox children:", sorted(existing))
+          assume = os.environ.get("ASSUME_UPLOADED", "false").lower() in {"1", "true", "yes"}
+          if SLUG in existing:
+              print(f"Package already in Inbox: {SLUG}")
+          elif assume:
+              raise SystemExit(
+                  f"assume_uploaded=true but {SLUG!r} not found in Drive Inbox. "
+                  "Copy bridge/fixtures/cloud-smoke/bridge-cloud-smoke-synthetic-signal into Inbox and retry."
+              )
+          elif meta.get("driveId"):
+              print("Shared Drive detected — uploading via service account.")
+              info = upload_package_to_inbox(pkg)
+              print(json.dumps(info, indent=2))
+          else:
+              # My Drive shared folder: SA cannot upload (no storage quota).
+              try:
+                  info = upload_package_to_inbox(pkg)
+                  print(json.dumps(info, indent=2))
+              except Exception as exc:
+                  print("SA upload failed (expected on My Drive):", exc)
+                  raise SystemExit(
+                      "SMOKE BLOCKED: Inbox is not on a Shared Drive and the service account "
+                      "cannot upload (Google SA storage quota).\n\n"
+                      "Do ONE of the following, then re-run this workflow with assume_uploaded=true:\n"
+                      "A) Preferred: Move Lonko Chronicles/ into a Google Shared Drive, add the "
+                      "service account as Content manager, update the three folder ID secrets, re-run.\n"
+                      "B) Quick: In Drive, copy folder "
+                      "bridge/fixtures/cloud-smoke/bridge-cloud-smoke-synthetic-signal "
+                      "from the repo (or download the workflow artifact) into Lonko Chronicles/Inbox "
+                      "keeping the exact folder name, then re-run with assume_uploaded=true.\n"
+                  )
           PY
+
+      - name: Upload smoke package artifact (for manual Inbox drop if needed)
+        uses: actions/upload-artifact@v4
+        with:
+          name: bridge-cloud-smoke-synthetic-signal
+          path: bridge/smoke-package/bridge-cloud-smoke-synthetic-signal
 
       - name: Ingest from Drive (validate → stage → build → archive)
         id: ingest
@@ -137,7 +198,6 @@ jobs:
           Close this PR after Cursor Web / Alex confirm the chain.
           EOF
           )")
-          echo "PR_URL=$PR_URL" >> "$GITHUB_ENV"
           echo "Opened: $PR_URL"
 
       - name: Confirm main unchanged tip

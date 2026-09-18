@@ -3,6 +3,19 @@
 Transport-only intake for Lonko Chronicles. The frozen v4 article contract in
 `scripts/chronicles_lib` remains authoritative.
 
+## Drive folder location (important)
+
+Google **service accounts have no My Drive storage quota**. They can **read** and
+**move** packages in a folder shared as Editor, but they **cannot upload** into a
+normal My Drive folder.
+
+**Preferred:** put `Lonko Chronicles/` on a **Google Shared Drive** and add the
+service account as **Content manager**. Then CI can upload smoke packages too.
+
+**Also valid for production:** Claude Blog (human) uploads packages into Inbox;
+the service account only downloads, validates, and moves to Processed/Quarantine.
+That matches the editorial workflow and works with My Drive shares.
+
 ## Preferred Drive folder structure
 
 Create these folders in Google Drive (Shared Drive preferred, or My Drive):
