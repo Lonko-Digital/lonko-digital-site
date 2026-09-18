@@ -4,5 +4,12 @@
 <title>Lonko Chronicles</title>
 <link>https://lonkodigital.com/chronicles/</link>
 <description>Evidence-led editorial from Lonko Digital.</description>
+<item>
+<title>Bridge Cloud Smoke — Synthetic Signal (Do Not Publish)</title>
+<link>https://lonkodigital.com/chronicles/bridge-cloud-smoke-synthetic-signal/</link>
+<guid isPermaLink="true">https://lonkodigital.com/chronicles/bridge-cloud-smoke-synthetic-signal/</guid>
+<pubDate>Fri, 18 Sep 2026 00:00:00 GMT</pubDate>
+<description>Synthetic package for Drive → Actions → PR verification. Close the PR without merging.</description>
+</item>
 </channel>
 </rss>
