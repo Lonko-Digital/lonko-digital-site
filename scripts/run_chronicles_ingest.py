@@ -20,7 +20,11 @@ ROOT = SCRIPTS.parent
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-from chronicles_bridge.drive import drive_configured, sync_inbox_to_local  # noqa: E402
+from chronicles_bridge.drive import (  # noqa: E402
+    archive_drive_results,
+    drive_configured,
+    sync_inbox_to_local,
+)
 from chronicles_bridge.ingest import (  # noqa: E402
     DEFAULT_INBOX,
     DEFAULT_PROCESSED,
@@ -41,7 +45,12 @@ def main() -> int:
     )
     parser.add_argument("--sync-drive", action="store_true", help="Pull Drive inbox first")
     parser.add_argument("--no-build", action="store_true", help="Stage only; skip Chronicles build")
-    parser.add_argument("--no-archive", action="store_true", help="Leave packages in inbox")
+    parser.add_argument("--no-archive", action="store_true", help="Leave packages in local inbox")
+    parser.add_argument(
+        "--archive-drive",
+        action="store_true",
+        help="After ingest, move Drive folders to Processed/Quarantine",
+    )
     args = parser.parse_args()
 
     if args.sync_drive:
@@ -53,7 +62,7 @@ def main() -> int:
             )
         else:
             paths = sync_inbox_to_local(args.inbox)
-            print(f"Downloaded {len(paths)} package folder(s) from Drive.")
+            print(f"Downloaded {len(paths)} package folder(s) from Drive.", file=sys.stderr)
 
     results = ingest_inbox(
         args.inbox,
@@ -76,9 +85,16 @@ def main() -> int:
         }
         for r in results
     ]
-    print(json.dumps(payload, indent=2))
 
-    # Exit non-zero only when quarantine occurred and nothing staged
+    drive_actions: list[dict] = []
+    if args.archive_drive:
+        drive_actions = archive_drive_results(
+            payload,
+            inbox_map_path=args.inbox / ".drive_folder_map.json",
+        )
+
+    print(json.dumps({"results": payload, "drive_archive": drive_actions}, indent=2))
+
     if any(r.outcome == "quarantine" for r in results) and not any(
         r.outcome == "staged" for r in results
     ):

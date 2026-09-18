@@ -1,12 +1,14 @@
 """Optional Google Drive sync for Chronicles inbox (least privilege).
 
-Requires secrets:
-  DRIVE_SERVICE_ACCOUNT_JSON  — service account key JSON
-  DRIVE_INBOX_FOLDER_ID       — shared Drive folder for incoming packages
-  DRIVE_PROCESSED_FOLDER_ID   — optional archive folder
-  DRIVE_QUARANTINE_FOLDER_ID  — optional quarantine folder
+Required secrets:
+  DRIVE_SERVICE_ACCOUNT_JSON  — service account key JSON (string)
+  DRIVE_INBOX_FOLDER_ID       — Lonko Chronicles / Inbox folder ID
 
-If secrets are absent, callers should use the local bridge/inbox filesystem path.
+Recommended for cloud archive (v1 smoke + ops):
+  DRIVE_PROCESSED_FOLDER_ID   — Lonko Chronicles / Processed
+  DRIVE_QUARANTINE_FOLDER_ID  — Lonko Chronicles / Quarantine
+
+If secrets are absent, callers use the local bridge/inbox filesystem path.
 """
 
 from __future__ import annotations
@@ -24,12 +26,21 @@ def drive_configured() -> bool:
     )
 
 
+def processed_folder_id() -> str:
+    return os.environ.get("DRIVE_PROCESSED_FOLDER_ID", "").strip()
+
+
+def quarantine_folder_id() -> str:
+    return os.environ.get("DRIVE_QUARANTINE_FOLDER_ID", "").strip()
+
+
 def _service():
     from google.oauth2 import service_account
     from googleapiclient.discovery import build
 
     raw = os.environ["DRIVE_SERVICE_ACCOUNT_JSON"]
     info = json.loads(raw) if raw.strip().startswith("{") else json.loads(Path(raw).read_text(encoding="utf-8"))
+    # Folder ACLs are the real boundary; scope must allow read + parent moves.
     creds = service_account.Credentials.from_service_account_info(
         info,
         scopes=["https://www.googleapis.com/auth/drive"],
@@ -47,7 +58,13 @@ def list_inbox_folders(service=None) -> list[dict]:
     )
     resp = (
         service.files()
-        .list(q=q, fields="files(id,name)", pageSize=100, supportsAllDrives=True, includeItemsFromAllDrives=True)
+        .list(
+            q=q,
+            fields="files(id,name)",
+            pageSize=100,
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
+        )
         .execute()
     )
     return resp.get("files", [])
@@ -79,10 +96,6 @@ def download_folder(service, folder_id: str, dest: Path) -> Path:
     for f in resp.get("files", []):
         if f["mimeType"] == "application/vnd.google-apps.folder":
             download_folder(service, f["id"], package_dir)
-            # nested folder lands as package_dir/<name>; move up if nested assets/
-            nested = package_dir / f["name"]
-            if nested.is_dir() and f["name"] == "assets":
-                pass  # already correct
             continue
         _download_file(service, f["id"], package_dir / f["name"])
     return package_dir
@@ -101,9 +114,10 @@ def _download_file(service, file_id: str, dest: Path) -> None:
     dest.write_bytes(buf.getvalue())
 
 
-def move_file(service, file_id: str, new_parent_id: str, old_parent_id: str) -> None:
+def move_folder(service, folder_id: str, new_parent_id: str, old_parent_id: str) -> None:
+    """Move a package folder from Inbox to Processed or Quarantine."""
     service.files().update(
-        fileId=file_id,
+        fileId=folder_id,
         addParents=new_parent_id,
         removeParents=old_parent_id,
         fields="id,parents",
@@ -111,14 +125,71 @@ def move_file(service, file_id: str, new_parent_id: str, old_parent_id: str) -> 
     ).execute()
 
 
-def sync_inbox_to_local(local_inbox: Path) -> list[Path]:
-    """Download each Drive inbox package folder into local_inbox. Returns paths."""
+def sync_inbox_to_local(local_inbox: Path) -> list[dict]:
+    """Download each Drive inbox package folder.
+
+    Returns list of {id, name, path} so callers can archive by Drive file id.
+    """
     if not drive_configured():
         return []
     service = _service()
     local_inbox.mkdir(parents=True, exist_ok=True)
-    downloaded: list[Path] = []
+    downloaded: list[dict] = []
     for folder in list_inbox_folders(service):
         path = download_folder(service, folder["id"], local_inbox)
-        downloaded.append(path)
+        downloaded.append({"id": folder["id"], "name": folder["name"], "path": str(path)})
+    # Persist map for the ingest step (same job)
+    map_path = local_inbox / ".drive_folder_map.json"
+    map_path.write_text(json.dumps(downloaded, indent=2) + "\n", encoding="utf-8")
     return downloaded
+
+
+def archive_drive_results(
+    results: list[dict],
+    *,
+    inbox_map_path: Path,
+) -> list[dict]:
+    """Move Drive package folders to Processed or Quarantine based on ingest outcome.
+
+    results: list of ingest result dicts with slug + outcome.
+    """
+    if not drive_configured():
+        return []
+    if not inbox_map_path.is_file():
+        return []
+    mapping = {row["name"]: row for row in json.loads(inbox_map_path.read_text(encoding="utf-8"))}
+    proc = processed_folder_id()
+    quar = quarantine_folder_id()
+    inbox = os.environ["DRIVE_INBOX_FOLDER_ID"]
+    if not proc and not quar:
+        return [{"note": "Drive archive folder IDs not set; left packages in Inbox"}]
+
+    service = _service()
+    actions: list[dict] = []
+    for result in results:
+        slug = result.get("slug") or ""
+        outcome = result.get("outcome") or ""
+        row = mapping.get(slug)
+        if not row:
+            continue
+        target = None
+        if outcome in {"staged", "noop_replay"} and proc:
+            target = proc
+        elif outcome == "quarantine" and quar:
+            target = quar
+        if not target:
+            actions.append({"slug": slug, "action": "skipped", "reason": "no target folder id"})
+            continue
+        try:
+            move_folder(service, row["id"], target, inbox)
+            actions.append(
+                {
+                    "slug": slug,
+                    "action": "moved",
+                    "to": "processed" if target == proc else "quarantine",
+                    "drive_id": row["id"],
+                }
+            )
+        except Exception as exc:  # noqa: BLE001
+            actions.append({"slug": slug, "action": "error", "error": str(exc)})
+    return actions

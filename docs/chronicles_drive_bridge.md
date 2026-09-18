@@ -3,49 +3,83 @@
 Transport-only intake for Lonko Chronicles. The frozen v4 article contract in
 `scripts/chronicles_lib` remains authoritative.
 
-## Package layout
+## Preferred Drive folder structure
+
+Create these folders in Google Drive (Shared Drive preferred, or My Drive):
 
 ```
-inbox/<slug>/
-  manifest.json       # package_id, slug, content_sha256, created_at, producer
-  article.yaml        # full v4 metadata
-  body.md             # long-form Markdown body
+Lonko Chronicles/
+  Inbox/          ← Claude Blog drops one package folder here
+  Processed/      ← successful / replay packages (90-day retention)
+  Quarantine/     ← failed packages (30-day retention)
+```
+
+Share **only** these three folders (not the whole Drive) with the bridge
+service account:
+
+| Folder | Permission for service account |
+|---|---|
+| Inbox | **Editor** (needs to move packages out after ingest) |
+| Processed | **Editor** |
+| Quarantine | **Editor** |
+
+Do **not** share personal Drive roots or unrelated Lonko folders.
+
+## Package layout (inside Inbox)
+
+```
+Inbox/<slug>/
+  manifest.json
+  article.yaml
+  body.md
   assets/             # raster only: png/jpg/jpeg/webp/avif
   CHECKSUMS.sha256    # required
 ```
 
-`content_sha256` = SHA-256 over sorted lines `{file_sha256}  {relpath}\n` for all
-package files except `manifest.json` and `CHECKSUMS.sha256`. Text files use LF;
-`article.yaml` is normalized via parse + `yaml.safe_dump(sort_keys=True)`.
+## GitHub secrets (exact names)
 
-## Drive permission model (least privilege)
+Repo → Settings → Secrets and variables → Actions → New repository secret:
 
-Create a Google Cloud service account. Share **only** these Drive folders with it:
+| Secret name | Value |
+|---|---|
+| `DRIVE_SERVICE_ACCOUNT_JSON` | Full JSON contents of the downloaded service-account key file |
+| `DRIVE_INBOX_FOLDER_ID` | Folder ID of `Lonko Chronicles/Inbox` (from the Drive URL) |
+| `DRIVE_PROCESSED_FOLDER_ID` | Folder ID of `Lonko Chronicles/Processed` |
+| `DRIVE_QUARANTINE_FOLDER_ID` | Folder ID of `Lonko Chronicles/Quarantine` |
 
-| Folder | Access | Secret |
-|---|---|---|
-| Inbox | Reader (or Content manager if moves required) | `DRIVE_INBOX_FOLDER_ID` |
-| Processed (90-day retention) | Content manager | `DRIVE_PROCESSED_FOLDER_ID` (optional v1) |
-| Quarantine (30-day retention) | Content manager | `DRIVE_QUARANTINE_FOLDER_ID` (optional v1) |
+Folder ID = the long ID in the browser URL when that folder is open:
+`https://drive.google.com/drive/folders/<THIS_PART>`
 
-Repo secrets:
+All four secrets are required for the real cloud smoke test and ongoing ops.
 
-- `DRIVE_SERVICE_ACCOUNT_JSON` — full service-account JSON
-- `DRIVE_INBOX_FOLDER_ID`
+## Service account (create once)
 
-No site deploy keys in Drive. GitHub Actions uses `GITHUB_TOKEN` to open PRs only.
+1. Open Google Cloud Console → create/select a small project (e.g. `lonko-chronicles-bridge`).
+2. Enable **Google Drive API**.
+3. IAM → Service Accounts → Create (`lonko-chronicles-bridge`).
+4. Keys → Add key → JSON → download once; store only in the GitHub secret.
+5. Copy the service account email (`…@….iam.gserviceaccount.com`) and share the three folders with it as Editor.
+
+## Security note (v1)
+
+Uses a long-lived Google service-account JSON key stored only as a GitHub Actions
+secret. Acceptable for small v1 because: folder ACL is narrow, key never enters
+git, and revoke/rotate is “delete key in GCP + replace secret.” Future upgrade:
+GitHub OIDC + Google Workload Identity Federation (no long-lived key). Not in
+scope for v1 unless a material reason appears.
 
 ## Workflow
 
 `.github/workflows/chronicles-drive-ingest.yml`
 
 - Triggers: `schedule` (every 6 hours) + `workflow_dispatch`
-- Flow: optional Drive sync → validate/checksums/v4 → stage `chronicles/content/<slug>/` → build → **open PR**
+- Flow: Drive sync → validate/checksums/v4 → stage → build → Drive archive → **open PR**
 - **Never pushes to `main`.** Alex merge = publication authorization.
 
-## Local commands
+## Local / smoke helpers
 
 ```bash
+python scripts/build_bridge_smoke_package.py
 python scripts/run_chronicles_ingest.py --inbox bridge/inbox
 python scripts/test_chronicles_bridge_acceptance.py
 ```

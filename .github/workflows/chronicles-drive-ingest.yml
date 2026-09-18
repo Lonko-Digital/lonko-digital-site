@@ -31,39 +31,29 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install "pyyaml>=6" 
+          pip install "pyyaml>=6"
           if [ -n "${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}" ]; then
             pip install "google-auth>=2" "google-api-python-client>=2"
           fi
 
-      - name: Sync Drive inbox (optional)
+      - name: Sync Drive inbox + ingest (validate → stage → build → Drive archive)
+        id: ingest
         env:
           DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}
           DRIVE_INBOX_FOLDER_ID: ${{ secrets.DRIVE_INBOX_FOLDER_ID }}
-        run: |
-          mkdir -p bridge/inbox bridge/processed bridge/quarantine
-          if [ -n "$DRIVE_SERVICE_ACCOUNT_JSON" ] && [ -n "$DRIVE_INBOX_FOLDER_ID" ]; then
-            python scripts/run_chronicles_ingest.py --sync-drive --inbox bridge/inbox --no-build --no-archive
-          else
-            echo "Drive secrets not set — ingesting local bridge/inbox only (if any)."
-          fi
-
-      - name: Ingest packages (validate → stage → build)
-        id: ingest
+          DRIVE_PROCESSED_FOLDER_ID: ${{ secrets.DRIVE_PROCESSED_FOLDER_ID }}
+          DRIVE_QUARANTINE_FOLDER_ID: ${{ secrets.DRIVE_QUARANTINE_FOLDER_ID }}
         run: |
           set -euo pipefail
           mkdir -p bridge/inbox bridge/processed bridge/quarantine
-          python scripts/run_chronicles_ingest.py \
-            --inbox bridge/inbox \
-            --processed bridge/processed \
-            --quarantine bridge/quarantine \
-            --audit chronicles/ingest-audit.jsonl \
-            | tee /tmp/ingest-result.json
-          if compgen -G "chronicles/content/*/article.md" > /dev/null; then
-            echo "has_content=true" >> "$GITHUB_OUTPUT"
+          ARGS=(--inbox bridge/inbox --processed bridge/processed --quarantine bridge/quarantine --audit chronicles/ingest-audit.jsonl)
+          if [ -n "${DRIVE_SERVICE_ACCOUNT_JSON:-}" ] && [ -n "${DRIVE_INBOX_FOLDER_ID:-}" ]; then
+            echo "Drive configured — syncing Inbox then ingesting."
+            python scripts/run_chronicles_ingest.py --sync-drive --archive-drive "${ARGS[@]}"
           else
-            echo "has_content=false" >> "$GITHUB_OUTPUT"
-          fi
+            echo "Drive secrets not set — ingesting local bridge/inbox only (if any)."
+            python scripts/run_chronicles_ingest.py "${ARGS[@]}"
+          fi | tee /tmp/ingest-result.json
 
       - name: Detect changes for PR
         id: diff
@@ -81,14 +71,13 @@ jobs:
         run: |
           set -euo pipefail
           SLUG=$(python - <<'PY'
-          import json,sys
+          import json
           from pathlib import Path
-          raw=Path("/tmp/ingest-result.json").read_text(encoding="utf-8")
-          # file may contain trailing logs; find JSON array
-          start=raw.find("[")
-          end=raw.rfind("]")+1
-          data=json.loads(raw[start:end]) if start>=0 else []
-          staged=[r for r in data if r.get("outcome")=="staged"]
+          raw = Path("/tmp/ingest-result.json").read_text(encoding="utf-8")
+          start = raw.find("{")
+          end = raw.rfind("}") + 1
+          data = json.loads(raw[start:end]) if start >= 0 else {}
+          staged = [r for r in data.get("results", []) if r.get("outcome") == "staged"]
           print(staged[0]["slug"] if staged else "ingest")
           PY
           )

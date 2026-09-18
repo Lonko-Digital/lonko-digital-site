@@ -24,6 +24,7 @@ bridge/inbox/**
 bridge/processed/
 bridge/quarantine/
 bridge/work/
+bridge/smoke-package/
 
 # Python
 __pycache__/
