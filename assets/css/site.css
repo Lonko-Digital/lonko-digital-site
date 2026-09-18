@@ -2769,6 +2769,20 @@ body:has(.chronicles-search-page) {
   max-width: 42rem;
 }
 
+.chronicles-retired-notice {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--border);
+  background: color-mix(in srgb, var(--bg-elevated) 80%, var(--border));
+}
+
+.chronicles-retired-notice p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
 .chronicles-article-header .story-meta,
 .chronicles-article-header .story-kicker {
   margin-bottom: 0.65rem;

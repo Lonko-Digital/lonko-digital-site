@@ -19,6 +19,7 @@ from .model import (
     fixture_articles,
     load_all_articles,
     public_articles,
+    renderable_articles,
     site_visible_articles,
     sort_by_date,
 )
@@ -209,7 +210,12 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     body_html = markdown_to_html(article.body)
     canonical = article_url(article.slug)
     og_image = resolve_social_image_url(article)
-    robots = "noindex, nofollow" if article.is_fixture or article.status == "fixture" else None
+    if article.is_retired():
+        robots = "noindex, nofollow"
+    elif article.is_fixture or article.status == "fixture":
+        robots = "noindex, nofollow"
+    else:
+        robots = None
 
     schema = {
         "@context": "https://schema.org",
@@ -317,6 +323,15 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     if article.dateModified and article.dateModified != article.datePublished:
         modified = f' · Updated <time datetime="{escape_text(article.dateModified)}">{escape_text(article.dateModified)}</time>'
 
+    # Temporary/test retired notice — final public wording routes through Claude Web.
+    retired_notice = ""
+    if article.is_retired():
+        retired_notice = """
+      <div class="chronicles-retired-notice" role="status">
+        <p>This article has been retired from Lonko Chronicles. It remains available at this URL for reference.</p>
+      </div>
+"""
+
     main = f"""
   <main id="main" class="chronicles-article-page">
     <article class="chronicles-article">
@@ -328,6 +343,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             <li aria-current="page">{escape_text(article.title)}</li>
           </ol>
         </nav>
+{retired_notice}
         <p class="chronicles-kicker">{escape_text(article.content_type)} · {escape_text(article.topic)}</p>
         <h1>{escape_text(article.title)}</h1>
         <p class="chronicles-deck">{escape_text(article.deck)}</p>
@@ -1021,6 +1037,7 @@ def build() -> int:
     if articles:
         errors = validate_articles(articles)
         visible = site_visible_articles(articles)
+        renderable = renderable_articles(articles)
         errors.extend(validate_articles(visible, forbid_drafts=True))
         # Deduplicate while preserving order
         seen: set[str] = set()
@@ -1036,10 +1053,12 @@ def build() -> int:
             return 1
     else:
         visible = []
+        renderable = []
         print("Chronicles build: no article packages yet — emitting empty publication shell.")
 
     published = public_articles(articles)
     fixtures = fixture_articles(articles)
+    retired = [a for a in articles if a.is_retired()]
 
     # Clean generated article dirs (keep content/, assets/, and local-only fixtures)
     for child in list(OUT.iterdir()):
@@ -1050,19 +1069,19 @@ def build() -> int:
         elif child.name in {"feed.xml", "index.html"}:
             child.unlink(missing_ok=True)
 
-    # Article pages (published + fixture)
-    for article in visible:
+    # Article pages: published + fixture + soft-retired (canonical URL preserved)
+    for article in renderable:
         copy_package_assets(article)
         html = render_article_page(article, visible)
         dest = OUT / article.slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(html, encoding="utf-8")
 
-    # Latest pagination over site-visible articles (published+fixture for UX)
+    # Latest/Featured/sections use listing-visible only (retired excluded)
     latest_all = sort_by_date(visible)
     total_pages = max(1, (len(latest_all) + PAGE_SIZE - 1) // PAGE_SIZE)
 
-    # Sitemap pagination reflects indexable published corpus only (never fixture pages)
+    # Sitemap pagination reflects indexable published corpus only (never fixture/retired)
     published_latest = sort_by_date(published)
     published_pages = (
         max(1, (len(published_latest) + PAGE_SIZE - 1) // PAGE_SIZE) if published else 1
@@ -1095,7 +1114,7 @@ def build() -> int:
 
     print(
         f"Chronicles build OK: {len(published)} published, {len(fixtures)} fixture, "
-        f"{total_pages} latest page(s)."
+        f"{len(retired)} retired, {total_pages} latest page(s)."
     )
     return 0
 

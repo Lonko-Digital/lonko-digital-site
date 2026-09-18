@@ -17,11 +17,17 @@ docs/_perf_test/
 docs/_psi_*
 docs/_chronicles_*
 
-# Chronicles local-only fixtures (never ship to main)
+# Chronicles local-only fixtures and bridge working dirs (never ship to main)
 chronicles/_local_fixtures/
-chronicles/content/**
-!chronicles/content/.gitkeep
+bridge/inbox/**
+!bridge/inbox/.gitkeep
+bridge/processed/
+bridge/quarantine/
+bridge/work/
 
 # Python
 __pycache__/
 *.pyc
+
+# Bridge optional vendor deps (install via scripts/requirements-bridge.txt in CI)
+.venv-bridge/

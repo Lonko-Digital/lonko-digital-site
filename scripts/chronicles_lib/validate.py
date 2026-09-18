@@ -109,19 +109,19 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
                     f"(expected {sorted(PLACEMENT_SECTIONS)})"
                 )
 
-        is_publicish = article.status in {"published", "fixture"} or article.is_fixture
+        is_publicish = article.status in {"published", "fixture", "retired"} or article.is_fixture
 
-        # Hero alt required when published/fixture with a hero image
+        # Hero alt required when published/fixture/retired with a hero image
         if is_publicish and article.hero_image and not article.hero_alt:
             errors.append(f"{prefix}published/fixture missing hero_alt")
 
         # Social metadata
-        # Published: require social_image.
+        # Published + retired: require social_image (page remains at canonical URL).
         # Fixture: allow fallback to site og-share.png when social_image is absent.
-        if article.status == "published" and not article.is_fixture:
+        if article.status in {"published", "retired"} and not article.is_fixture:
             if not article.social_image:
                 errors.append(
-                    f"{prefix}published article missing social_image "
+                    f"{prefix}{article.status} article missing social_image "
                     f"(fixtures may fall back to {SITE_OG_FALLBACK})"
                 )
         elif is_publicish and not article.social_image:

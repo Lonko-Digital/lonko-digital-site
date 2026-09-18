@@ -137,8 +137,18 @@ class Article:
         return None
 
     def is_site_visible(self) -> bool:
-        """Published and fixture articles appear on the local/site UX."""
+        """Published and fixture articles appear on promotional/listing UX.
+
+        Retired articles are intentionally excluded (soft-retire v1).
+        """
         return self.status in {"published", "fixture"}
+
+    def is_renderable(self) -> bool:
+        """Articles that keep a canonical HTML page (includes soft-retired)."""
+        return self.status in {"published", "fixture", "retired"}
+
+    def is_retired(self) -> bool:
+        return self.status == "retired" and not self.is_fixture
 
     def is_indexable(self) -> bool:
         """Only truly published articles enter sitemap/feed/indexation."""
@@ -277,8 +287,17 @@ def fixture_articles(articles: list[Article]) -> list[Article]:
 
 
 def site_visible_articles(articles: list[Article]) -> list[Article]:
-    """Articles rendered on the site UX: published + fixture."""
+    """Articles on promotional surfaces: published + fixture (not retired)."""
     return [a for a in articles if a.is_site_visible()]
+
+
+def renderable_articles(articles: list[Article]) -> list[Article]:
+    """Articles that emit canonical HTML: published + fixture + retired."""
+    return [a for a in articles if a.is_renderable()]
+
+
+def retired_articles(articles: list[Article]) -> list[Article]:
+    return [a for a in articles if a.is_retired()]
 
 
 def sort_by_date(articles: list[Article], *, reverse: bool = True) -> list[Article]:
