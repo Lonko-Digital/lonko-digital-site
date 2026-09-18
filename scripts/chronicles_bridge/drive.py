@@ -193,3 +193,86 @@ def archive_drive_results(
         except Exception as exc:  # noqa: BLE001
             actions.append({"slug": slug, "action": "error", "error": str(exc)})
     return actions
+
+
+def _mime_for(path: Path) -> str:
+    suffix = path.suffix.lower()
+    return {
+        ".json": "application/json",
+        ".yaml": "text/yaml",
+        ".yml": "text/yaml",
+        ".md": "text/markdown",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".avif": "image/avif",
+        ".txt": "text/plain",
+    }.get(suffix, "application/octet-stream")
+
+
+def _create_drive_folder(service, name: str, parent_id: str) -> str:
+    meta = {
+        "name": name,
+        "mimeType": "application/vnd.google-apps.folder",
+        "parents": [parent_id],
+    }
+    created = (
+        service.files()
+        .create(body=meta, fields="id,name", supportsAllDrives=True)
+        .execute()
+    )
+    return created["id"]
+
+
+def _upload_file(service, local_path: Path, parent_id: str) -> str:
+    from googleapiclient.http import MediaFileUpload
+
+    media = MediaFileUpload(str(local_path), mimetype=_mime_for(local_path), resumable=True)
+    meta = {"name": local_path.name, "parents": [parent_id]}
+    created = (
+        service.files()
+        .create(body=meta, media_body=media, fields="id,name", supportsAllDrives=True)
+        .execute()
+    )
+    return created["id"]
+
+
+def upload_package_to_inbox(package_dir: Path) -> dict:
+    """Upload a local package directory into Drive Inbox as a child folder.
+
+    Replaces an existing Inbox child with the same name.
+    """
+    if not drive_configured():
+        raise RuntimeError("Drive is not configured")
+    package_dir = Path(package_dir)
+    if not package_dir.is_dir():
+        raise FileNotFoundError(package_dir)
+
+    service = _service()
+    inbox = os.environ["DRIVE_INBOX_FOLDER_ID"]
+    slug = package_dir.name
+
+    # Remove existing same-name folder in Inbox (idempotent smoke reruns)
+    for existing in list_inbox_folders(service):
+        if existing["name"] == slug:
+            service.files().update(
+                fileId=existing["id"],
+                body={"trashed": True},
+                supportsAllDrives=True,
+            ).execute()
+
+    root_id = _create_drive_folder(service, slug, inbox)
+
+    def walk(local: Path, parent_id: str) -> None:
+        for child in sorted(local.iterdir()):
+            if child.name.startswith("."):
+                continue
+            if child.is_dir():
+                nested_id = _create_drive_folder(service, child.name, parent_id)
+                walk(child, nested_id)
+            elif child.is_file():
+                _upload_file(service, child, parent_id)
+
+    walk(package_dir, root_id)
+    return {"id": root_id, "name": slug, "parent": inbox}
