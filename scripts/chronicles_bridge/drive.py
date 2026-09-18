@@ -50,10 +50,14 @@ def _service():
 
 def list_inbox_folders(service=None) -> list[dict]:
     """List immediate child folders in the inbox (each = one article package)."""
+    return list_child_folders(os.environ["DRIVE_INBOX_FOLDER_ID"], service=service)
+
+
+def list_child_folders(parent_id: str, service=None) -> list[dict]:
+    """List immediate child folders under a Drive parent."""
     service = service or _service()
-    folder_id = os.environ["DRIVE_INBOX_FOLDER_ID"]
     q = (
-        f"'{folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' "
+        f"'{parent_id}' in parents and mimeType = 'application/vnd.google-apps.folder' "
         "and trashed = false"
     )
     resp = (
@@ -69,6 +73,39 @@ def list_inbox_folders(service=None) -> list[dict]:
     )
     return resp.get("files", [])
 
+
+def restore_package_to_inbox(slug: str) -> dict:
+    """Move a package folder from Processed (or Quarantine) back into Inbox.
+
+    Used for synthetic re-tests without asking a human to re-upload.
+    """
+    if not drive_configured():
+        raise RuntimeError("Drive is not configured")
+    service = _service()
+    inbox = os.environ["DRIVE_INBOX_FOLDER_ID"]
+    proc = processed_folder_id()
+    quar = quarantine_folder_id()
+
+    existing = {f["name"]: f for f in list_inbox_folders(service)}
+    if slug in existing:
+        return {"action": "already_in_inbox", "id": existing[slug]["id"], "name": slug}
+
+    for label, parent in (("processed", proc), ("quarantine", quar)):
+        if not parent:
+            continue
+        children = {f["name"]: f for f in list_child_folders(parent, service=service)}
+        if slug not in children:
+            continue
+        move_folder(service, children[slug]["id"], inbox, parent)
+        return {
+            "action": "restored",
+            "from": label,
+            "id": children[slug]["id"],
+            "name": slug,
+        }
+    raise FileNotFoundError(
+        f"Package {slug!r} not found in Inbox, Processed, or Quarantine"
+    )
 
 def download_folder(service, folder_id: str, dest: Path) -> Path:
     """Download a Drive folder tree into dest/<name>/."""
