@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "slug": "bridge-cloud-smoke-synthetic-signal",
+    "title": "Bridge Cloud Smoke — Synthetic Signal (Do Not Publish)",
+    "deck": "Synthetic package for Drive → Actions → PR verification. Close the PR without merging.",
+    "topic": "Marketing",
+    "tags": [
+      "smoke-test",
+      "do-not-publish"
+    ],
+    "content_type": "News",
+    "datePublished": "2026-09-18",
+    "url": "/chronicles/bridge-cloud-smoke-synthetic-signal/",
+    "is_fixture": false,
+    "body": "Smoke test only This article exists solely to verify the Chronicles Drive publishing bridge. Do not merge the ingest PR to production. Close/delete after verification.",
+    "excerpt": "Smoke test only This article exists solely to verify the Chronicles Drive publishing bridge. Do not merge the ingest PR to production. Close/delete after verification."
+  }
+]
