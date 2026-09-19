@@ -277,6 +277,8 @@ Don't try to communicate every Lonko benefit in one image. One strong visual sto
 
 Lonko Digital should normally be identifiable in social/banner creative — through the logo/wordmark, the controlled red/black/white visual system, typography, composition style, or a restrained "Lonko Chronicles" designation where relevant. Don't rely solely on the Chronicles name if the company identity is otherwise unclear in the piece.
 
+**Exact production values** (colors, type stacks, logo paths) are canonical in `docs/brand/lonko-brand-production-tokens.md` — use that file for HEX/RGB, font stacks/weights, and real logo assets. Do not invent or approximate brand values in prompts.
+
 ### 57.12 Article hero vs. social banner vs. data visualization — the permanent separation
 
 Three different jobs, three different assets — don't force one to do all three:
@@ -301,14 +303,48 @@ Before proposing new creative, review recent approved entries in the creative re
 
 1. Understand the article's topic and audience.
 2. Identify the required topic signal (§57.2).
-3. Review recent Creative Registry entries.
+3. Review recent Creative Registry entries **and** the Creative Learnings Log (`docs/chronicles/lonko-chronicles-creative-learnings.md`; §57.18).
 4. Develop at least three materially different visual worlds (§57.8).
 5. Compare them against the anti-repetition rules (§57.15).
 6. Select/recommend the strongest concept, with reasoning.
-7. Generate or brief the creative (see the working-notes tool-reality caveat below).
+7. Generate or brief the creative (see the working-notes tool-reality caveat below). Carry exact brand values from `docs/brand/lonko-brand-production-tokens.md` whenever color, type, or logo appear in the brief.
 8. Run realism, relevance, brand, and quality QA (§57.13-57.14).
 9. Get Alex's approval.
 10. Record the approved creative in the registry at `docs/chronicles/lonko-chronicles-creative-registry.md`.
+
+### 57.17 Legacy Creative Baseline
+
+**Status: active reference.** This subsection freezes what Article #1 already taught us so future packages do not re-learn the same lessons from scratch.
+
+**Accepted (do not reopen without Alex):**
+
+- Article #1 photography/concept direction for the dedicated hero and social diptych is accepted after post-generation QA of the rendered drafts.
+- Remaining Article #1 visual work is **brand-layer correction only** (divider color, social typography, accent color, real logo mark + wordmark) — not a new photo concept round.
+- In-article Whitespark/chart visualization remains evidence inside the article body; it is **not** the social banner (§57.12; Creative Learnings L001).
+
+**Superseded / do not revive as the standard:**
+
+- Using the chart (or any data viz) as the primary LinkedIn/Meta stop-scroll creative.
+- Treating a single image as both hero and social via crop alone.
+- Generating a fake “LONKO DIGITAL” wordmark instead of compositing the real mark.
+- Prompting brand color/type with descriptive labels only (“Lonko red”, “modern sans-serif”) without production values.
+
+**Baseline brand-layer defaults for future creative** (values in `docs/brand/lonko-brand-production-tokens.md`):
+
+- Accent / divider red: `#e10600` (`--brand-red`)
+- Social headline type: UI sans stack at weight **700**
+- Logo: real `assets/images/lonko-logo.png` mark + text wordmark “Lonko Digital”
+- Near-black overlay base when needed: `#0b0b0f` (`--brand-black`); opacity is not a production token
+
+### 57.18 Creative Learnings Log integration
+
+Before developing concepts (§57.16 steps 3–6) and again during post-generation QA (§57.14), consult:
+
+`docs/chronicles/lonko-chronicles-creative-learnings.md`
+
+That log records approved reusable lessons (L001 onward). New lessons require Alex approval before they become permanent. §57 governs creative **behavior**; the learnings log captures **what went wrong / what to do next time**; `docs/brand/lonko-brand-production-tokens.md` supplies **exact production values**.
+
+When a generation or compositing failure matches an existing lesson (especially L008–L010 on color, type, and logo), fix the brief/spec to carry the exact production values — do not only rephrase the descriptive language.
 
 ---
 
