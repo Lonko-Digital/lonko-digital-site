@@ -152,6 +152,54 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ---
 
+## L011 — Final output dimensions are hard production requirements
+
+**Issue:** Article #1 creative was repeatedly treated as acceptable when it was only approximately the correct aspect ratio, while the actual social production requirement is an exact **1200×628** export.
+
+**Decision:** Final asset dimensions are pass/fail production requirements, not suggestions. The default Chronicles social banner export is **1200×628**. The default article hero export is **1600×900** unless an article-specific brief explicitly overrides it before rendering.
+
+**Reusable lesson:** “Essentially the right ratio” is acceptable for an intermediate photographic base, never for a final deliverable. Validate pixel dimensions before creative approval.
+
+**Applies to:** Final hero/social exports and any derivative production asset.
+
+---
+
+## L012 — Lock the production contract before rendering
+
+**Issue:** Article #1 entered rendering before every deterministic production detail was locked, causing avoidable rework around dimensions, colors, typography, and logo treatment.
+
+**Decision:** Before the first render, the brief must explicitly lock: asset role, exact pixel dimensions, approved copy, brand HEX/RGB values, font stack and weight, authoritative logo asset, text/logo compositing method, and required output filename/format.
+
+**Reusable lesson:** Do not start rendering while any deterministic production requirement is still described vaguely or is waiting to be discovered.
+
+**Applies to:** Every hero, social banner, and branded editorial creative.
+
+---
+
+## L013 — Separate scene generation from deterministic brand compositing
+
+**Issue:** The image model produced an orange/gold accent, serif typography, and an invented logo/wordmark when asked to render the full branded social asset.
+
+**Decision:** Use image generation for the photographic/illustrative scene. Apply exact typography, logo assets, approved copy, and exact brand colors in a controlled compositing pass whenever fidelity matters.
+
+**Reusable lesson:** Generate the story; composite the brand.
+
+**Applies to:** Any public-facing creative with exact text, logos, or brand-token requirements.
+
+---
+
+## L014 — Freeze layers that already passed QA
+
+**Issue:** Article #1 risked reopening accepted photography and editorial decisions while correcting unrelated brand-layer defects.
+
+**Decision:** Once a layer passes QA, later revisions must be scoped only to the failed layer unless a genuine new defect is discovered.
+
+**Reusable lesson:** Copy pass stays passed during image QA; photography pass stays passed during brand compositing; technical implementation does not reopen creative direction without a real defect.
+
+**Applies to:** The full Chronicles production workflow.
+
+---
+
 ## Status
 
-L001–L010 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
+L001–L014 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
