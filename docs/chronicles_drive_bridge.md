@@ -49,6 +49,24 @@ Inbox/<slug>/
   CHECKSUMS.sha256    # required
 ```
 
+### SVG vs raster (important)
+
+**Drive intake rejects SVG.** Production packages must use raster files under
+`assets/` for `hero_image`, `social_image`, and any body-embedded charts.
+
+Local/test fixtures under `chronicles/_local_fixtures/` may use SVG heroes
+(e.g. `hero.svg`) for lightweight local QA only. That does **not** imply SVG
+support on the Drive → GitHub publishing path.
+
+## Editorial governance docs (Claude Blog)
+
+Canonical Markdown (not loaded by the build):
+
+- `docs/chronicles/lonko-chronicles-operating-system.md`
+- `docs/chronicles/lonko-chronicles-creative-registry.md`
+
+Do not reference `claude/...` paths in this repository.
+
 ## GitHub secrets (exact names)
 
 Repo → Settings → Secrets and variables → Actions → New repository secret:

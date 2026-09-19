@@ -160,6 +160,8 @@ def head_open(
     og_title: str | None = None,
     og_description: str | None = None,
     og_image: str | None = None,
+    og_image_width: int | None = None,
+    og_image_height: int | None = None,
     og_type: str = "website",
     robots: str | None = None,
     extra_head: str = "",
@@ -176,6 +178,13 @@ def head_open(
     for block in json_ld_blocks or []:
         ld += f'  <script type="application/ld+json">\n  {block}\n  </script>\n'
 
+    og_size_meta = ""
+    if og_image_width and og_image_height and og_image_width > 0 and og_image_height > 0:
+        og_size_meta = (
+            f'  <meta property="og:image:width" content="{int(og_image_width)}">\n'
+            f'  <meta property="og:image:height" content="{int(og_image_height)}">\n'
+        )
+
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -190,9 +199,7 @@ def head_open(
   <meta property="og:url" content="{html.escape(canonical)}">
   <meta property="og:site_name" content="Lonko Digital">
   <meta property="og:image" content="{html.escape(og_image)}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="{html.escape(og_title)}">
+{og_size_meta}  <meta property="og:image:alt" content="{html.escape(og_title)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{html.escape(og_title)}">
   <meta name="twitter:description" content="{html.escape(og_description)}">

@@ -13,6 +13,7 @@ from typing import Iterable
 from urllib.parse import quote
 from xml.sax.saxutils import escape as xml_escape
 
+from .image_dims import read_image_size
 from .model import (
     TOPIC_PILLS,
     Article,
@@ -70,6 +71,38 @@ def resolve_social_image_url(article: Article) -> str:
             return article.social_image
         return abs_asset_url(f"chronicles/{article.slug}/{article.social_image}")
     return abs_asset_url(SITE_OG_FALLBACK)
+
+
+def package_asset_path(article: Article, rel: str | None) -> Path | None:
+    """Resolve a package-relative media path for dimension reads."""
+    if not rel or not article.package_dir:
+        return None
+    if "://" in rel or rel.startswith("/"):
+        return None
+    candidate = Path(rel)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        return None
+    path = (article.package_dir / candidate).resolve()
+    try:
+        path.relative_to(article.package_dir.resolve())
+    except ValueError:
+        return None
+    return path if path.is_file() else None
+
+
+def social_image_dims(article: Article) -> tuple[int, int] | None:
+    """Intrinsic size of the finalized social/OG image (never assumed)."""
+    if article.social_image:
+        path = package_asset_path(article, article.social_image)
+        if path:
+            return read_image_size(path)
+        return None
+    fallback = ROOT / SITE_OG_FALLBACK
+    return read_image_size(fallback)
+
+
+def site_og_fallback_dims() -> tuple[int, int] | None:
+    return read_image_size(ROOT / SITE_OG_FALLBACK)
 
 
 def package_media_href(article: Article, rel: str | None, *, from_depth: int) -> str | None:
@@ -268,9 +301,17 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             if article.hero_caption
             else ""
         )
+        # Intrinsic dims from the asset (hero may differ from social 1.91:1).
+        # Omit attrs when unknown rather than claiming a wrong aspect ratio.
+        size_attrs = ""
+        hero_path = package_asset_path(article, article.hero_image)
+        if hero_path:
+            dims = read_image_size(hero_path)
+            if dims:
+                size_attrs = f' width="{dims[0]}" height="{dims[1]}"'
         hero_html = f"""
         <figure class="chronicles-hero-figure chronicles-imagery-{escape_text(article.imagery_family or 'abstraction')}">
-          <img src="{escape_text(src)}" alt="{escape_text(article.hero_alt or '')}" width="1200" height="630" decoding="async">
+          <img src="{escape_text(src)}" alt="{escape_text(article.hero_alt or '')}"{size_attrs} decoding="async">
           {caption}
         </figure>
 """
@@ -366,6 +407,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
   </main>
 """
 
+    og_dims = social_image_dims(article)
     head = head_open(
         depth=depth,
         title=f"{article.display_title} — Lonko Chronicles",
@@ -374,6 +416,8 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         og_title=article.display_og_title,
         og_description=article.display_og_description,
         og_image=og_image,
+        og_image_width=og_dims[0] if og_dims else None,
+        og_image_height=og_dims[1] if og_dims else None,
         og_type="article",
         robots=robots,
         include_regular_font=True,
@@ -574,11 +618,14 @@ def render_index(
 """
 
     js_path = "assets/chronicles.js" if is_home else "../../assets/chronicles.js"
+    fb_dims = site_og_fallback_dims()
     head = head_open(
         depth=depth,
         title=title,
         description="Lonko Chronicles — evidence-led editorial on marketing intelligence, AI, SEO, and growth.",
         canonical=canonical,
+        og_image_width=fb_dims[0] if fb_dims else None,
+        og_image_height=fb_dims[1] if fb_dims else None,
         json_ld_blocks=[
             json.dumps(collection_schema, ensure_ascii=False, indent=2),
             json.dumps(crumbs, ensure_ascii=False, indent=2),
@@ -594,12 +641,15 @@ def render_index(
 
 def render_search_page() -> str:
     depth = 2
+    fb_dims = site_og_fallback_dims()
     head = head_open(
         depth=depth,
         title="Search Chronicles — Lonko Digital",
         description="Search Lonko Chronicles.",
         canonical=f"{SITE}/chronicles/search/",
         robots="noindex, nofollow",
+        og_image_width=fb_dims[0] if fb_dims else None,
+        og_image_height=fb_dims[1] if fb_dims else None,
     )
     main = """
   <main id="main" class="chronicles-search-page">

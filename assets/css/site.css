@@ -2918,6 +2918,28 @@ body:has(.chronicles-search-page) {
   height: auto;
 }
 
+/* Article hero — outside body; dims come from the asset (not social 1.91:1). */
+.chronicles-hero-figure {
+  margin: 1.25rem 0 0;
+  max-width: 100%;
+}
+
+.chronicles-hero-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chronicles-hero-caption {
+  margin: 0.55rem auto 0;
+  max-width: 42rem;
+  padding: 0 1.25rem;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
 .chronicles-article-body figcaption,
 .chronicles-caption {
   margin-top: 0.55rem;
