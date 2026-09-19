@@ -9,92 +9,102 @@ Governed by the Visual Creative System in
 Exact production color/type/logo values live in
 `docs/brand/lonko-brand-production-tokens.md` — not duplicated here.
 
+**Three separate records (never merge):**
+
+| Record | Purpose |
+|---|---|
+| Creative Registry | Approved assets (with CR IDs) |
+| Legacy Creative Baseline (§57.17) | Pre-§57 visual territory (no CR IDs) |
+| Creative Learnings Log (this file) | Reusable mistakes / lessons |
+
+**Governance test for new entries:** Would remembering this lesson materially reduce the chance that a future creative round repeats a known mistake? If yes: log it. If no: keep it article-specific.
+
 **Format:** one entry per lesson. Lessons are permanent until Alex supersedes them.
 This is not a CMS and is not loaded by the site build.
 
 ---
 
-## L001 — Chart is evidence, not the social banner
+## L001 — Empty registry ≠ blank creative history
 
-**Issue:** Early Article #1 iterations treated the Whitespark/data chart as if it could serve as the LinkedIn/Meta stop-scroll creative.
+**Issue:** The first creative round treated the new empty Creative Registry as if Lonko had no existing visual history.
 
-**Decision:** Alex rejected chart-as-banner. The chart remains an **in-article data visualization** only.
+**Decision:** Creative concepting must consider the Legacy Creative Baseline as well as the Registry.
 
-**Reusable lesson:** A chart proves a claim; a social banner earns attention and human connection. Do not promote an evidence graphic to the feed creative just because the data is strong.
+**Reusable lesson:** An empty current registry never overrides known historical creative territory.
 
-**Applies to:** Any article that includes charts, tables, or annotated screenshots.
-
----
-
-## L002 — Dedicated hero and dedicated social banner
-
-**Issue:** Risk of shipping one image cropped two ways for hero and social.
-
-**Decision:** Article #1 (and future Chronicles packages) require **independent** `hero_image` and `social_image` assets with distinct jobs.
-
-**Reusable lesson:** Hero = editorial storytelling for the article page. Social = stronger stop-scroll feed object. Separate files, separate QA.
-
-**Applies to:** Every published Chronicles package with imagery.
+**Applies to:** All future Chronicles/social creative.
 
 ---
 
-## L003 — Do not bake the article H1 into the hero by default
+## L002 — Person swap is not meaningful variation
 
-**Issue:** Baking large headline text into the hero fights the HTML headline and responsive layout.
+**Issue:** A different ethnicity, age, gender, or individual can leave the underlying creative concept essentially unchanged.
 
-**Decision:** Article hero keeps minimal baked-in text; the real headline stays in HTML.
+**Decision:** Variation must come from story, environment, activity, composition, emotional interpretation, viewpoint, device use, or format — not casting alone.
 
-**Reusable lesson:** Hero imagery supports the story; it does not replace the page title.
+**Reusable lesson:** Different person ≠ different creative world.
 
-**Applies to:** Article heroes (social banners may use on-image headline treatment when needed).
-
----
-
-## L004 — Topic-first: lifestyle alone is not enough
-
-**Issue:** Attractive lifestyle frames can pass aesthetics while failing article relevance.
-
-**Decision:** Every concept must answer: “What in this image tells the viewer why it belongs with **this** article?” (§57.2).
-
-**Reusable lesson:** Require defensible Topic + Human/outcome + Lonko brand signals — not decoration.
-
-**Applies to:** All hero/social concept rounds.
+**Applies to:** All future visual concepting.
 
 ---
 
-## L005 — Three Different Worlds, not wardrobe swaps
+## L003 — Avoid artificial digital topic signals
 
-**Issue:** Concept rounds that only change the person in the same café/scene fail anti-repetition and creative energy.
+**Issue:** Early concepts used glowing map pins, floating UI, and screen glows to communicate what a device/search experience meant.
 
-**Decision:** Enforce §57.8 — at least three **materially different** visual worlds before selecting.
+**Decision:** Prefer real human situations and plausible physical behavior over digital overlays.
 
-**Reusable lesson:** If three concepts could be produced by swapping the person in essentially the same photograph, the round has failed.
+**Reusable lesson:** If the topic can be communicated through what is actually happening in the scene, do that instead of adding artificial UI/effects.
 
-**Applies to:** Pre-generation concept development.
-
----
-
-## L006 — Realism over AI-art spectacle
-
-**Issue:** Generated imagery drifts toward plastic skin, neon, holograms, and “look what the model can do.”
-
-**Decision:** Apply §57.9 realism bar — would a skilled commercial photographer plausibly have captured this?
-
-**Reusable lesson:** Prefer candid commercial photography energy; reject obvious AI-art clichés in post-generation QA.
-
-**Applies to:** All generated or heavily composited human/lifestyle creative.
+**Applies to:** Photography-style hero/social creative.
 
 ---
 
-## L007 — Quality DNA, not scene DNA
+## L004 — Topic action cannot be ambiguous
 
-**Issue:** Brand consistency can be misunderstood as repeating the same person, café, lake, or family setup.
+**Issue:** “Person grabs keys and walks toward the door” could mean work, errands, school pickup, shopping, or many unrelated activities.
 
-**Decision:** Repeat Lonko’s identity, quality, tone, typography discipline, color system, and emotional promise — **not** the same scene cast (§57.15).
+**Decision:** The local-intent panel was revised to show an actual interaction with a local service professional arriving.
 
-**Reusable lesson:** Recognizably Lonko, never predictable. Check the Creative Registry before proposing near-duplicates.
+**Reusable lesson:** A visual should not require the caption to explain the key topic signal when the human situation itself can make it clear.
 
-**Applies to:** Anti-repetition review before every new concept round.
+**Applies to:** Topic-led hero and social creative.
+
+---
+
+## L005 — Banner vs chart roles
+
+**Issue:** Article #1's earlier chart-based visualization was being used as both evidence and promotional creative.
+
+**Decision:** Banner and chart are separate jobs.
+
+**Reusable lesson:** Banner earns attention. Chart earns trust. Hero/social creative primarily communicates story, relevance, emotion, and attention. Charts/graphs/data visualization primarily communicate evidence and understanding inside the article.
+
+**Applies to:** Chronicles.
+
+---
+
+## L006 — Do not force extra data visualization
+
+**Issue:** Article #1 could technically support an Ahrefs 34.5%-vs-58% visual.
+
+**Decision:** Do not build it because the prose already explains the evidence clearly and a two-point chart could imply a continuous trend from two separate studies.
+
+**Reusable lesson:** Only add charts when they materially improve comprehension and faithfully represent the evidence structure.
+
+**Applies to:** All evidence-led Chronicles content.
+
+---
+
+## L007 — In-scene branding must not imply fabricated real relationship
+
+**Issue:** Early concepting considered placing Lonko brand accents/signage on service vehicles/storefronts that could imply a real Lonko client relationship.
+
+**Decision:** Brand signal comes from post-production color/typography treatment, not branding on people, businesses, or vehicles standing in for a general scenario.
+
+**Reusable lesson:** Illustrating a general phenomenon is different from claiming a real customer case study; imagery must not blur that line.
+
+**Applies to:** Any hero/social creative featuring a business, employee, or service professional as a stand-in for a general scenario.
 
 ---
 
@@ -144,4 +154,4 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ## Status
 
-L001–L010 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development.
+L001–L010 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).

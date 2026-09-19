@@ -289,7 +289,13 @@ Three different jobs, three different assets — don't force one to do all three
 
 ### 57.13 Pre-generation QA (before generating or finalizing any concept)
 
-Confirm: Is it meaningfully tied to the article topic? Is it substantially different from recent approved assets (check the registry)? Does it feel human? Does it have visual energy? Does it feel premium? Is the brand identifiable? Is the scene believable? Does it avoid generic SaaS clichés? Does it avoid obvious AI-art clichés? Would it plausibly stop someone in a feed? Is the message understandable quickly? Is the composition restrained rather than overloaded?
+Before finalizing any concept, check **all three** creative references:
+
+1. **Creative Registry** — recent approved assets (`docs/chronicles/lonko-chronicles-creative-registry.md`)
+2. **Legacy Creative Baseline** — pre-§57 visual territory (§57.17)
+3. **Creative Learnings Log** — reusable mistakes/lessons (`docs/chronicles/lonko-chronicles-creative-learnings.md`; §57.18)
+
+Then confirm: Is it meaningfully tied to the article topic? Is it substantially different from recent approved assets **and** from already-used legacy territory? Does it avoid repeating a logged lesson? Does it feel human? Does it have visual energy? Does it feel premium? Is the brand identifiable? Is the scene believable? Does it avoid generic SaaS clichés? Does it avoid obvious AI-art clichés? Would it plausibly stop someone in a feed? Is the message understandable quickly? Is the composition restrained rather than overloaded?
 
 ### 57.14 Post-generation QA (before recommending approval)
 
@@ -297,13 +303,22 @@ Inspect: anatomy/hands, faces/eyes, device geometry, UI plausibility, clothing, 
 
 ### 57.15 Anti-repetition system
 
-Before proposing new creative, review recent approved entries in the creative registry. Reject or substantially revise a concept that repeats too much of a recent combination across: people configuration, representation, setting, geographic/environmental feel, activity, device usage, emotional payoff, composition, visual metaphor, and headline treatment. This is a judgment call, not a mechanical rule — don't invent something rigid like "no beach for 8 posts." A beach can be reused if the concept, story, people, topic relationship, composition, and emotional interpretation are materially different from the last time it appeared. The goal: recognizably Lonko, never predictable. **Brand consistency comes from Lonko's identity, quality level, tone, typography, composition discipline, color system, and emotional promise — never from repeating the same person, ethnicity, café, office, family, dog, lake, or activity across pieces.** Repeat the quality DNA, not the scene DNA.
+Before proposing new creative, review **all three** creative references:
+
+1. **Creative Registry** — recent approved entries
+2. **Legacy Creative Baseline (§57.17)** — pre-§57 territories already used historically
+3. **Creative Learnings Log (§57.18)** — reusable lessons (especially casting-only variation, ambiguous topic action, artificial digital overlays)
+
+Reject or substantially revise a concept that repeats too much of a recent or legacy combination across: people configuration, representation, setting, geographic/environmental feel, activity, device usage, emotional payoff, composition, visual metaphor, and headline treatment. This is a judgment call, not a mechanical rule — don't invent something rigid like "no beach for 8 posts." A beach can be reused if the concept, story, people, topic relationship, composition, and emotional interpretation are materially different from the last time it appeared. The goal: recognizably Lonko, never predictable. **Brand consistency comes from Lonko's identity, quality level, tone, typography, composition discipline, color system, and emotional promise — never from repeating the same person, ethnicity, café, office, family, dog, lake, or activity across pieces.** Repeat the quality DNA, not the scene DNA. An empty current Registry never means blank creative history — check §57.17.
 
 ### 57.16 Per-article creative workflow
 
 1. Understand the article's topic and audience.
 2. Identify the required topic signal (§57.2).
-3. Review recent Creative Registry entries **and** the Creative Learnings Log (`docs/chronicles/lonko-chronicles-creative-learnings.md`; §57.18).
+3. Review **all three** creative references before concepting:
+   - recent Creative Registry entries (`docs/chronicles/lonko-chronicles-creative-registry.md`)
+   - Legacy Creative Baseline (§57.17)
+   - Creative Learnings Log (`docs/chronicles/lonko-chronicles-creative-learnings.md`; §57.18)
 4. Develop at least three materially different visual worlds (§57.8).
 5. Compare them against the anti-repetition rules (§57.15).
 6. Select/recommend the strongest concept, with reasoning.
@@ -312,39 +327,60 @@ Before proposing new creative, review recent approved entries in the creative re
 9. Get Alex's approval.
 10. Record the approved creative in the registry at `docs/chronicles/lonko-chronicles-creative-registry.md`.
 
-### 57.17 Legacy Creative Baseline
+### 57.17 Legacy Creative Baseline — pre-§57 visual history
 
-**Status: active reference.** This subsection freezes what Article #1 already taught us so future packages do not re-learn the same lessons from scratch.
+**Status: active reference. Separate from the Creative Registry and the Creative Learnings Log.**
 
-**Accepted (do not reopen without Alex):**
+This is Lonko's **pre-§57 visual history** — territories already used in earlier Lonko marketing/creative work before the Visual Creative System and Creative Registry existed. These entries have **no CR IDs**, do **not** receive new approved assets into the Registry, and are **not** banned. They exist so concepting does not treat an empty Registry as blank creative history (see L001).
 
-- Article #1 photography/concept direction for the dedicated hero and social diptych is accepted after post-generation QA of the rendered drafts.
-- Remaining Article #1 visual work is **brand-layer correction only** (divider color, social typography, accent color, real logo mark + wordmark) — not a new photo concept round.
-- In-article Whitespark/chart visualization remains evidence inside the article body; it is **not** the social banner (§57.12; Creative Learnings L001).
+**Already-used territories (not banned; already-used):**
 
-**Superseded / do not revive as the standard:**
+- café / restaurant owner
+- local retail / shop owner
+- small-business storefront
+- owner working at counter
+- office / dashboard
+- executive / presentation
+- mobile business dashboard
+- tablet / laptop business-performance scenes
+- family / leisure
+- lake
+- fishing
+- BBQ
+- hiking
+- camping / outdoors
+- marina / sailing
+- business travel
+- owner + family lifestyle
+- warm “business success gives time back” imagery
+- business owner checking marketing results while away from work
 
-- Using the chart (or any data viz) as the primary LinkedIn/Meta stop-scroll creative.
-- Treating a single image as both hero and social via crop alone.
-- Generating a fake “LONKO DIGITAL” wordmark instead of compositing the real mark.
-- Prompting brand color/type with descriptive labels only (“Lonko red”, “modern sans-serif”) without production values.
+**Rules:**
 
-**Baseline brand-layer defaults for future creative** (values in `docs/brand/lonko-brand-production-tokens.md`):
-
-- Accent / divider red: `#e10600` (`--brand-red`)
-- Social headline type: UI sans stack at weight **700**
-- Logo: real `assets/images/lonko-logo.png` mark + text wordmark “Lonko Digital”
-- Near-black overlay base when needed: `#0b0b0f` (`--brand-black`); opacity is not a production token
+- These territories are **not banned**.
+- They are **already-used territory** — reuse requires a materially different story, composition, activity, emotional interpretation, and topic relationship (§57.8 / §57.15), not a person-swap (L002).
+- They have **no CR IDs**.
+- Do **not** add new approved assets “into” this baseline; new approvals go only to the Creative Registry.
+- Keep this baseline **separate** from the Creative Registry and the Creative Learnings Log.
+- Exact brand color/type/logo values for any brand-layer treatment remain in `docs/brand/lonko-brand-production-tokens.md`.
 
 ### 57.18 Creative Learnings Log integration
 
-Before developing concepts (§57.16 steps 3–6) and again during post-generation QA (§57.14), consult:
+Consult and maintain:
 
 `docs/chronicles/lonko-chronicles-creative-learnings.md`
 
-That log records approved reusable lessons (L001 onward). New lessons require Alex approval before they become permanent. §57 governs creative **behavior**; the learnings log captures **what went wrong / what to do next time**; `docs/brand/lonko-brand-production-tokens.md` supplies **exact production values**.
+**Governance test for logging a new lesson:** Would remembering this lesson materially reduce the chance that a future creative round repeats a known mistake? If **yes**: log it (with Alex approval). If **no**: keep it article-specific.
 
-When a generation or compositing failure matches an existing lesson (especially L008–L010 on color, type, and logo), fix the brief/spec to carry the exact production values — do not only rephrase the descriptive language.
+**Never merge these three records:**
+
+| Record | Holds |
+|---|---|
+| Creative Registry | Approved assets |
+| Legacy Creative Baseline (§57.17) | Pre-§57 visual territory |
+| Creative Learnings Log | Reusable mistakes / lessons |
+
+§57 governs creative **behavior**; the learnings log captures **what went wrong / what to do next time**; `docs/brand/lonko-brand-production-tokens.md` supplies **exact production values**. Before concepting (§57.16 step 3) and during anti-repetition / pre-generation QA (§57.13, §57.15), check Registry + Baseline + Learnings together. When a failure matches L008–L010 (color, type, logo), fix the brief/spec to carry exact production values — do not only rephrase descriptive language.
 
 ---
 
