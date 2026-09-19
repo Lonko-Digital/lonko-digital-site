@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from datetime import date
+from pathlib import Path
 
 from .model import (
     CONTENT_TYPES,
@@ -128,6 +129,17 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
             # Fixture path: fallback allowed — no error, documented above.
             pass
 
+        # Fail closed if authored package-relative image paths do not resolve.
+        # Absolute/http(s) URLs are left to the author (rare; not used by Drive intake).
+        if article.package_dir is not None:
+            for field_name, rel in (
+                ("hero_image", article.hero_image),
+                ("social_image", article.social_image),
+            ):
+                err = _missing_package_asset(article.package_dir, rel, field_name)
+                if err:
+                    errors.append(f"{prefix}{err}")
+
         # Sources
         for i, src in enumerate(article.sources):
             url = (src or {}).get("url", "")
@@ -155,3 +167,24 @@ def _valid_iso_date(value: str) -> bool:
     except ValueError:
         return False
     return True
+
+
+def _missing_package_asset(
+    package_dir: Path, rel: str | None, field_name: str
+) -> str | None:
+    """Return an error string if a relative package asset path is missing/unsafe."""
+    if not rel:
+        return None
+    if "://" in rel or rel.startswith("/"):
+        return None
+    candidate = Path(rel)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        return f"{field_name} path must be package-relative without '..': {rel!r}"
+    path = (Path(package_dir) / candidate).resolve()
+    try:
+        path.relative_to(Path(package_dir).resolve())
+    except ValueError:
+        return f"{field_name} path escapes package directory: {rel!r}"
+    if not path.is_file():
+        return f"{field_name} file not found in package: {rel!r}"
+    return None
