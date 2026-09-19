@@ -283,6 +283,14 @@ Lonko Digital should normally be identifiable in social/banner creative — thro
 
 Three different jobs, three different assets — don't force one to do all three:
 
+**Default final export dimensions (hard production requirements):**
+
+- **Article hero:** **1600×900 px** unless an article-specific brief explicitly overrides it before rendering.
+- **Social banner:** **1200×628 px** unless an article/platform-specific brief explicitly overrides it before rendering.
+- Intermediate photographic bases may be larger or approximately the same ratio, but **final approved assets must match the locked pixel dimensions exactly**.
+- Do not infer the social-banner size from a site-wide OG fallback asset; metadata/share fallbacks may use different dimensions.
+
+
 - **Article hero:** editorial storytelling; minimal baked-in text (the article's actual headline stays in HTML, not burned into the image); built for the responsive hero pipeline.
 - **Social banner:** a stronger stop-scroll treatment; may use a headline/text treatment since it has to work as a standalone social object; optimized independently for the LinkedIn/Meta feed rather than just resized from the hero.
 - **Chart / data visualization:** evidence supporting the article's claims — not automatically the promotional banner. A chart proves a point; a hero/banner earns attention and makes a human connection. They can coexist in one article (chart in-body, hero and banner separate), but a chart standing in for the hero is a fallback, not the standard.
@@ -322,10 +330,11 @@ Reject or substantially revise a concept that repeats too much of a recent or le
 4. Develop at least three materially different visual worlds (§57.8).
 5. Compare them against the anti-repetition rules (§57.15).
 6. Select/recommend the strongest concept, with reasoning.
-7. Generate or brief the creative (see the working-notes tool-reality caveat below). Carry exact brand values from `docs/brand/lonko-brand-production-tokens.md` whenever color, type, or logo appear in the brief.
-8. Run realism, relevance, brand, and quality QA (§57.13-57.14).
-9. Get Alex's approval.
-10. Record the approved creative in the registry at `docs/chronicles/lonko-chronicles-creative-registry.md`.
+7. **Lock the production contract before rendering:** asset role; exact pixel dimensions; approved on-image copy; exact brand colors; font stack + weight; authoritative logo asset; whether text/logo will be deterministically composited; final filename/format. Do not render while any deterministic requirement is still vague or unresolved.
+8. Generate or brief the photographic/illustrative scene. Carry exact brand values from `docs/brand/lonko-brand-production-tokens.md` whenever brand treatment appears. For public-facing assets with exact text/logo requirements, keep scene generation separate from deterministic brand compositing (L013).
+9. Run realism, relevance, brand, quality, **and exact-dimension** QA (§57.13-57.14; L011-L014). Freeze any layer that passes; later corrections stay scoped to the failed layer unless a genuine new defect is found.
+10. Get Alex's approval.
+11. Record the approved creative in the registry at `docs/chronicles/lonko-chronicles-creative-registry.md`.
 
 ### 57.17 Legacy Creative Baseline — pre-§57 visual history
 
@@ -386,13 +395,13 @@ Consult and maintain:
 
 ## Working notes on current tool/access reality (session-specific, keep updated)
 
-- **No photorealistic image-generation tool available in this session as of 2026-09.** This is the central practical constraint on §57: the system above describes what finished Lonko creative should look like and how to reason about it, but this session cannot render photorealistic human/lifestyle imagery directly. In practice, step 7 of the workflow (§57.16) currently means producing a **detailed, production-ready creative brief/prompt** per selected concept — environment, people configuration, activity, emotional territory, composition, lighting, wardrobe, props, realism notes, brand-visibility notes — for either (a) a future image-generation tool once connected, (b) a human photographer/designer, or (c) Claude Web/Cursor Web if either has image-generation capability this session doesn't. Data visualizations (via the dataviz skill, as used for Article #1's chart) remain something this session can fully produce end-to-end. Revisit this note the moment an image-gen tool becomes available — at that point step 7 should produce finished assets, not just briefs.
+- **Rendering workflow is role-based, not session-dependent.** Claude Blog owns visual concepting/briefing and post-generation QA; ChatGPT image generation may render or edit the photographic/illustrative scene when available; exact logos, approved copy, typography, colors, and final dimensions should be applied/validated in a controlled compositing pass when fidelity matters. Do not ask an image model to invent a Lonko logo or exact branded lettering.
 - **Canonical governance docs live in the Lonko Digital site repository (synced 2026-09-19).** Authoritative paths: `docs/chronicles/lonko-chronicles-operating-system.md` and `docs/chronicles/lonko-chronicles-creative-registry.md`. Claude Blog maintains editorial content; Cursor Web syncs approved versions into the repo. Claude.ai Project copies of these two files are working mirrors only — not authoritative once the repo copy is live.
 - No direct SEO tool connections (Search Console, Keyword Planner, Semrush, Ahrefs) as of 2026-09 — use web research for search-landscape context and explicitly flag "search-volume evidence unavailable" per §11/§47 rather than guessing; revisit if/when a connector is added.
 - No direct publishing access to the Lonko Digital CMS/website or to LinkedIn/Meta from this session as of 2026-09-17. Per Alex's memo, Cursor Web has since built and tested a Google Drive → GitHub Actions publishing bridge (`Lonko Chronicles/Inbox` → validation/build → automatic PR → Alex's merge). This session does not yet have a Google Drive connector confirmed active for that specific workflow — production packages are delivered here for Alex to move into the Inbox himself until/unless that upload step is confirmed working directly from this session. Never upload without Alex's explicit "APPROVED FOR PUBLICATION."
 - This project ("LinkedIn Post"/"Lonko Blog Post & Social Media") also carries a separate, older operating doc (`claude/linkedin-content-system.md`) for Robert Fernandez's own personal LinkedIn thought-leadership posts (job-search positioning) — that is a distinct workstream from Lonko Chronicles/Lonko's company social and should not be merged with this one.
 - An evolving SEO + AI Discovery + Backlink Authority Roadmap lives at `claude/lonko-chronicles-seo-authority-roadmap.md` per §47/§51/§52 — check it before topic selection and update it as articles publish and evidence comes in. (Not part of this canonicalization pass — no repo-path assignment given for it yet.)
-- Article #1's creative package remains incomplete under the Visual Creative System: the chart-based images built in earlier rounds are superseded (chart is now in-article evidence only), and a dedicated hero + social banner still need to be developed, QA'd, and approved before Article #1 is publish-ready. GA4 implementation/QA (not just the specification) is a separate, also-still-open gate. See the Article #1 doc's status header for the current, accurate gate list.
+- Article #1's creative package remains incomplete under the Visual Creative System: dedicated hero/social photography has been rendered and passed concept/realism QA; only final brand-layer corrections remain before final creative QA and Alex approval. The hero must export at **1600×900** with a 3px `#e10600` divider. The social banner must export at **1200×628** with exact production typography/colors and the real Lonko logo mark + text wordmark. GA4 implementation/QA remains a separate open gate.
 
 ## Editorial calendar log
 
