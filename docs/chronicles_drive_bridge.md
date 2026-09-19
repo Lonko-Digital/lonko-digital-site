@@ -89,9 +89,23 @@ scope for v1 unless a material reason appears.
 - Flow: Drive sync → validate/checksums/v4 → stage → build → Drive archive → **open PR**
 - **Never pushes to `main`.** Alex merge = publication authorization.
 
+## Python dependencies
+
+Authoritative install path: `requirements-chronicles-bridge.txt`
+
+Includes `pyyaml`, `markdown`, `google-auth`, and `google-api-python-client`
+(required by `scripts/chronicles_bridge/drive.py`). Both Drive workflows install
+from this file; do not gate Google packages on secret interpolation in shell.
+
+```bash
+pip install -r requirements-chronicles-bridge.txt
+python scripts/test_chronicles_bridge_deps.py
+```
+
 ## Local / smoke helpers
 
 ```bash
+pip install -r requirements-chronicles-bridge.txt
 python scripts/build_bridge_smoke_package.py
 python scripts/run_chronicles_ingest.py --inbox bridge/inbox
 python scripts/test_chronicles_bridge_acceptance.py

@@ -31,10 +31,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install "pyyaml>=6" "markdown>=3.5"
-          if [ -n "${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}" ]; then
-            pip install "google-auth>=2" "google-api-python-client>=2"
-          fi
+          pip install -r requirements-chronicles-bridge.txt
+
+      - name: Verify bridge Python dependencies
+        run: python scripts/test_chronicles_bridge_deps.py
 
       - name: Sync Drive inbox + ingest (validate → stage → build → Drive archive)
         id: ingest

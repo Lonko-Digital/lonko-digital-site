@@ -1,0 +1,39 @@
+name: Chronicles bridge deps
+
+# Guards against Drive bridge dependency regressions (e.g. missing google-auth).
+on:
+  pull_request:
+    paths:
+      - "requirements-chronicles-bridge.txt"
+      - "scripts/chronicles_bridge/**"
+      - "scripts/test_chronicles_bridge_deps.py"
+      - "scripts/run_chronicles_ingest.py"
+      - ".github/workflows/chronicles-drive-ingest.yml"
+      - ".github/workflows/chronicles-drive-smoke.yml"
+      - ".github/workflows/chronicles-bridge-deps.yml"
+  push:
+    branches: [main]
+    paths:
+      - "requirements-chronicles-bridge.txt"
+      - "scripts/chronicles_bridge/**"
+      - "scripts/test_chronicles_bridge_deps.py"
+      - "scripts/run_chronicles_ingest.py"
+      - ".github/workflows/chronicles-drive-ingest.yml"
+      - ".github/workflows/chronicles-drive-smoke.yml"
+      - ".github/workflows/chronicles-bridge-deps.yml"
+  workflow_dispatch:
+
+jobs:
+  deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install authoritative bridge requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-chronicles-bridge.txt
+      - name: Import-level dependency check
+        run: python scripts/test_chronicles_bridge_deps.py

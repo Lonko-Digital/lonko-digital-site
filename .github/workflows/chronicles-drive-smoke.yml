@@ -38,7 +38,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install "pyyaml>=6" "markdown>=3.5" "google-auth>=2" "google-api-python-client>=2"
+          pip install -r requirements-chronicles-bridge.txt
+
+      - name: Verify bridge Python dependencies
+        run: python scripts/test_chronicles_bridge_deps.py
 
       - name: Require Drive secrets
         env:

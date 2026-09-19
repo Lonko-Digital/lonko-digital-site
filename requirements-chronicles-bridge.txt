@@ -1,0 +1,10 @@
+# Authoritative Python deps for the Chronicles Drive publishing bridge.
+# Installed by:
+#   .github/workflows/chronicles-drive-ingest.yml
+#   .github/workflows/chronicles-drive-smoke.yml
+# Keep google-auth + google-api-python-client here — drive.py imports both.
+
+pyyaml>=6
+markdown>=3.5
+google-auth>=2
+google-api-python-client>=2
