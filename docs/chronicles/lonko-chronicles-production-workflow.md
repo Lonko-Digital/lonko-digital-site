@@ -1,0 +1,317 @@
+# Lonko Chronicles — Standard Article + Social Production Workflow
+
+**Status:** Active canonical cross-role workflow.
+
+**Purpose:** Define the normal end-to-end operating path for launching a Lonko Chronicles article and its LinkedIn/Meta distribution without making Alex act as the project manager or file courier.
+
+**Audience:** Alex, Claude Blog Post & Social Media, Lonko Chronicles image-production chat, Cursor Web, and any future role supporting Chronicles.
+
+**Authority:** This file is the canonical cross-role workflow. Role-specific operating documents may add detail, but they must not contradict this workflow unless Alex explicitly changes it.
+
+---
+
+## 1. The normal starting point
+
+Alex should be able to begin a publishing cycle with one sentence to **Claude Blog Post & Social Media**:
+
+> “I want to launch a blog post.”
+
+Alex is not expected to arrive with a topic, headline, image, keyword, or finished brief.
+
+Claude Blog owns the process from that point and should proactively move the work through the correct stages, asking Alex only for decisions that genuinely require his judgment.
+
+---
+
+## 2. Topic discovery comes before visual production
+
+**No image generation begins until the topic and editorial angle are understood and explicitly approved by Alex.**
+
+Claude Blog first:
+
+1. researches current and evergreen opportunities;
+2. checks audience relevance;
+3. checks existing Chronicles content and the separate Insights property for cannibalization risk;
+4. checks evidence strength, search intent, social potential, and Lonko relevance;
+5. presents the strongest topic options with clear reasoning;
+6. discusses the options with Alex;
+7. records the topic/angle Alex approves.
+
+Only after that approval does visual production begin.
+
+The image must serve the agreed article. The article must never be forced to fit an image that was generated too early.
+
+---
+
+## 3. Claude Blog owns editorial, SEO, social, and creative direction
+
+After Alex approves the topic/angle, Claude Blog proceeds with the article package:
+
+- research and source review;
+- article structure and writing;
+- fact checking;
+- SEO and AI-search strategy;
+- title, deck, slug, metadata, internal links, schema requirements;
+- source dossier;
+- LinkedIn post copy;
+- Meta post copy;
+- measurement requirements;
+- supporting evidence visuals/charts when genuinely useful;
+- visual concepting for the article hero and social banner.
+
+Claude Blog remains the **Creative Director** even though it is not the routine image renderer.
+
+Before generating any image, Claude Blog must follow the Visual Creative System and check:
+
+- Creative Registry;
+- Legacy Creative Baseline;
+- Creative Learnings Log.
+
+Claude Blog develops at least three materially different visual worlds when §57 requires it, recommends the strongest concept, aligns with Alex, and then locks the production contract.
+
+---
+
+## 4. Claude Blog creates one complete Lonko Chronicles image-production prompt
+
+Once the visual concept is agreed, Claude Blog gives Alex **one complete, copy-paste-ready prompt** addressed to the **Lonko Chronicles** image-production chat.
+
+Alex should not have to rewrite, supplement, or remember production requirements.
+
+The prompt must include, at minimum:
+
+- article title/topic and short explanation of what the story is actually about;
+- audience and intended emotional/business takeaway;
+- approved visual concept;
+- exact hero requirements;
+- exact social-banner requirements;
+- exact dimensions;
+- exact on-image copy, if any;
+- exact brand colors;
+- exact typography/weight;
+- authoritative logo requirement;
+- scene-generation instructions;
+- deterministic brand-compositing instructions where exact text/logo/color fidelity matters;
+- anti-repetition / realism / no-fake-UI requirements;
+- acceptance criteria;
+- requested final filenames.
+
+Default final dimensions are hard requirements:
+
+- **Article hero: 1600×900 px**
+- **Social banner: 1200×628 px**
+
+unless Alex explicitly approves a different specification before rendering.
+
+---
+
+## 5. Lonko Chronicles owns image production
+
+Alex copies Claude Blog’s prompt into the dedicated **Lonko Chronicles** image-production chat.
+
+Lonko Chronicles then:
+
+1. reads and follows the approved brief;
+2. creates the article hero;
+3. creates the social banner;
+4. validates exact final dimensions;
+5. uses image generation for scene creation/editing;
+6. uses controlled/deterministic compositing for exact logo, typography, approved copy, and exact brand colors where needed;
+7. does not reopen the article topic or creative direction unless it discovers a genuine defect or impossible requirement.
+
+Alex reviews the generated assets in Lonko Chronicles.
+
+If Alex requests changes, Lonko Chronicles revises them there until Alex approves the final assets.
+
+Passed layers stay frozen. A typography or logo correction does not reopen approved photography without a genuine new defect.
+
+---
+
+## 6. Approved image handoff — Alex is not the file courier
+
+Once Alex approves both images, Lonko Chronicles must:
+
+1. save the approved hero and social banner to the **durable shared Chronicles asset location** that Claude Blog can access;
+2. use stable, meaningful filenames tied to the article slug;
+3. return the exact canonical filenames plus their durable location/reference;
+4. clearly mark them as **ALEX-APPROVED FINAL ASSETS**.
+
+Example naming convention:
+
+- `<article-slug>-hero-1600x900.png`
+- `<article-slug>-social-1200x628.png`
+
+**Do not rely on temporary chat sandbox paths as the cross-role handoff.**
+
+Alex should not need to download the files and upload them to Claude manually.
+
+Alex returns to Claude Blog and provides only the exact asset names/references that Lonko Chronicles supplied.
+
+Claude Blog retrieves the approved files directly from the shared location.
+
+If the shared location is ever unavailable to one of the roles, that is an infrastructure/setup defect to fix once — not a recurring manual-download workflow for Alex.
+
+---
+
+## 7. Claude Blog performs final visual QA
+
+After retrieving the two Alex-approved images, Claude Blog checks the actual files against the original brief and §57.
+
+Claude verifies, as applicable:
+
+- correct article/topic relationship;
+- correct concept;
+- realism and anatomy;
+- anti-repetition;
+- exact dimensions;
+- correct headline/copy;
+- brand colors;
+- typography;
+- actual Lonko logo treatment;
+- mobile/feed readability;
+- accessibility/alt-text fit;
+- no fabricated UI, claims, customer relationship, or unintended branding.
+
+Claude returns a clear result for each asset:
+
+- **APPROVED**
+- **REVISE**
+- **REJECT**
+
+If revision is required, Claude gives a narrowly scoped correction. Alex takes only that correction back to Lonko Chronicles.
+
+Claude does not casually reopen the article, approved concept, or passed image layers.
+
+---
+
+## 8. Claude Blog owns the final article package and routine publication
+
+Once the article, social copy, and final visuals all pass QA, Claude Blog prepares the complete publication package and presents the final publish-readiness state to Alex.
+
+No external publication occurs until Alex explicitly authorizes publication with language such as:
+
+- **APPROVED FOR PUBLICATION**
+- **Publish it**
+- **Go live**
+
+After explicit approval, **Claude Blog owns the routine publication step** through the established Lonko Chronicles publishing workflow/bridge available to it.
+
+Cursor Web is **not** part of the normal per-article operator flow.
+
+Cursor Web is involved only when there is an infrastructure or engineering need, such as:
+
+- publishing bridge failure;
+- template defect;
+- schema/metadata system defect;
+- tracking infrastructure change;
+- new article capability;
+- site rendering/performance/accessibility defect;
+- other technical work that cannot be handled by the established publishing system.
+
+Alex should not have to open Cursor for an ordinary article.
+
+If Claude Blog’s current environment lacks access needed to publish through the established bridge, treat that as a one-time access/infrastructure task to solve — not as a reason to make Alex manually assemble or move the publication package every article.
+
+---
+
+## 9. Claude Blog must return the live URL and tracked social URLs
+
+After the article is live, Claude Blog verifies the production URL and gives Alex a final social-distribution package containing:
+
+- final live canonical article URL;
+- final LinkedIn post copy;
+- final Meta post copy;
+- approved social banner reference;
+- **LinkedIn UTM URL**;
+- **Meta UTM URL**;
+- any additional platform-specific URL required by the approved distribution plan.
+
+Default UTM structure:
+
+```
+?utm_source={platform}&utm_medium=organic_social&utm_campaign={article_slug}&utm_content={post_variant}
+```
+
+Default launch values:
+
+- `utm_medium=organic_social`
+- `utm_campaign=<article-slug>`
+- `utm_content=launch_post`
+
+Source values must reflect the actual platform.
+
+Examples:
+
+- LinkedIn: `utm_source=linkedin`
+- Meta cross-platform post when one shared link is intentionally used: `utm_source=meta`
+- Facebook-only distribution: `utm_source=facebook`
+- Instagram-only clickable destination: `utm_source=instagram`
+
+For later reposts/creative variants, keep the campaign stable and change `utm_content`, for example:
+
+- `followup_post`
+- `stat_angle`
+- `owner_angle`
+
+Claude Blog must not ask Alex to manually construct these URLs.
+
+---
+
+## 10. Alex owns social posting
+
+After Claude Blog confirms the article is live and supplies the finished social package:
+
+- **Alex posts to LinkedIn**
+- **Alex posts to Meta**
+
+Alex uses:
+
+- Claude’s approved platform-specific copy;
+- the approved 1200×628 social banner;
+- the corresponding Claude-provided UTM URL.
+
+Claude Blog publishes the website article; Alex publishes the social posts.
+
+---
+
+## 11. The whole recurring flow
+
+The normal flow is:
+
+**Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Alex gives final publication approval → Claude publishes the article → Claude returns live URL + LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
+
+This is the default. Do not add extra handoffs unless a genuine technical or editorial problem requires them.
+
+---
+
+## 12. Operator experience standard
+
+Alex should need to remember only the starting action:
+
+> “I want to launch a blog post.”
+
+The system should know the rest.
+
+Do not make Alex repeatedly answer:
+
+- Who goes next?
+- What size are the banners?
+- Where is the logo?
+- Who writes the image prompt?
+- Who checks the images?
+- Who publishes the article?
+- What UTM should I use?
+- Do I need Cursor?
+- Do I need to download/upload the assets?
+
+Those are workflow responsibilities, not Alex’s recurring project-management tasks.
+
+---
+
+## 13. Quality principle
+
+This workflow simplifies coordination, not quality.
+
+**Basic means narrow, not half-built.  
+We do not defer quality. We defer scope.  
+Build depth underneath. Present clarity on top.**
+
+The goal is fewer preventable handoffs and fewer revision loops while preserving the highest editorial, visual, SEO, tracking, and brand standards.
