@@ -200,6 +200,18 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ---
 
+## L015 — Brand assets are fail-closed
+
+**Issue:** During Article #1's social-banner correction, the image-generation step created an approximate/redrawn Lonko-style mark instead of using the authoritative Lonko logo asset, even though the workflow explicitly required the real logo.
+
+**Decision:** If an exact brand asset is required and the authoritative file is not actually available to the production step, stop that brand-compositing step. Do not approximate, redraw, infer, stylize, or ask an image model to create a substitute. Retrieve the real asset or ask Alex for it once, then resume.
+
+**Reusable lesson:** No authoritative logo file = no logo-bearing final creative. Brand identity is fail-closed.
+
+**Applies to:** Every Lonko public-facing asset containing the logo, wordmark, or any other exact brand mark.
+
+---
+
 ## Status
 
-L001–L014 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
+L001–L015 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
