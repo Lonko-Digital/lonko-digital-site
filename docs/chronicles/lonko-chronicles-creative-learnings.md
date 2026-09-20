@@ -212,6 +212,18 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ---
 
+## L016 — Status context is not execution authorization
+
+**Issue:** A Claude status response saying Article #1 was waiting on Lonko Chronicles was misread as an instruction to generate the images immediately.
+
+**Decision:** Mentions of pending creative work, current gates, or "waiting on Lonko Chronicles" are context only. The image-production workspace acts only when Alex explicitly instructs it to run the actual production prompt/brief.
+
+**Reusable lesson:** Context can describe the next action without authorizing it. Require an explicit execution trigger before generating/editing/compositing images.
+
+**Applies to:** All cross-role Chronicles handoffs and creative-production transitions.
+
+---
+
 ## Status
 
-L001–L015 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
+L001–L016 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
