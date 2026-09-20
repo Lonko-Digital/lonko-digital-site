@@ -182,7 +182,7 @@ Claude does not casually reopen the article, approved concept, or passed image l
 
 ---
 
-## 8. Claude Blog owns the final article package and routine publication
+## 8. Claude Blog owns publish readiness; the connected publishing operator executes deployment
 
 Once the article, social copy, and final visuals all pass QA, Claude Blog prepares the complete publication package and presents the final publish-readiness state to Alex.
 
@@ -192,7 +192,14 @@ No external publication occurs until Alex explicitly authorizes publication with
 - **Publish it**
 - **Go live**
 
-After explicit approval, **Claude Blog owns the routine publication step** through the established Lonko Chronicles publishing workflow/bridge available to it.
+**Current capability rule (2026-09-19):** the active Claude Blog session has Google Drive read access but does **not** have repository/CMS/deploy access and therefore cannot truthfully claim to push the article live itself.
+
+After Alex's explicit publication approval:
+
+1. Claude Blog freezes the approved article/social package and supplies the canonical article package reference plus the exact publish instruction.
+2. The **Lonko Chronicles connected publishing operator** executes the established Drive/GitHub publishing workflow using the approved package. In the current setup, that operator is the ChatGPT Lonko Chronicles workspace because it has the required connected Drive/GitHub access.
+3. Alex should not manually assemble files, download/re-upload assets, or reconstruct metadata for publication.
+4. If Claude Blog later gains a verified writable publishing/deploy connector, direct routine publication may move to Claude without changing the editorial approval gates.
 
 Cursor Web is **not** part of the normal per-article operator flow.
 
@@ -208,13 +215,11 @@ Cursor Web is involved only when there is an infrastructure or engineering need,
 
 Alex should not have to open Cursor for an ordinary article.
 
-If Claude Blog’s current environment lacks access needed to publish through the established bridge, treat that as a one-time access/infrastructure task to solve — not as a reason to make Alex manually assemble or move the publication package every article.
-
 ---
 
 ## 9. Claude Blog must return the live URL and tracked social URLs
 
-After the article is live, Claude Blog verifies the production URL and gives Alex a final social-distribution package containing:
+After the connected publishing operator confirms the article is live, Claude Blog retrieves/verifies the production URL and gives Alex a final social-distribution package containing:
 
 - final live canonical article URL;
 - final LinkedIn post copy;
@@ -268,7 +273,7 @@ Alex uses:
 - the approved 1200×628 social banner;
 - the corresponding Claude-provided UTM URL.
 
-Claude Blog publishes the website article; Alex publishes the social posts.
+The connected publishing operator deploys the website article from Claude Blog’s approved package; Claude Blog verifies the live article and supplies the final social package; Alex publishes the social posts.
 
 ---
 
@@ -276,7 +281,7 @@ Claude Blog publishes the website article; Alex publishes the social posts.
 
 The normal flow is:
 
-**Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Alex gives final publication approval → Claude publishes the article → Claude returns live URL + LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
+**Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Alex gives final publication approval → Claude freezes the publish-ready package → Lonko Chronicles connected publishing operator deploys it → Claude verifies the live URL and returns LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
 
 This is the default. Do not add extra handoffs unless a genuine technical or editorial problem requires them.
 
