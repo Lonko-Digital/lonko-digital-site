@@ -134,6 +134,33 @@ unless Alex explicitly approves a different specification before rendering.
 
 ---
 
+## 4A. Handoff execution gate — a status update is not an image-production order
+
+The Lonko Chronicles image-production workspace must distinguish between **context/status** and an **actionable production handoff**.
+
+**Do not generate, edit, composite, save, or move image assets merely because Alex pastes a Claude response that mentions image work, says an image is pending, or says Claude is waiting on Lonko Chronicles.** That is context only.
+
+Image production begins only when Alex supplies the actual Claude-authored image-production brief/prompt **and** clearly asks the Lonko Chronicles workspace to execute it, for example:
+
+> “Run this Lonko Chronicles image-production prompt.”
+
+The actionable handoff should contain the locked production contract: article/topic context, approved visual concept, exact dimensions, copy, brand values, authoritative logo requirement, acceptance criteria, and final filenames.
+
+If Alex pastes a Claude status message without the actual production brief, the Lonko Chronicles workspace should:
+
+1. identify it as a status/context handoff;
+2. **not create any image**;
+3. tell Alex what the current gate is;
+4. ask only for the already-created production prompt if it is not present/accessible.
+
+If the production prompt is already available in shared project/Drive context, the workspace may retrieve it rather than making Alex re-copy it — but it still waits for Alex's explicit instruction to execute the image-production step.
+
+**Approval gate:** generated/revised assets remain drafts until Alex explicitly approves them. Drafts may be stored in Draft Assets. Only after Alex says he approves the final hero/social assets may they be moved/copied into Approved Assets and labeled ALEX-APPROVED FINAL ASSETS.
+
+This rule prevents accidental production from status memos and keeps Alex in control of every creative execution/approval transition.
+
+---
+
 ## 5. Lonko Chronicles owns image production
 
 Alex copies Claude Blog’s prompt into the dedicated **Lonko Chronicles** image-production chat.
