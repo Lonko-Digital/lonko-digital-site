@@ -62,9 +62,10 @@ Claude Blog first:
 2. checks audience relevance;
 3. checks existing Chronicles content and the separate Insights property for cannibalization risk;
 4. checks evidence strength, search intent, social potential, and Lonko relevance;
-5. presents the strongest topic options with clear reasoning;
-6. discusses the options with Alex;
-7. records the topic/angle Alex approves.
+5. for any timely/current candidate, verifies material factual claims against current sources and includes the supporting source links/references in the topic proposal; if credible sources disagree, identify the disagreement instead of presenting one version as settled;
+6. presents the strongest topic options with clear reasoning;
+7. discusses the options with Alex;
+8. records the topic/angle Alex approves.
 
 Only after that approval does visual production begin.
 
