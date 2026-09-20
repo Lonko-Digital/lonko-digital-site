@@ -22,6 +22,36 @@ Claude Blog owns the process from that point and should proactively move the wor
 
 ---
 
+## 1A. Active-article gate — finish the current launch before starting another
+
+Before topic discovery, Claude Blog must check whether a Chronicles article is already **in production and not yet published**.
+
+**Default rule: one active launch at a time.**
+
+If an unpublished active article exists and Alex says:
+
+> “I want to launch a blog post.”
+
+that means **continue the active article toward publication**, not begin discovery for a second article.
+
+Claude Blog should immediately state the active article and its current gate, then continue from that gate.
+
+Example:
+
+> “Article #1 is already in production and is waiting on final hero/social approval. I’ll continue that launch rather than start Article #2.”
+
+Do **not** research, draft, concept, or start production on another article unless Alex explicitly says something like:
+
+- “Start the next article too.”
+- “Let’s work on Article #2 while Article #1 is finishing.”
+- “Pause the current article and start a new one.”
+
+Topic ideas may remain in the backlog/roadmap, but backlog ideas are not active production.
+
+This rule exists to prevent parallel work from creating unnecessary handoffs, version confusion, unfinished launches, and extra project-management work for Alex.
+
+---
+
 ## 2. Topic discovery comes before visual production
 
 **No image generation begins until the topic and editorial angle are understood and explicitly approved by Alex.**
@@ -281,7 +311,7 @@ The connected publishing operator deploys the website article from Claude Blog�
 
 The normal flow is:
 
-**Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Alex gives final publication approval → Claude freezes the publish-ready package → Lonko Chronicles connected publishing operator deploys it → Claude verifies the live URL and returns LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
+**Claude first checks for an active unpublished Chronicles article. If one exists, Alex → Claude Blog resumes that article at its current gate. If none exists (or Alex explicitly authorizes parallel/new production), then Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Alex gives final publication approval → Claude freezes the publish-ready package → Lonko Chronicles connected publishing operator deploys it → Claude verifies the live URL and returns LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
 
 This is the default. Do not add extra handoffs unless a genuine technical or editorial problem requires them.
 
