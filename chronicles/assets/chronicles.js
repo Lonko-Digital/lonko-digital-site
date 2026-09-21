@@ -177,14 +177,37 @@
     });
   }
 
+  function pushChroniclesEvent(name, params) {
+    window.dataLayer = window.dataLayer || [];
+    var payload = { event: name };
+    if (params) {
+      Object.keys(params).forEach(function (k) {
+        if (params[k] != null && params[k] !== "") payload[k] = params[k];
+      });
+    }
+    window.dataLayer.push(payload);
+  }
+
   document.querySelectorAll(".chronicles-share-controls").forEach(function (root) {
     var url = root.getAttribute("data-share-url") || window.location.href;
     var title = root.getAttribute("data-share-title") || document.title;
     var status = root.parentElement && root.parentElement.querySelector(".chronicles-share-status");
+    var articlePage = document.querySelector("[data-chronicles-page='article']");
+    var articleSlug = articlePage ? (articlePage.getAttribute("data-article-slug") || "") : "";
+
     function setStatus(msg) {
       if (!status) return;
       afterNextPaint(function () {
         status.textContent = msg || "";
+      });
+    }
+
+    function trackShare(method) {
+      if (!articlePage) return;
+      pushChroniclesEvent("chronicles_share", {
+        article_slug: articleSlug,
+        content_group: "chronicles",
+        share_method: method
       });
     }
 
@@ -194,6 +217,7 @@
         nativeBtn.hidden = true;
       } else {
         nativeBtn.addEventListener("click", function () {
+          trackShare(nativeBtn.getAttribute("data-share-method") || "native");
           // Invoke share as the only sync work (preserves user activation).
           navigator.share({ title: title, url: url }).catch(function () {});
         });
@@ -202,6 +226,7 @@
     var copyBtn = root.querySelector("[data-share-copy]");
     if (copyBtn) {
       copyBtn.addEventListener("click", function () {
+        trackShare(copyBtn.getAttribute("data-share-method") || "copy");
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(url).then(function () {
             setStatus("Link copied.");
@@ -213,5 +238,94 @@
         }
       });
     }
+    root.querySelectorAll("a[data-share-method]").forEach(function (a) {
+      a.addEventListener("click", function () {
+        trackShare(a.getAttribute("data-share-method") || "unknown");
+      });
+    });
   });
+
+  /* —— Chronicles measurement (article pages only) ——
+     Shared GA4/dataLayer foundation — see docs/chronicles/lonko-chronicles-ga4-foundation.md */
+  (function initChroniclesMeasure() {
+    var page = document.querySelector("[data-chronicles-page='article']");
+    if (!page) return;
+
+    var slug = page.getAttribute("data-article-slug") || "";
+    function measure(name, params) {
+      var base = {
+        article_slug: slug,
+        content_group: "chronicles"
+      };
+      if (params) {
+        Object.keys(params).forEach(function (k) {
+          base[k] = params[k];
+        });
+      }
+      pushChroniclesEvent(name, base);
+    }
+
+    var thresholds = [25, 50, 75, 90];
+    var fired = {};
+    function scrollPercent() {
+      var doc = document.documentElement;
+      var body = document.body;
+      var scrollTop = window.pageYOffset || doc.scrollTop || (body && body.scrollTop) || 0;
+      var height =
+        Math.max(doc.scrollHeight, (body && body.scrollHeight) || 0) - window.innerHeight;
+      if (height <= 0) return 100;
+      return Math.min(100, Math.round((scrollTop / height) * 100));
+    }
+    function checkScroll() {
+      var pct = scrollPercent();
+      thresholds.forEach(function (t) {
+        if (pct >= t && !fired[t]) {
+          fired[t] = true;
+          measure("chronicles_scroll_depth", { scroll_percent: t });
+        }
+      });
+    }
+    window.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
+
+    document.querySelectorAll('a[data-chronicles-outbound="source"]').forEach(function (a) {
+      a.addEventListener("click", function () {
+        measure("chronicles_outbound_source_click", {
+          link_url: a.href,
+          link_text: (a.textContent || "").trim().slice(0, 120)
+        });
+      });
+    });
+
+    function isSameOrigin(href) {
+      try {
+        return new URL(href, window.location.href).origin === window.location.origin;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    document
+      .querySelectorAll(".chronicles-article-body a[href], .chronicles-related a[href]")
+      .forEach(function (a) {
+        a.addEventListener("click", function () {
+          if (!isSameOrigin(a.href)) return;
+          measure("chronicles_internal_link_click", {
+            link_url: a.href,
+            link_text: (a.textContent || "").trim().slice(0, 120)
+          });
+        });
+      });
+
+    document.querySelectorAll("#site-nav a[href], a.brand[href]").forEach(function (a) {
+      a.addEventListener("click", function () {
+        var label = (a.textContent || "").trim();
+        if (a.classList.contains("brand")) label = "Home";
+        measure("chronicles_to_site_nav", {
+          nav_label: label.slice(0, 60),
+          link_url: a.href
+        });
+      });
+    });
+  })();
 })();

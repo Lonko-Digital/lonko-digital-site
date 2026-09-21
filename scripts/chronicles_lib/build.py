@@ -319,7 +319,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     sources_html = ""
     if article.sources:
         items = "\n".join(
-            f'          <li><a href="{escape_text(s["url"])}" rel="noopener noreferrer">{escape_text(s["description"])}</a></li>'
+            f'          <li><a href="{escape_text(s["url"])}" rel="noopener noreferrer" data-chronicles-outbound="source">{escape_text(s["description"])}</a></li>'
             for s in article.sources
         )
         sources_html = f"""
@@ -350,11 +350,11 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
       <section class="chronicles-share" aria-labelledby="share-heading">
         <h2 id="share-heading" class="visually-quiet">Share</h2>
         <div class="chronicles-share-controls" data-share-url="{escape_text(canonical)}" data-share-title="{escape_text(article.title)}">
-          <button type="button" class="chronicles-share-btn" data-share-native>Share</button>
-          <button type="button" class="chronicles-share-btn" data-share-copy>Copy link</button>
-          <a class="chronicles-share-btn" href="mailto:?subject={share_title}&amp;body={share_url}">Email</a>
-          <a class="chronicles-share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={share_url}" rel="noopener noreferrer" target="_blank">LinkedIn</a>
-          <a class="chronicles-share-btn" href="https://twitter.com/intent/tweet?url={share_url}&amp;text={share_title}" rel="noopener noreferrer" target="_blank">X</a>
+          <button type="button" class="chronicles-share-btn" data-share-native data-share-method="native">Share</button>
+          <button type="button" class="chronicles-share-btn" data-share-copy data-share-method="copy">Copy link</button>
+          <a class="chronicles-share-btn" href="mailto:?subject={share_title}&amp;body={share_url}" data-share-method="email">Email</a>
+          <a class="chronicles-share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={share_url}" rel="noopener noreferrer" target="_blank" data-share-method="linkedin">LinkedIn</a>
+          <a class="chronicles-share-btn" href="https://twitter.com/intent/tweet?url={share_url}&amp;text={share_title}" rel="noopener noreferrer" target="_blank" data-share-method="x">X</a>
         </div>
         <p class="chronicles-share-status" aria-live="polite"></p>
       </section>
@@ -374,7 +374,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
 """
 
     main = f"""
-  <main id="main" class="chronicles-article-page">
+  <main id="main" class="chronicles-article-page" data-chronicles-page="article" data-article-slug="{escape_text(article.slug)}">
     <article class="chronicles-article">
       <header class="chronicles-article-header container">
         <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -1029,14 +1029,37 @@ CHRONICLES_JS = r"""(function () {
     });
   }
 
+  function pushChroniclesEvent(name, params) {
+    window.dataLayer = window.dataLayer || [];
+    var payload = { event: name };
+    if (params) {
+      Object.keys(params).forEach(function (k) {
+        if (params[k] != null && params[k] !== "") payload[k] = params[k];
+      });
+    }
+    window.dataLayer.push(payload);
+  }
+
   document.querySelectorAll(".chronicles-share-controls").forEach(function (root) {
     var url = root.getAttribute("data-share-url") || window.location.href;
     var title = root.getAttribute("data-share-title") || document.title;
     var status = root.parentElement && root.parentElement.querySelector(".chronicles-share-status");
+    var articlePage = document.querySelector("[data-chronicles-page='article']");
+    var articleSlug = articlePage ? (articlePage.getAttribute("data-article-slug") || "") : "";
+
     function setStatus(msg) {
       if (!status) return;
       afterNextPaint(function () {
         status.textContent = msg || "";
+      });
+    }
+
+    function trackShare(method) {
+      if (!articlePage) return;
+      pushChroniclesEvent("chronicles_share", {
+        article_slug: articleSlug,
+        content_group: "chronicles",
+        share_method: method
       });
     }
 
@@ -1046,6 +1069,7 @@ CHRONICLES_JS = r"""(function () {
         nativeBtn.hidden = true;
       } else {
         nativeBtn.addEventListener("click", function () {
+          trackShare(nativeBtn.getAttribute("data-share-method") || "native");
           // Invoke share as the only sync work (preserves user activation).
           navigator.share({ title: title, url: url }).catch(function () {});
         });
@@ -1054,6 +1078,7 @@ CHRONICLES_JS = r"""(function () {
     var copyBtn = root.querySelector("[data-share-copy]");
     if (copyBtn) {
       copyBtn.addEventListener("click", function () {
+        trackShare(copyBtn.getAttribute("data-share-method") || "copy");
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(url).then(function () {
             setStatus("Link copied.");
@@ -1065,7 +1090,96 @@ CHRONICLES_JS = r"""(function () {
         }
       });
     }
+    root.querySelectorAll("a[data-share-method]").forEach(function (a) {
+      a.addEventListener("click", function () {
+        trackShare(a.getAttribute("data-share-method") || "unknown");
+      });
+    });
   });
+
+  /* —— Chronicles measurement (article pages only) ——
+     Shared GA4/dataLayer foundation — see docs/chronicles/lonko-chronicles-ga4-foundation.md */
+  (function initChroniclesMeasure() {
+    var page = document.querySelector("[data-chronicles-page='article']");
+    if (!page) return;
+
+    var slug = page.getAttribute("data-article-slug") || "";
+    function measure(name, params) {
+      var base = {
+        article_slug: slug,
+        content_group: "chronicles"
+      };
+      if (params) {
+        Object.keys(params).forEach(function (k) {
+          base[k] = params[k];
+        });
+      }
+      pushChroniclesEvent(name, base);
+    }
+
+    var thresholds = [25, 50, 75, 90];
+    var fired = {};
+    function scrollPercent() {
+      var doc = document.documentElement;
+      var body = document.body;
+      var scrollTop = window.pageYOffset || doc.scrollTop || (body && body.scrollTop) || 0;
+      var height =
+        Math.max(doc.scrollHeight, (body && body.scrollHeight) || 0) - window.innerHeight;
+      if (height <= 0) return 100;
+      return Math.min(100, Math.round((scrollTop / height) * 100));
+    }
+    function checkScroll() {
+      var pct = scrollPercent();
+      thresholds.forEach(function (t) {
+        if (pct >= t && !fired[t]) {
+          fired[t] = true;
+          measure("chronicles_scroll_depth", { scroll_percent: t });
+        }
+      });
+    }
+    window.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
+
+    document.querySelectorAll('a[data-chronicles-outbound="source"]').forEach(function (a) {
+      a.addEventListener("click", function () {
+        measure("chronicles_outbound_source_click", {
+          link_url: a.href,
+          link_text: (a.textContent || "").trim().slice(0, 120)
+        });
+      });
+    });
+
+    function isSameOrigin(href) {
+      try {
+        return new URL(href, window.location.href).origin === window.location.origin;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    document
+      .querySelectorAll(".chronicles-article-body a[href], .chronicles-related a[href]")
+      .forEach(function (a) {
+        a.addEventListener("click", function () {
+          if (!isSameOrigin(a.href)) return;
+          measure("chronicles_internal_link_click", {
+            link_url: a.href,
+            link_text: (a.textContent || "").trim().slice(0, 120)
+          });
+        });
+      });
+
+    document.querySelectorAll("#site-nav a[href], a.brand[href]").forEach(function (a) {
+      a.addEventListener("click", function () {
+        var label = (a.textContent || "").trim();
+        if (a.classList.contains("brand")) label = "Home";
+        measure("chronicles_to_site_nav", {
+          nav_label: label.slice(0, 60),
+          link_url: a.href
+        });
+      });
+    });
+  })();
 })();
 """
 

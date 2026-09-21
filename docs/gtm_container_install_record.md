@@ -15,6 +15,20 @@ Container install remains sitewide. **Tags are now configured and firing** throu
 | GA4 Event `site_click` | Measurement ID `G-Y8T0Q59191` |
 | GA4 Event `site_scroll_depth` | Measurement ID `G-Y8T0Q59191` |
 
+### Chronicles shared events (site `dataLayer` — 2026-09-21)
+
+Article pages push these Custom Events via `chronicles/assets/chronicles.js`. **GTM → GA4 Event tags for them are a one-time Admin step** (not yet assumed published in this record). Spec: [`docs/chronicles/lonko-chronicles-ga4-foundation.md`](./chronicles/lonko-chronicles-ga4-foundation.md).
+
+| `dataLayer` event | Intended GA4 Event tag |
+| --- | --- |
+| `chronicles_scroll_depth` | Pending GTM Admin (`scroll_percent`) |
+| `chronicles_share` | Pending GTM Admin (`share_method`) |
+| `chronicles_outbound_source_click` | Pending GTM Admin |
+| `chronicles_internal_link_click` | Pending GTM Admin |
+| `chronicles_to_site_nav` | Pending GTM Admin |
+
+Do **not** replace `site_click` / `site_scroll_depth`. Chronicles events are additive and article-scoped.
+
 No Meta Pixel is configured. Public description of these tags: [Privacy Policy](../privacy/).
 
 ---
@@ -128,4 +142,4 @@ Updated **2026-08-22** so public wording matches the live tags (GA4, Google Ads 
 
 ## Stop line
 
-GTM foundation remains installed sitewide. Live container currently fires GA4, a Google Ads tag, and a LinkedIn Insight Tag as documented above. Do not edit GTM from this repo without an explicit tracking/governance task.
+GTM foundation remains installed sitewide. Live container currently fires GA4, a Google Ads tag, and a LinkedIn Insight Tag as documented above. Chronicles article pages emit shared `chronicles_*` `dataLayer` events in source; mapping those to GA4 Event tags is a one-time GTM Admin task (see foundation doc). Do not edit GTM from this repo without an explicit tracking/governance task. Do not invent per-article GTM setups for routine Chronicles posts.

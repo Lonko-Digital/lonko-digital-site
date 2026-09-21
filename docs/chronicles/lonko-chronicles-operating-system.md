@@ -210,7 +210,24 @@ Not every article needs backlink outreach. Identify genuine citation-potential p
 
 ## 53. GA4 measurement — owned, not an afterthought
 
-Every major Chronicles/SEO/social initiative gets a measurement plan; Claude Blog owns the measurement requirements, Cursor Web implements the website/GTM/GA4 changes. Per article, identify what should be measured where appropriate: organic entrances, engaged sessions, engagement time, scroll/read depth, article shares, outbound source clicks, internal-link clicks, Chronicles-to-product/site navigation, newsletter signup, Early Access signup, referral traffic from earned backlinks, social referral traffic, returning readers, conversions/leads where measurement is valid. Avoid vanity-event explosion — define a **clean, reusable event architecture** shared across articles rather than one-off custom events per piece (e.g. `chronicles_scroll_depth`, `chronicles_outbound_source_click`, `chronicles_internal_link_click`, `chronicles_to_site_nav`, `chronicles_share`). Always distinguish **content-performance metrics** (e.g. 10,000 article views) from **business outcomes** (e.g. ten qualified business owners discovering Lonko through the piece) — the latter usually matters more. Coexist with GA4's native Enhanced Measurement events rather than duplicating or double-counting them (see the per-article GA4 implementation brief for the worked example). **A finalized measurement specification is not the same as completed implementation/QA — don't treat one as satisfying the other in any publish-readiness assessment.**
+Every major Chronicles/SEO/social initiative gets a measurement plan; Claude Blog owns the measurement requirements, Cursor Web implements the website/GTM/GA4 changes. Per article, identify what should be measured where appropriate: organic entrances, engaged sessions, engagement time, scroll/read depth, article shares, outbound source clicks, internal-link clicks, Chronicles-to-product/site navigation, newsletter signup, Early Access signup, referral traffic from earned backlinks, social referral traffic, returning readers, conversions/leads where measurement is valid. Avoid vanity-event explosion — define a **clean, reusable event architecture** shared across articles rather than one-off custom events per piece (e.g. `chronicles_scroll_depth`, `chronicles_outbound_source_click`, `chronicles_internal_link_click`, `chronicles_to_site_nav`, `chronicles_share`). Always distinguish **content-performance metrics** (e.g. 10,000 article views) from **business outcomes** (e.g. ten qualified business owners discovering Lonko through the piece) — the latter usually matters more. Coexist with GA4's native Enhanced Measurement events rather than duplicating or double-counting them. **A finalized measurement specification is not the same as completed implementation/QA — don't treat one as satisfying the other in any publish-readiness assessment.**
+
+### 53.1 Permanent Chronicles GA4 foundation (site infrastructure)
+
+**Chronicles tracking is site infrastructure, not Article #N work.** Build and QA the shared layer once; every future article inherits it. Do not invent per-article GA4 setups, do not make Alex rebuild tags per post, and do not leave measurement as a recurring Claude Blog publish blocker.
+
+Canonical engineering/ops record: `docs/chronicles/lonko-chronicles-ga4-foundation.md`.
+
+| Gate | Who | When |
+|---|---|---|
+| Chronicles GA4 foundation (shared `dataLayer` events + article template wiring) | Cursor Web | Once, before first Chronicles article live |
+| GTM → GA4 event-tag mapping for the shared events | Alex / GTM Admin | Once |
+| Article creative + package | Claude Blog | Every article |
+| PRE-PUBLISH tracking QA | Cursor Web | Confirm foundation still healthy (fast checklist) — not a rebuild |
+| Alex APPROVED FOR PUBLICATION | Alex | Every article |
+| POST-PUBLISH verify | Cursor Web | After release |
+
+Shared events (all article pages): `chronicles_scroll_depth`, `chronicles_share`, `chronicles_outbound_source_click`, `chronicles_internal_link_click`, `chronicles_to_site_nav`. After foundation + GTM mapping are live, Claude notes only *extra* measurement needs; publish does not wait for new GA4 engineering unless a genuine new shared event is approved.
 
 ## 54. Social — native, not blog promotion
 
@@ -232,9 +249,9 @@ Before any article package reaches Alex + ChatGPT, run this self-audit — it sh
 - **Schema:** Correct `schema_type`? Accurate publisher/author/dates/images/breadcrumb relationships? Nothing fabricated?
 - **Imagery:** Accurate? Professional? Mobile-safe? Alt text correct? Social crop works? **Run against §57's Pre- and Post-Generation QA lists specifically.**
 - **Social:** Native to LinkedIn/Meta? Useful without clicking? Human? No generic AI copy?
-- **Measurement:** Is this a finalized *specification* or confirmed *implementation*? Don't conflate the two (see §53). What will GA4 tell us after publication? Additional tracking requirements identified before launch?
+- **Measurement:** Does this article rely only on the shared Chronicles GA4 foundation (§53.1), or does it need a *new* shared event? Don't conflate a measurement *specification* with completed *implementation/QA*. Foundation PRE-PUBLISH QA is a fast health check — not a per-article rebuild. What will GA4 tell us after publication?
 - **Backlinks:** Is this link-worthy? If yes, what's the specific earned-link strategy?
-- **Publication gate:** Every required gate cleared — hero/social creative approved, GA4 implementation *and* QA (not just spec) confirmed, publish-time QA complete, and Alex's explicit "APPROVED FOR PUBLICATION" received? Missing any one of these means not publish-ready, regardless of how complete the rest of the package is.
+- **Publication gate:** Every required gate cleared — hero/social creative approved, Chronicles GA4 foundation healthy (plus any approved *new* events implemented/QA'd), publish-time QA complete, and Alex's explicit "APPROVED FOR PUBLICATION" received? Missing any one of these means not publish-ready, regardless of how complete the rest of the package is.
 
 ---
 
@@ -427,11 +444,11 @@ Consult and maintain:
 - No direct publishing access to the Lonko Digital CMS/website or to LinkedIn/Meta from this session as of 2026-09-17. Per Alex's memo, Cursor Web has since built and tested a Google Drive → GitHub Actions publishing bridge (`Lonko Chronicles/Inbox` → validation/build → automatic PR → Alex's merge). This session does not yet have a Google Drive connector confirmed active for that specific workflow — production packages are delivered here for Alex to move into the Inbox himself until/unless that upload step is confirmed working directly from this session. Never upload without Alex's explicit "APPROVED FOR PUBLICATION."
 - This project ("LinkedIn Post"/"Lonko Blog Post & Social Media") also carries a separate, older operating doc (`claude/linkedin-content-system.md`) for Robert Fernandez's own personal LinkedIn thought-leadership posts (job-search positioning) — that is a distinct workstream from Lonko Chronicles/Lonko's company social and should not be merged with this one.
 - An evolving SEO + AI Discovery + Backlink Authority Roadmap lives at `claude/lonko-chronicles-seo-authority-roadmap.md` per §47/§51/§52 — check it before topic selection and update it as articles publish and evidence comes in. (Not part of this canonicalization pass — no repo-path assignment given for it yet.)
-- Article #1's creative package remains incomplete under the Visual Creative System: dedicated hero/social photography has been rendered and passed concept/realism QA; only final brand-layer corrections remain before final creative QA and Alex approval. The hero must export at **1600×900** with a 3px `#e10600` divider. The social banner must export at **1200×628** with exact production typography/colors and the real Lonko logo mark + text wordmark. GA4 implementation/QA remains a separate open gate.
+- Article #1's creative package remains incomplete under the Visual Creative System: dedicated hero/social photography has been rendered and passed concept/realism QA; only final brand-layer corrections remain before final creative QA and Alex approval. The hero must export at **1600×900** with a 3px `#e10600` divider. The social banner must export at **1200×628** with exact production typography/colors and the real Lonko logo mark + text wordmark. Chronicles GA4 is **site foundation** (§53.1 / `lonko-chronicles-ga4-foundation.md`): shared `dataLayer` events ship in-repo; one-time GTM → GA4 event-tag mapping may still be outstanding before first live PRE-PUBLISH measurement QA. Do not reopen per-article GA4 engineering for routine posts.
 
 ## Editorial calendar log
 
 (Track published/in-progress Chronicles pieces here as they happen: topic, format, date, primary query, evergreen/timely, status.)
 
 - Existing (pre-dates this system, published on lonkodigital.com/insights — home page TBD, see note above): "The Real Cost of Not Tracking Conversions," "Marketing Data Feels Like a Second Job," "Why Clicks Don't Feel Like Progress."
-- In production (not yet published): "AI Overviews and Local Search: What Actually Changed for Small Businesses" — Article #1, analysis format, targets AI Overviews/local search informational intent, evergreen-with-timely-hook, section "What Business Owners Should Know," pending multiple gates as of 2026-09-19 (see Article #1 doc's status header: hero/social creative, GA4 implementation/QA, publish-time QA, and Alex's explicit approval all still outstanding).
+- In production (not yet published): "AI Overviews and Local Search: What Actually Changed for Small Businesses" — Article #1, analysis format, targets AI Overviews/local search informational intent, evergreen-with-timely-hook, section "What Business Owners Should Know," pending gates as of 2026-09-21 (hero/social creative, foundation PRE-PUBLISH tracking QA including any remaining one-time GTM mapping, publish-time QA, and Alex's explicit approval). Shared Chronicles GA4 events are site infrastructure (§53.1), not an Article #1-only rebuild.

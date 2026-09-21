@@ -276,8 +276,20 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 **Applies to:** Every approved Chronicles hero, social banner, in-body image, or other creative asset that Claude Blog must retrieve.
 
+## L021 — Chronicles GA4 is foundation, not a per-article rebuild
+
+**Issue:** Article packages were treated as blocked on “GA4 implementation” even though GTM/GA4 were already live sitewide — because the shared Chronicles `dataLayer` event layer had never been built once.
+
+**Decision:** Treat Chronicles measurement as permanent site infrastructure (§53.1). Shared events ship in the article template/JS; PRE-PUBLISH tracking QA is a fast health check. Only genuine *new* shared events require engineering.
+
+**Reusable lesson:** Missing shared Chronicles tracking is an engineering foundation gap, not an editorial per-article gate to reinvent every post.
+
+**Applies to:** All Chronicles publish-readiness assessments.
+
+**Canonical record:** `docs/chronicles/lonko-chronicles-ga4-foundation.md`.
+
 ---
 
 ## Status
 
-L001–L020 active as of 2026-09-21. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
+L001–L021 active as of 2026-09-21. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17). For measurement gates, also read §53.1 / the GA4 foundation doc.
