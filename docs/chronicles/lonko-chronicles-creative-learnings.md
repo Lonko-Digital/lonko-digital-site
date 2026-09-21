@@ -260,6 +260,24 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ---
 
+## L020 — Approved assets live in the shared Google Drive handoff folder
+
+**Issue:** An approved hero/social pair was saved to an internal ChatGPT Library path and handed to Claude Blog, but Claude Blog only had read access to the shared Google Drive production workspace and could not retrieve those files.
+
+**Decision:** After Alex approves a final hero/social asset, the Lonko Chronicles production workspace must upload the file to the shared Google Drive **Approved Assets** folder before handoff.
+
+**Canonical destination:**
+- Folder: **Approved Assets**
+- Folder ID: `1sGbYPmWpo-cSyFxhCi8HF9Rz3LOplV-P`
+- URL: `https://drive.google.com/drive/folders/1sGbYPmWpo-cSyFxhCi8HF9Rz3LOplV-P`
+- ChatGPT-visible Drive path: `/Google Drive/RF760626/Lonko Chronicles - Shared Production/Approved Assets/`
+
+**Reusable lesson:** A file can be durable but still be inaccessible to the next role. Cross-role handoff is not complete until the approved asset exists in the shared Drive location Claude Blog can actually read. ChatGPT Library paths, sandbox paths, local/container paths, and other private-only locations are working locations, not final handoff locations.
+
+**Applies to:** Every approved Chronicles hero, social banner, in-body image, or other creative asset that Claude Blog must retrieve.
+
+---
+
 ## Status
 
-L001–L019 active as of 2026-09-21. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
+L001–L020 active as of 2026-09-21. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
