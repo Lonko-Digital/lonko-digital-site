@@ -140,13 +140,13 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ## L010 — Real logo asset, never generated substitute
 
-**Issue:** The social banner generated “LONKO DIGITAL” as styled text instead of using the actual Lonko logo mark.
+**Issue:** Social-banner iterations used styled text and invented marks instead of faithfully using the actual Lonko logo.
 
-**Decision:** Logo-bearing creative must composite an authoritative logo asset.
+**Decision:** Logo-bearing creative must composite the authoritative real logo asset. Default public-facing social/banner creative includes the authentic Lonko mark + text wordmark “Lonko Digital” unless Alex explicitly approves a logo-free exception.
 
-**Reusable lesson:** A typed/generated company name is not a substitute for the real logo mark.
+**Reusable lesson:** A typed/generated company name, ring, geometric “L,” generic icon, approximate mark, or any model-invented symbol is not the Lonko logo. Wrong or missing logo = automatic reject.
 
-**Applies to:** Social/public-facing creative requiring Lonko branding.
+**Applies to:** Social/public-facing creative requiring Lonko branding. Locked hero briefs that explicitly specify “no logo” remain logo-free.
 
 **Production assets (this repo):** `assets/images/lonko-logo.png` (+ `.webp`). Compose with text wordmark “Lonko Digital” as the live site header does. See `docs/brand/lonko-brand-production-tokens.md`.
 
@@ -224,6 +224,42 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ---
 
+## L017 — Human coherence is a pass/fail realism gate
+
+**Issue:** A generated person can have a credible face while the hands, forearms, build, proportions, or posture look inconsistent with the rest of the same person, making the image feel visibly AI-generated.
+
+**Decision:** Evaluate the full human subject as one coherent person — face, neck, shoulders, torso, arms, hands, posture, build, age cues, wardrobe, and role. When the brief specifies a woman or man, the entire subject must remain visually coherent with that intended person without caricature or stereotyped exaggeration.
+
+**Reusable lesson:** A realistic face does not rescue mismatched anatomy. If body parts look like they belong to a different person, regenerate before delivery.
+
+**Applies to:** Every generated image containing people.
+
+---
+
+## L018 — Alex should receive the finished standard, not the first QA pass
+
+**Issue:** Avoidable defects were sometimes visible before delivery — weak topic fit, blurry/soft output, anatomy problems, incorrect logo treatment, approximate dimensions, or other known weaknesses — and were still surfaced for Alex to catch.
+
+**Decision:** Run a strict internal quality gate before delivery. The production role must answer its own improvement questions, correct any material defect it can see, and only then hand the asset to Alex for final approval.
+
+**Reusable lesson:** If we can see the problem, we fix it before Alex sees it. “Good enough” is not a delivery state.
+
+**Applies to:** All Lonko images, banners, social creative, editorial visuals, and derivative assets.
+
+---
+
+## L019 — Topic relevance is a pass/fail creative requirement
+
+**Issue:** A visually attractive image can still be weak if it only communicates a broad category rather than the exact article subject and angle.
+
+**Decision:** Every creative must contain a defensible, quickly understandable relationship to the specific story. The scene, action, props, and emotional moment should support the article's actual subject rather than merely looking professional.
+
+**Reusable lesson:** Beautiful but generic is a reject. The image must earn its place beside that exact article.
+
+**Applies to:** Every Chronicles hero, social banner, and editorial creative.
+
+---
+
 ## Status
 
-L001–L016 active as of 2026-09-19. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
+L001–L019 active as of 2026-09-21. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17).
