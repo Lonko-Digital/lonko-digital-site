@@ -256,6 +256,8 @@ Every image must have a defensible visual relationship to its article. Before fi
 - **Human/outcome signal** — a person, relationship, or moment that connects to what the reader gets out of understanding this topic
 - **Lonko brand signal** — something that ties the image back to Lonko's identity and quality level
 
+**Topic-fit is pass/fail, not decorative.** A beautiful image that does not clearly belong with the exact article subject/angle is not acceptable. The image must help the reader understand what kind of story they are about to read, not merely match a broad category such as “business,” “technology,” or “marketing.”
+
 ### 57.3 Creative freedom — inspiration, not a menu
 
 The environments below are inspiration, not a checklist to cycle through, and Claude Blog is explicitly encouraged to invent environments and concepts not listed here when they serve the topic better: office, home office, retail, café, restaurant, warehouse, conference room, presentation, business travel, airport, hotel, late-night work, city, countryside, home, BBQ, hiking, sailing, fishing, beach, camping, walking, biking, kayaking, swimming/lake, sports, hobbies, family activities, travel, and other believable environments appropriate to the topic.
@@ -287,13 +289,17 @@ Before producing a final visual, develop at least three materially different cre
 
 The bar: could a skilled commercial photographer plausibly have captured this moment? Favor natural skin, realistic textures, believable lighting and environments, candid expressions, normal proportions, correct hands/anatomy, plausible device use, realistic depth, restrained visual effects, real-world wardrobe, credible props. Avoid plastic-looking skin, exaggerated smiles, glowing AI-brain imagery, robots as AI shorthand, hologram overload, excessive neon, magical environments, warped devices, malformed hands, unnecessary branded objects everywhere, fake-looking text baked onto every surface, overly perfect stock poses, and visual clutter. The result should feel like excellent commercial photography with thoughtful art direction — never like "look what an image generator can do."
 
+**Human-coherence gate:** when a person appears, the face, neck, shoulders, torso, arms, hands, posture, age cues, build, wardrobe, and role must read as one plausible real person. When the brief specifies a gender presentation, that presentation must remain coherent across the entire subject without relying on caricature or stereotypes. Reject any image where the head/body feel mismatched, hands or forearms look like they belong to a different person, proportions undermine the intended subject, or the anatomy makes the image feel composited or AI-generated. “Mostly realistic” is not a pass.
+
 ### 57.10 Restraint
 
 Don't try to communicate every Lonko benefit in one image. One strong visual story beats six slogans, four dashboards, a branded mug, a branded notebook, a branded shirt, icons everywhere, and multiple stacked visual metaphors. Pick one idea and let it breathe.
 
 ### 57.11 Brand visibility
 
-Lonko Digital should normally be identifiable in social/banner creative — through the logo/wordmark, the controlled red/black/white visual system, typography, composition style, or a restrained "Lonko Chronicles" designation where relevant. Don't rely solely on the Chronicles name if the company identity is otherwise unclear in the piece.
+Lonko Digital should be unmistakably identifiable in social/banner creative. **Default rule: every public-facing Lonko social/banner asset includes the real Lonko logo mark plus the text wordmark “Lonko Digital,” unless Alex explicitly approves a logo-free exception.** Article heroes remain logo-free when their locked hero brief explicitly requires no logo.
+
+The real Lonko logo is a protected production asset. Never replace it with a generated ring, geometric “L,” generic icon, approximate headdress, text-only substitute, model-invented mark, or any other reinterpretation. If the authoritative logo asset is unavailable to the compositing step, stop and retrieve it before producing a final branded asset. **Wrong, missing, or approximated logo = automatic reject.**
 
 **Exact production values** (colors, type stacks, logo paths) are canonical in `docs/brand/lonko-brand-production-tokens.md` — use that file for HEX/RGB, font stacks/weights, and real logo assets. Do not invent or approximate brand values in prompts.
 
@@ -325,7 +331,9 @@ Then confirm: Is it meaningfully tied to the article topic? Is it substantially 
 
 ### 57.14 Post-generation QA (before recommending approval)
 
-Inspect: anatomy/hands, faces/eyes, device geometry, UI plausibility, clothing, environmental consistency, shadows/reflections, background people, text rendering, logo rendering, unrealistic props, repeated/duplicated objects, artificial-looking skin, excessive perfection, accidental visual artifacts, accessibility/readability, mobile-feed legibility. Reject and regenerate when necessary — never approve something merely because it's attractive.
+Inspect: exact topic/subject alignment, anatomy/hands, whole-body coherence, faces/eyes, device geometry, UI plausibility, clothing, environmental consistency, shadows/reflections, background people, text rendering, **real-logo fidelity**, unrealistic props, repeated/duplicated objects, artificial-looking skin, sharpness/detail, compression/blurriness, excessive perfection, accidental visual artifacts, accessibility/readability, mobile-feed legibility, and exact export dimensions. Reject and regenerate when necessary — never approve something merely because it's attractive.
+
+**10/10 internal delivery gate:** do not hand Alex an asset while a known defect remains. If the production pass can already see a problem — weak topic fit, AI-looking anatomy, mismatched body parts, blurry/soft quality, incorrect branding, wrong text, weak composition, or any other material flaw — correct it before delivery. Alex's review is final approval, not the first quality-control pass.
 
 ### 57.15 Anti-repetition system
 
@@ -350,7 +358,7 @@ Reject or substantially revise a concept that repeats too much of a recent or le
 6. Select/recommend the strongest concept, with reasoning.
 7. **Lock the production contract before rendering:** asset role; exact pixel dimensions; approved on-image copy; exact brand colors; font stack + weight; authoritative logo asset; whether text/logo will be deterministically composited; final filename/format. Do not render while any deterministic requirement is still vague or unresolved.
 8. Generate or brief the photographic/illustrative scene. Carry exact brand values from `docs/brand/lonko-brand-production-tokens.md` whenever brand treatment appears. For public-facing assets with exact text/logo requirements, keep scene generation separate from deterministic brand compositing (L013).
-9. Run realism, relevance, brand, quality, **and exact-dimension** QA (§57.13-57.14; L011-L014). Freeze any layer that passes; later corrections stay scoped to the failed layer unless a genuine new defect is found.
+9. Run realism, relevance, human-coherence, brand/logo fidelity, sharpness, quality, **and exact-dimension** QA (§57.13-57.14; Creative Learnings). Apply the 10/10 internal delivery gate: if a material weakness is already visible, revise before showing Alex. Freeze any layer that passes; later corrections stay scoped to the failed layer unless a genuine new defect is found.
 10. Get Alex's approval.
 11. Record the approved creative in the registry at `docs/chronicles/lonko-chronicles-creative-registry.md`.
 
