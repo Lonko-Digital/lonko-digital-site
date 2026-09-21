@@ -92,6 +92,8 @@ Do **not** default social-banner headlines to Source Serif 4 unless the creative
 
 ## 4. Logo assets
 
+**Permanent identity rule:** the authentic Lonko logo is the approved red/white/black mark represented by the canonical logo files below. No ring, geometric “L,” monogram, generic icon, model-generated approximation, or text-only substitute is an acceptable Lonko logo. When branding is required, use the real asset.
+
 ### Public site (this repo)
 
 | Asset | Path | Format | Intrinsic size | Role |
@@ -129,9 +131,11 @@ Noted historically in `docs/public_showcase/linkedin/README.md` (public site shi
 
 ### Recommended social-banner brand treatment
 
-1. Place the **real mark** from `assets/images/lonko-logo.png` (or a hi-res copy sourced from the sibling `marketing-agent` project into the package — never invent a path inside this repo that does not exist).
-2. Set the wordmark as text **“Lonko Digital”** in the UI sans stack at weight **700** — matching production header composition.
-3. Do **not** generate a fake “LONKO DIGITAL” wordmark inside the image model.
+1. **Default presence rule:** every public-facing Lonko social/banner creative includes the authentic Lonko logo mark unless Alex explicitly approves a logo-free exception. A locked article-hero brief may still require no logo.
+2. Place the **real mark** from `assets/images/lonko-logo.png` (or a hi-res copy sourced from the sibling `marketing-agent` project into the package — never invent a path inside this repo that does not exist).
+3. Set the wordmark as text **“Lonko Digital”** in the UI sans stack at weight **700** — matching production header composition.
+4. Do **not** generate, redraw, simplify, infer, approximate, or substitute the Lonko logo inside the image model.
+5. If the authoritative logo bytes are not available to the final compositing step, **fail closed**: stop, retrieve the real asset, and only then finish the branded creative.
 
 ---
 
@@ -171,7 +175,8 @@ When briefing image tools:
 
 1. **Colors:** pass exact HEX/RGB (`#e10600`), never “Lonko red” / “brand orange.”
 2. **Type:** pass the exact Segoe UI stack + weight, never “modern sans-serif.”
-3. **Logo:** composite the real `lonko-logo` asset + text wordmark; never ask the model to invent the logo.
+3. **Logo:** composite the real `lonko-logo` asset + text wordmark; never ask the model to invent, redraw, simplify, approximate, or substitute the logo. Validate the final mark visually against the authoritative asset before delivery.
+4. **Delivery QA:** do not deliver a branded image with any known topic-fit, anatomy, sharpness, text, logo, or dimension defect. Correct first; Alex reviews the finished work, not an avoidable draft.
 
 ---
 
