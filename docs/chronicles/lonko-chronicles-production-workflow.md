@@ -187,10 +187,16 @@ Passed layers stay frozen. A typography or logo correction does not reopen appro
 
 Once Alex approves both images, Lonko Chronicles must:
 
-1. save the approved hero and social banner to the **durable shared Chronicles asset location** that Claude Blog can access;
+1. save the approved hero and social banner to the **shared Google Drive Approved Assets folder** that Claude Blog can read:
+   - Folder name: **Approved Assets**
+   - Folder ID: `1sGbYPmWpo-cSyFxhCi8HF9Rz3LOplV-P`
+   - Canonical folder URL: `https://drive.google.com/drive/folders/1sGbYPmWpo-cSyFxhCi8HF9Rz3LOplV-P`
+   - Current Library/Drive path when visible to ChatGPT: `/Google Drive/RF760626/Lonko Chronicles - Shared Production/Approved Assets/`
 2. use stable, meaningful filenames tied to the article slug;
-3. return the exact canonical filenames plus their durable location/reference;
+3. return the exact canonical filenames after confirming the uploads succeeded in that folder;
 4. clearly mark them as **ALEX-APPROVED FINAL ASSETS**.
+
+**Hard storage rule:** ChatGPT Library paths, sandbox paths, local container paths, or other private/internal locations are **not valid cross-role handoff locations** for approved Chronicles assets. They may be used for temporary working files only. The final approved files must be uploaded to the Google Drive **Approved Assets** folder above before telling Claude Blog they are ready.
 
 Example naming convention:
 
