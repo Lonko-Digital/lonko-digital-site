@@ -276,9 +276,15 @@ After Alex's explicit publication approval:
    - explicit instruction: **DEPLOY THROUGH THE ESTABLISHED CHRONICLES PUBLISHING WORKFLOW — DO NOT EDIT CONTENT**.
 4. **Fail-closed accessibility rule:** if Claude's working article exists only inside the Claude Project and there is no durable cross-role URL/file that the publishing operator can access, Claude must include the complete frozen publication payload in the PUBLISH HANDOFF rather than asking Alex how to route it or asking Alex to reconstruct the package.
 5. Alex copies that single PUBLISH HANDOFF to the **Lonko Chronicles connected publishing operator**. In the current setup, that operator is the ChatGPT Lonko Chronicles workspace because it has the required connected Drive/GitHub access.
-6. The connected publishing operator executes the established Drive/GitHub publishing workflow using the frozen handoff and the approved Drive assets. It does not reopen editorial, SEO, creative, or social decisions unless a genuine publishing defect makes deployment impossible.
-7. Alex should not manually assemble files, download/re-upload assets, reconstruct metadata, choose between Cursor/Drive/GitHub routes, or locate the bridge Inbox.
-8. If Claude Blog later gains a verified writable publishing/deploy connector, direct routine publication may move to Claude without changing the editorial approval gates.
+6. The connected publishing operator executes the established publication-control workflow using the frozen handoff and approved Drive assets. It does not reopen editorial, SEO, creative, or social decisions unless a genuine publishing defect makes deployment impossible.
+7. **Current operator route (verified 2026-09-22):**
+   - If the configured Drive bridge Inbox is directly reachable by the operator, package the article for the bridge and let the bridge validate/build/open the publication PR.
+   - If the bridge Inbox is service-account-only or not reachable from the operator session, the operator must **not** ask Alex to locate it or choose another route. Instead, translate the frozen handoff into the canonical Chronicles authoring contract on a dedicated GitHub publication branch, include the exact approved Drive asset bytes, regenerate the required derived surfaces, and open a PR against `main`.
+   - Both paths end at the same safety boundary: **a PR, never a direct push to `main`.**
+   - The PR must preserve the frozen content and identify any unavoidable technical mapping or defect without silently changing editorial decisions.
+8. **Alex merge remains authoritative.** The connected operator may prepare and validate the PR automatically after publication approval, but it does not merge to `main` until Alex explicitly authorizes the merge. Alex can give that authorization in chat; he does not need to visit GitHub manually.
+9. Alex should not manually assemble files, download/re-upload assets, reconstruct metadata, choose between Cursor/Drive/GitHub routes, or locate the bridge Inbox.
+10. If Claude Blog later gains a verified writable publishing/deploy connector, direct routine publication may move there without changing the editorial or merge-authorization gates.
 
 Cursor Web is **not** part of the normal per-article operator flow.
 
