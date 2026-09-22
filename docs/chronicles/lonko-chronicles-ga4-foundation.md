@@ -1,6 +1,7 @@
 # Lonko Chronicles — GA4 / dataLayer foundation
 
-**Status:** site infrastructure (permanent). Built once; reused by every article.  
+**Status:** complete site infrastructure (permanent). Built once; reused by every article.  
+**Site `dataLayer`:** shipped 2026-09-21. **GTM → GA4 tags:** verified live in `GTM-53DPJ88F` on 2026-09-22.  
 **Canonical path:** `docs/chronicles/lonko-chronicles-ga4-foundation.md`  
 **Related:** Operating System §53; `docs/gtm_container_install_record.md`
 
@@ -59,7 +60,7 @@ In container `GTM-53DPJ88F`, create GA4 Event tags → measurement ID `G-Y8T0Q59
 
 Publish the container. Record completion in `docs/gtm_container_install_record.md`.
 
-Until these tags exist, `dataLayer` pushes still happen in the browser, but GA4 reports will not show the Chronicles events.
+**Done (2026-09-22):** shared event tags are present in the published container. Remaining per-article work is the fast PRE-PUBLISH health check only.
 
 ## PRE-PUBLISH tracking QA (fast checklist)
 
