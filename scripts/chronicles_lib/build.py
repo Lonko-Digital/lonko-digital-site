@@ -374,7 +374,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     share_title = quote(article.title, safe="")
     share_html = f"""
       <section class="chronicles-share" aria-labelledby="share-heading">
-        <h2 id="share-heading" class="visually-quiet">Share</h2>
+        <h2 id="share-heading" class="visually-hidden">Share</h2>
         <div class="chronicles-share-controls" data-share-url="{escape_text(canonical)}" data-share-title="{escape_text(article.title)}">
           <button type="button" class="chronicles-share-btn" data-share-native data-share-method="native">Share</button>
           <button type="button" class="chronicles-share-btn" data-share-copy data-share-method="copy">Copy link</button>

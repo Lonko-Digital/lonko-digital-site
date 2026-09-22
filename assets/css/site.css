@@ -831,6 +831,19 @@ button:focus-visible {
   font-weight: 600;
 }
 
+/* Accessible name without a visible duplicate label (e.g. Chronicles Share). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .north-star-quote {
   margin: 0 0 1.75rem;
   padding: 0.15rem 0 0.15rem 1.1rem;
@@ -2992,19 +3005,6 @@ body:has(.chronicles-search-page) {
   /* Isolate share chrome from long-form layout invalidation */
   contain: layout style;
   font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* Override global h2 serif + .visually-quiet bottom margin so label aligns with buttons. */
-.chronicles-share > .visually-quiet,
-.chronicles-share > #share-heading {
-  margin: 0;
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  line-height: 1;
-  color: var(--text-muted);
 }
 
 .chronicles-share-controls {

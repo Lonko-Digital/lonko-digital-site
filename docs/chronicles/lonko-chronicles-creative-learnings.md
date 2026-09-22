@@ -318,11 +318,11 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ## L024 — Share label and controls are one UI row
 
-**Issue:** “SHARE” rendered in article serif (global `h2`) while Share/Copy/Email/LinkedIn/X used UI sans, and vertical alignment drifted.
+**Issue:** “SHARE” rendered in article serif (global `h2`) while Share/Copy/Email/LinkedIn/X used UI sans, and vertical alignment drifted. The visible section label also duplicated the native **Share** control.
 
-**Decision:** Share chrome uses one UI sans stack; label and controls align on one row (no serif heading treatment for the label).
+**Decision:** Share chrome uses one UI sans stack. The section heading stays for accessibility only (`visually-hidden`); visible controls are Share / Copy link / Email / LinkedIn / X — “Share” appears once.
 
-**Reusable lesson:** Article body can be serif; Share controls are site UI and must match each other.
+**Reusable lesson:** Article body can be serif; Share controls are site UI. Don’t show both a “SHARE” label and a “Share” button.
 
 **Applies to:** Every Chronicles article Share section.
 
