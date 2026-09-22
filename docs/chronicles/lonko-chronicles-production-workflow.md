@@ -260,10 +260,25 @@ No external publication occurs until Alex explicitly authorizes publication with
 
 After Alex's explicit publication approval:
 
-1. Claude Blog freezes the approved article/social package and supplies the canonical article package reference plus the exact publish instruction.
-2. The **Lonko Chronicles connected publishing operator** executes the established Drive/GitHub publishing workflow using the approved package. In the current setup, that operator is the ChatGPT Lonko Chronicles workspace because it has the required connected Drive/GitHub access.
-3. Alex should not manually assemble files, download/re-upload assets, or reconstruct metadata for publication.
-4. If Claude Blog later gains a verified writable publishing/deploy connector, direct routine publication may move to Claude without changing the editorial approval gates.
+1. Claude Blog freezes the approved article/social package.
+2. Claude Blog must immediately return one **PUBLISH HANDOFF** block addressed to the **Lonko Chronicles connected publishing operator**. Alex should never be asked to choose the route.
+3. The PUBLISH HANDOFF must contain:
+   - article title;
+   - final slug;
+   - status: **FROZEN — APPROVED FOR PUBLICATION**;
+   - Alex approval date;
+   - final article body or a durable package reference that the publishing operator can actually access;
+   - all required metadata/schema fields;
+   - exact approved hero filename;
+   - exact approved social filename;
+   - Approved Assets folder reference;
+   - any required placement/featured settings;
+   - explicit instruction: **DEPLOY THROUGH THE ESTABLISHED CHRONICLES PUBLISHING WORKFLOW — DO NOT EDIT CONTENT**.
+4. **Fail-closed accessibility rule:** if Claude's working article exists only inside the Claude Project and there is no durable cross-role URL/file that the publishing operator can access, Claude must include the complete frozen publication payload in the PUBLISH HANDOFF rather than asking Alex how to route it or asking Alex to reconstruct the package.
+5. Alex copies that single PUBLISH HANDOFF to the **Lonko Chronicles connected publishing operator**. In the current setup, that operator is the ChatGPT Lonko Chronicles workspace because it has the required connected Drive/GitHub access.
+6. The connected publishing operator executes the established Drive/GitHub publishing workflow using the frozen handoff and the approved Drive assets. It does not reopen editorial, SEO, creative, or social decisions unless a genuine publishing defect makes deployment impossible.
+7. Alex should not manually assemble files, download/re-upload assets, reconstruct metadata, choose between Cursor/Drive/GitHub routes, or locate the bridge Inbox.
+8. If Claude Blog later gains a verified writable publishing/deploy connector, direct routine publication may move to Claude without changing the editorial approval gates.
 
 Cursor Web is **not** part of the normal per-article operator flow.
 
