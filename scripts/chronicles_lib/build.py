@@ -235,12 +235,42 @@ def related_for(article: Article, corpus: list[Article], *, limit: int = 3) -> l
     return [t[2] for t in scored[:limit]]
 
 
+def _mark_body_source_links(body_html: str) -> str:
+    """Tag authored body-source links for shared Chronicles GA4 tracking.
+
+    Some frozen articles intentionally include a visible "Sources & Further Reading"
+    section in Markdown rather than structured "sources" front matter. The renderer
+    must not duplicate that section merely to obtain tracking hooks.
+    """
+    if not body_html:
+        return body_html
+    match = re.search(
+        r'(<h[2-6][^>]*id="sources-further-reading"[^>]*>.*?</h[2-6]>\s*<ul>)(.*?)(</ul>)',
+        body_html,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if not match:
+        return body_html
+    items = match.group(2)
+    items = re.sub(
+        r'<a(?![^>]*\bdata-chronicles-outbound=)([^>]*)>',
+        r'<a data-chronicles-outbound="source"\1>',
+        items,
+        flags=re.IGNORECASE,
+    )
+    return body_html[: match.start(2)] + items + body_html[match.end(2) :]
+
+
 # —— Page builders ——————————————————————————————————————————————————————
 
 
 def render_article_page(article: Article, corpus: list[Article]) -> str:
     depth = 2
     body_html = markdown_to_html(article.body)
+    # Frozen editorial bodies may carry their own visible "Sources & Further Reading"
+    # section. Mark those links for the shared GA4 source-click event without
+    # duplicating or rewriting the authored source section.
+    body_html = _mark_body_source_links(body_html)
     canonical = article_url(article.slug)
     og_image = resolve_social_image_url(article)
     if article.is_retired():
@@ -250,6 +280,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     else:
         robots = None
 
+    organization_id = f"{SITE}/#organization"
     schema = {
         "@context": "https://schema.org",
         "@type": article.schema_type,
@@ -259,18 +290,13 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         "dateModified": article.dateModified,
         "author": {
             "@type": "Organization",
+            "@id": organization_id,
             "name": article.author,
-            "url": SITE,
+            "url": f"{SITE}/",
         },
-        "publisher": {
-            "@type": "Organization",
-            "name": "Lonko Digital",
-            "url": SITE,
-            "logo": {
-                "@type": "ImageObject",
-                "url": f"{SITE}/assets/images/lonko-logo.png",
-            },
-        },
+        # Reuse the site's canonical Organization entity rather than emitting
+        # a second competing publisher Organization on every article page.
+        "publisher": {"@id": organization_id},
         "mainEntityOfPage": {"@type": "WebPage", "@id": canonical},
         "url": canonical,
         "inLanguage": "en-US",
@@ -410,7 +436,9 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     og_dims = social_image_dims(article)
     head = head_open(
         depth=depth,
-        title=f"{article.display_title} — Lonko Chronicles",
+        # An explicit seo_title is a locked title-tag value. Only add the
+        # publication suffix when no dedicated SEO title was authored.
+        title=article.seo_title or f"{article.title} — Lonko Chronicles",
         description=article.display_description,
         canonical=canonical,
         og_title=article.display_og_title,
