@@ -22,7 +22,7 @@ Container install remains sitewide. **Tags are configured and firing** through t
 
 ### Chronicles shared events (site `dataLayer` + GTM — complete 2026-09-22)
 
-Article pages push these Custom Events via `chronicles/assets/chronicles.js`. GTM → GA4 Event tags are **published** in `GTM-53DPJ88F` (verified in live `gtm.js` on 2026-09-22). Spec: [`docs/chronicles/lonko-chronicles-ga4-foundation.md`](./chronicles/lonko-chronicles-ga4-foundation.md).
+Article pages push these Custom Events via `chronicles/assets/chronicles.js`. GTM → GA4 Event tags are **published** in `GTM-53DPJ88F` **Version 6** — *Add GA4 chronicle tracking tags and update Google tag* (Live, Latest; published 2026-09-22 by lonkodigital@gmail.com). Also verified in live `gtm.js`. Spec: [`docs/chronicles/lonko-chronicles-ga4-foundation.md`](./chronicles/lonko-chronicles-ga4-foundation.md).
 
 | `dataLayer` event | GA4 Event tag |
 | --- | --- |
