@@ -33,17 +33,17 @@ This covers the **rendered article page** (hero placement, spacing, Share row, p
 - Controls use the same **UI sans** stack (`Segoe UI` / system UI), not the article serif.
 - Footer links remain separate site chrome; Share is article chrome.
 
-### 5. Outbound links open in a new tab
-
-- Every external `http(s)` link in article body and Sources opens in a new tab (`target="_blank"` + `rel="noopener noreferrer"`).
-- Same-site / relative / mailto links stay in the current tab.
-- Enforced by the shared renderer for all articles — not a per-article manual attribute.
-
 ### 4. No internal editorial metadata in public HTML
 
 - Never publish internal notes such as `(~1,150 words)` (or similar word-count lines) in the article body or after Sources.
 - Reading time in the byline (`N min read`) is the public-facing duration signal.
 - Packages that accidentally include a trailing word-count line are stripped at render time — still remove them from source packages when found.
+
+### 5. Outbound links open in a new tab
+
+- Every external `http(s)` link in article body and Sources opens in a new tab (`target="_blank"` + `rel="noopener noreferrer"`).
+- Same-site / relative / mailto links stay in the current tab.
+- Enforced by the shared renderer for all articles — not a per-article manual attribute.
 
 ## Live / PRE-PUBLISH visual checklist (fast)
 
