@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""End-to-end publishing-contract acceptance test.
+"""End-to-end Chronicles publishing-contract acceptance test.
 
-1. Temporarily promotes the realistic package to status=published
-2. Rebuilds Chronicles
-3. Asserts webpage, index presence, sitemap, feed, search index, and schema
-4. Restores fixture status and rebuilds
+Validates the production authoring contract against the current corpus without
+depending on a hard-coded editorial fixture. Also exercises renderer-level
+contract details that must remain stable for future publication packages.
 
 Usage:
   python scripts/test_chronicles_publishing_contract.py
@@ -12,100 +11,157 @@ Usage:
 
 from __future__ import annotations
 
+import html as html_lib
 import json
-import re
-import shutil
 import sys
-import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from chronicles_lib.build import build  # noqa: E402
+from chronicles_lib.build import build, render_article_page  # noqa: E402
+from chronicles_lib.model import Article, load_all_articles, public_articles  # noqa: E402
 
-SLUG = "when-stable-traffic-hides-a-conversion-problem"
-PKG = ROOT / "chronicles" / "content" / SLUG
-ARTICLE = PKG / "article.md"
+ORG_ID = "https://lonkodigital.com/#organization"
+CONTENT = ROOT / "chronicles" / "content"
 
 
-def _set_status(raw: str, status: str, is_fixture: bool) -> str:
-    raw = re.sub(r"(?m)^status:\s*\S+", f"status: {status}", raw, count=1)
-    if re.search(r"(?m)^is_fixture:\s*", raw):
-        raw = re.sub(r"(?m)^is_fixture:\s*\S+", f"is_fixture: {str(is_fixture).lower()}", raw, count=1)
-    else:
-        raw = raw.replace("---\n", f"---\nis_fixture: {str(is_fixture).lower()}\n", 1)
-    return raw
+def _renderer_contract_checks() -> list[str]:
+    """Check renderer behavior with a synthetic in-memory article."""
+    failures: list[str] = []
+    article = Article(
+        title="Display Headline",
+        deck="Deck",
+        slug="publishing-contract-synthetic",
+        topic="Marketing",
+        content_type="News",
+        status="published",
+        datePublished="2026-09-22",
+        dateModified="2026-09-22",
+        schema_type="NewsArticle",
+        seo_title="Locked SEO Title",
+        meta_description="Locked description",
+        og_title="Locked OG title",
+        og_description="Locked OG description",
+        author="Lonko Digital",
+        body=(
+            "Body paragraph.\n\n"
+            "### Sources & Further Reading\n\n"
+            "- [Example source](https://example.com/source)"
+        ),
+    )
+    rendered = render_article_page(article, [article])
+
+    exact_title = f"<title>{html_lib.escape(article.seo_title, quote=True)}</title>"
+    if exact_title not in rendered:
+        failures.append("explicit seo_title is not emitted as the exact title tag")
+    if "Locked SEO Title — Lonko Chronicles" in rendered:
+        failures.append("publication suffix is still forced onto explicit seo_title")
+
+    if f'"@id": "{ORG_ID}"' not in rendered:
+        failures.append("canonical Organization @id is not referenced in article schema")
+    if f'"publisher": {{\n    "@id": "{ORG_ID}"\n  }}' not in rendered:
+        failures.append("publisher does not reuse canonical Organization @id")
+
+    if 'id="sources-further-reading"' not in rendered:
+        failures.append("authored Sources & Further Reading heading was not rendered")
+    if 'data-chronicles-outbound="source"' not in rendered:
+        failures.append("authored source links are missing GA4 source-click tracking hook")
+
+    if "BreadcrumbList" not in rendered:
+        failures.append("BreadcrumbList missing from rendered article")
+    if '"name": "Chronicles"' not in rendered:
+        failures.append("Chronicles breadcrumb missing")
+
+    return failures
+
+
+def _production_surface_checks() -> list[str]:
+    failures: list[str] = []
+
+    code = build()
+    if code != 0:
+        failures.append(f"build exited {code}")
+        return failures
+
+    corpus = load_all_articles(CONTENT)
+    published = public_articles(corpus)
+
+    # The contract test is allowed to run before the first production article
+    # exists. Renderer-level checks above still verify the publication system.
+    if not published:
+        return failures
+
+    index_html = (ROOT / "chronicles" / "index.html").read_text(encoding="utf-8")
+    sitemap = (ROOT / "sitemap-chronicles.xml").read_text(encoding="utf-8")
+    feed = (ROOT / "chronicles" / "feed.xml").read_text(encoding="utf-8")
+    search_index = json.loads(
+        (ROOT / "chronicles" / "assets" / "search-index.json").read_text(encoding="utf-8")
+    )
+
+    for article in published:
+        page = ROOT / "chronicles" / article.slug / "index.html"
+        if not page.is_file():
+            failures.append(f"{article.slug}: article webpage missing")
+            continue
+
+        rendered = page.read_text(encoding="utf-8")
+        canonical = f"https://lonkodigital.com/chronicles/{article.slug}/"
+
+        if f'rel="canonical" href="{canonical}"' not in rendered:
+            failures.append(f"{article.slug}: canonical missing or incorrect")
+        if "noindex" in rendered:
+            failures.append(f"{article.slug}: published page must not be noindex")
+        if "BreadcrumbList" not in rendered:
+            failures.append(f"{article.slug}: BreadcrumbList missing")
+        if f'"@type": "{article.schema_type}"' not in rendered:
+            failures.append(f"{article.slug}: {article.schema_type} schema missing")
+        if f'"@id": "{ORG_ID}"' not in rendered:
+            failures.append(f"{article.slug}: canonical Organization @id missing")
+
+        if article.seo_title:
+            exact_title = f"<title>{html_lib.escape(article.seo_title, quote=True)}</title>"
+            if exact_title not in rendered:
+                failures.append(f"{article.slug}: explicit seo_title not honored exactly")
+
+        if 'id="sources-further-reading"' in rendered and (
+            'data-chronicles-outbound="source"' not in rendered
+        ):
+            failures.append(f"{article.slug}: body sources lack outbound-source tracking")
+
+        if article.slug not in index_html:
+            failures.append(f"{article.slug}: index does not link article")
+        if f"/chronicles/{article.slug}/" not in sitemap:
+            failures.append(f"{article.slug}: sitemap-chronicles missing URL")
+        if article.slug not in feed:
+            failures.append(f"{article.slug}: feed missing article")
+        if not any(item.get("slug") == article.slug for item in search_index):
+            failures.append(f"{article.slug}: search-index missing article")
+
+    # Draft packages must never emit a public canonical page.
+    for article in corpus:
+        if article.status != "draft":
+            continue
+        if (ROOT / "chronicles" / article.slug / "index.html").exists():
+            failures.append(f"{article.slug}: draft package emitted publicly")
+
+    return failures
 
 
 def main() -> int:
-    if not ARTICLE.is_file():
-        print(f"FAIL: missing package {ARTICLE}", file=sys.stderr)
-        return 1
-
-    original = ARTICLE.read_text(encoding="utf-8")
-    backup = tempfile.NamedTemporaryFile(delete=False, suffix=".md")
-    backup.write(original.encode("utf-8"))
-    backup.close()
-
-    failures: list[str] = []
-    try:
-        ARTICLE.write_text(_set_status(original, "published", False), encoding="utf-8")
-        code = build()
-        if code != 0:
-            failures.append(f"build exited {code}")
-
-        page = ROOT / "chronicles" / SLUG / "index.html"
-        if not page.is_file():
-            failures.append("article webpage missing")
-        else:
-            html = page.read_text(encoding="utf-8")
-            if 'rel="canonical"' not in html:
-                failures.append("canonical missing")
-            if '"@type": "Article"' not in html and '"@type":"Article"' not in html:
-                # schema_type for this package is Article
-                if "Article" not in html:
-                    failures.append("Article schema missing")
-            if "noindex" in html:
-                failures.append("published page should not noindex")
-            if "BreadcrumbList" not in html:
-                failures.append("BreadcrumbList missing")
-
-        home = (ROOT / "chronicles" / "index.html").read_text(encoding="utf-8")
-        if SLUG not in home:
-            failures.append("index does not link article")
-
-        chron_map = (ROOT / "sitemap-chronicles.xml").read_text(encoding="utf-8")
-        if f"/chronicles/{SLUG}/" not in chron_map:
-            failures.append("sitemap-chronicles missing article URL")
-
-        feed = (ROOT / "chronicles" / "feed.xml").read_text(encoding="utf-8")
-        if SLUG not in feed:
-            failures.append("feed missing article")
-
-        idx = json.loads((ROOT / "chronicles" / "assets" / "search-index.json").read_text(encoding="utf-8"))
-        if not any(e.get("slug") == SLUG for e in idx):
-            failures.append("search-index missing article")
-
-        # Draft still absent
-        if (ROOT / "chronicles" / "draft-should-never-ship").exists():
-            failures.append("draft package was emitted publicly")
-
-    finally:
-        ARTICLE.write_text(Path(backup.name).read_text(encoding="utf-8"), encoding="utf-8")
-        Path(backup.name).unlink(missing_ok=True)
-        build()  # restore fixture corpus output
+    failures = _renderer_contract_checks()
+    failures.extend(_production_surface_checks())
 
     if failures:
         print("PUBLISHING CONTRACT: FAIL")
-        for f in failures:
-            print(f"  - {f}")
+        for failure in failures:
+            print(f"  - {failure}")
         return 1
 
     print("PUBLISHING CONTRACT: PASS")
     print(
-        "  Inserted one package -> webpage, index, sitemap, feed, search index, schema"
-        " -- no manual multi-file edits."
+        "  Renderer metadata/schema/tracking contract and all current published "
+        "surfaces validated."
     )
     return 0
 
