@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import re
+from urllib.parse import urlparse
 
 import markdown
 
@@ -33,6 +34,10 @@ _WORD_COUNT_LEAK_HTML_RE = re.compile(
     re.IGNORECASE,
 )
 
+_A_TAG_RE = re.compile(r"<a\s+([^>]*?)>", re.IGNORECASE)
+_HREF_RE = re.compile(r"""href\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
+_SITE_HOSTS = frozenset({"lonkodigital.com", "www.lonkodigital.com"})
+
 
 def strip_word_count_leaks(text: str) -> str:
     """Remove public-facing word-count metadata lines from markdown or HTML."""
@@ -41,6 +46,42 @@ def strip_word_count_leaks(text: str) -> str:
     cleaned = _WORD_COUNT_LEAK_MD_RE.sub("", text)
     cleaned = _WORD_COUNT_LEAK_HTML_RE.sub("", cleaned)
     return cleaned
+
+
+def _is_external_href(href: str) -> bool:
+    """True for absolute http(s) links that leave lonkodigital.com."""
+    if not href:
+        return False
+    raw = href.strip()
+    if not raw or raw.startswith(("#", "/", "./", "../", "mailto:", "tel:", "sms:")):
+        return False
+    if not (raw.startswith("http://") or raw.startswith("https://")):
+        return False
+    host = (urlparse(raw).hostname or "").lower()
+    return bool(host) and host not in _SITE_HOSTS
+
+
+def ensure_outbound_new_tab(html_text: str) -> str:
+    """Force external http(s) anchors to open in a new tab with safe rel."""
+
+    def repl(match: re.Match[str]) -> str:
+        attrs = match.group(1)
+        href_m = _HREF_RE.search(attrs)
+        if not href_m or not _is_external_href(href_m.group(1)):
+            return match.group(0)
+        if not re.search(r"\btarget\s*=", attrs, flags=re.IGNORECASE):
+            attrs += ' target="_blank"'
+        rel_m = re.search(r"""\brel\s*=\s*["']([^"']*)["']""", attrs, flags=re.IGNORECASE)
+        if rel_m:
+            parts = {p.lower() for p in rel_m.group(1).split() if p}
+            parts.update({"noopener", "noreferrer"})
+            new_rel = " ".join(sorted(parts))
+            attrs = attrs[: rel_m.start()] + f'rel="{new_rel}"' + attrs[rel_m.end() :]
+        else:
+            attrs += ' rel="noopener noreferrer"'
+        return f"<a {attrs}>"
+
+    return _A_TAG_RE.sub(repl, html_text)
 
 
 def _render_container(kind: str, inner_md: str) -> str:
@@ -72,7 +113,8 @@ def markdown_to_html(text: str) -> str:
         return ""
     prepared = strip_word_count_leaks(preprocess_containers(text))
     _MD.reset()
-    return strip_word_count_leaks(_MD.convert(prepared))
+    html_out = strip_word_count_leaks(_MD.convert(prepared))
+    return ensure_outbound_new_tab(html_out)
 
 
 def escape_text(value: str) -> str:

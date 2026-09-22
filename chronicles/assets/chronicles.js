@@ -223,19 +223,31 @@
         });
       }
     }
+    function copyLink(successMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () {
+          setStatus(successMsg || "Link copied.");
+        }).catch(function () {
+          setStatus("Could not copy link.");
+        });
+      } else {
+        setStatus("Copy not available in this browser.");
+      }
+    }
+
     var copyBtn = root.querySelector("[data-share-copy]");
     if (copyBtn) {
       copyBtn.addEventListener("click", function () {
         trackShare(copyBtn.getAttribute("data-share-method") || "copy");
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(function () {
-            setStatus("Link copied.");
-          }).catch(function () {
-            setStatus("Could not copy link.");
-          });
-        } else {
-          setStatus("Copy not available in this browser.");
-        }
+        copyLink("Link copied.");
+      });
+    }
+    /* Instagram has no web share-URL intent; copy the article link for paste. */
+    var igBtn = root.querySelector("[data-share-instagram]");
+    if (igBtn) {
+      igBtn.addEventListener("click", function () {
+        trackShare(igBtn.getAttribute("data-share-method") || "instagram");
+        copyLink("Link copied — paste it in Instagram.");
       });
     }
     root.querySelectorAll("a[data-share-method]").forEach(function (a) {

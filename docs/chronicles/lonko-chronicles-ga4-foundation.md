@@ -36,7 +36,7 @@ Common parameters on every push: `article_slug`, `content_group: "chronicles"`.
 | Event | When | Extra parameters |
 |---|---|---|
 | `chronicles_scroll_depth` | Reader crosses 25 / 50 / 75 / 90% once each | `scroll_percent` |
-| `chronicles_share` | Share control used | `share_method` (`native` \| `copy` \| `email` \| `linkedin` \| `x`) |
+| `chronicles_share` | Share control used | `share_method` (`native` \| `copy` \| `email` \| `facebook` \| `instagram` \| `linkedin` \| `x`) |
 | `chronicles_outbound_source_click` | Click on a Sources & Further Reading link | `link_url`, `link_text` |
 | `chronicles_internal_link_click` | Same-origin click in article body or Related Stories | `link_url`, `link_text` |
 | `chronicles_to_site_nav` | Primary nav or brand click leaving toward other site sections | `nav_label`, `link_url` |

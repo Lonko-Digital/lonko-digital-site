@@ -27,10 +27,17 @@ This covers the **rendered article page** (hero placement, spacing, Share row, p
 
 ### 3. Share row: one UI system
 
-- Visible controls only: **Share** (native, when the browser supports it), **Copy link**, **Email**, **LinkedIn**, **X**.
+- Visible controls: **Share** (native, when supported), **Copy link**, **Email**, **Facebook**, **Instagram**, **LinkedIn**, **X**.
 - Do **not** show a separate visible “SHARE” section label beside those controls — it reads as a duplicate. Keep a screen-reader-only heading for accessibility (`visually-hidden`).
+- **Facebook** opens the Facebook sharer in a new tab. **Instagram** has no web share-URL intent — the control copies the article link for paste into Instagram.
 - Controls use the same **UI sans** stack (`Segoe UI` / system UI), not the article serif.
 - Footer links remain separate site chrome; Share is article chrome.
+
+### 5. Outbound links open in a new tab
+
+- Every external `http(s)` link in article body and Sources opens in a new tab (`target="_blank"` + `rel="noopener noreferrer"`).
+- Same-site / relative / mailto links stay in the current tab.
+- Enforced by the shared renderer for all articles — not a per-article manual attribute.
 
 ### 4. No internal editorial metadata in public HTML
 
@@ -44,9 +51,10 @@ Use after deploy — do **not** reinvent layout per article:
 
 1. Hero is capped ~672px, centered; not edge-to-edge on desktop.
 2. Visible gap between hero bottom and first body paragraph.
-3. Share controls only once (no visible “SHARE” + “Share” duplicate); UI sans; aligned.
-4. No `(~N words)` or similar editorial leftovers visible.
-5. Mobile: hero fluid with gutters; no forced 672px width.
+3. Share controls only once (no visible “SHARE” + “Share” duplicate); includes Facebook + Instagram; UI sans; aligned.
+4. External source/body links open in a new tab.
+5. No `(~N words)` or similar editorial leftovers visible.
+6. Mobile: hero fluid with gutters; no forced 672px width.
 
 ## Ownership
 

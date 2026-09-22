@@ -345,7 +345,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     sources_html = ""
     if article.sources:
         items = "\n".join(
-            f'          <li><a href="{escape_text(s["url"])}" rel="noopener noreferrer" data-chronicles-outbound="source">{escape_text(s["description"])}</a></li>'
+            f'          <li><a href="{escape_text(s["url"])}" rel="noopener noreferrer" target="_blank" data-chronicles-outbound="source">{escape_text(s["description"])}</a></li>'
             for s in article.sources
         )
         sources_html = f"""
@@ -379,6 +379,8 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
           <button type="button" class="chronicles-share-btn" data-share-native data-share-method="native">Share</button>
           <button type="button" class="chronicles-share-btn" data-share-copy data-share-method="copy">Copy link</button>
           <a class="chronicles-share-btn" href="mailto:?subject={share_title}&amp;body={share_url}" data-share-method="email">Email</a>
+          <a class="chronicles-share-btn" href="https://www.facebook.com/sharer/sharer.php?u={share_url}" rel="noopener noreferrer" target="_blank" data-share-method="facebook">Facebook</a>
+          <button type="button" class="chronicles-share-btn" data-share-instagram data-share-method="instagram">Instagram</button>
           <a class="chronicles-share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={share_url}" rel="noopener noreferrer" target="_blank" data-share-method="linkedin">LinkedIn</a>
           <a class="chronicles-share-btn" href="https://twitter.com/intent/tweet?url={share_url}&amp;text={share_title}" rel="noopener noreferrer" target="_blank" data-share-method="x">X</a>
         </div>
@@ -1103,19 +1105,31 @@ CHRONICLES_JS = r"""(function () {
         });
       }
     }
+    function copyLink(successMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () {
+          setStatus(successMsg || "Link copied.");
+        }).catch(function () {
+          setStatus("Could not copy link.");
+        });
+      } else {
+        setStatus("Copy not available in this browser.");
+      }
+    }
+
     var copyBtn = root.querySelector("[data-share-copy]");
     if (copyBtn) {
       copyBtn.addEventListener("click", function () {
         trackShare(copyBtn.getAttribute("data-share-method") || "copy");
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(function () {
-            setStatus("Link copied.");
-          }).catch(function () {
-            setStatus("Could not copy link.");
-          });
-        } else {
-          setStatus("Copy not available in this browser.");
-        }
+        copyLink("Link copied.");
+      });
+    }
+    /* Instagram has no web share-URL intent; copy the article link for paste. */
+    var igBtn = root.querySelector("[data-share-instagram]");
+    if (igBtn) {
+      igBtn.addEventListener("click", function () {
+        trackShare(igBtn.getAttribute("data-share-method") || "instagram");
+        copyLink("Link copied — paste it in Instagram.");
       });
     }
     root.querySelectorAll("a[data-share-method]").forEach(function (a) {
