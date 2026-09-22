@@ -23,6 +23,25 @@ _CONTAINER_RE = re.compile(
     re.DOTALL | re.IGNORECASE,
 )
 
+# Internal editorial word-count notes sometimes leak into package bodies
+# (e.g. "*(~1,150 words)*"). Never render those publicly.
+_WORD_COUNT_LEAK_MD_RE = re.compile(
+    r"(?m)^\s*(?:\*|_){0,2}\(\s*~\s*[\d,]+\s*words?\s*\)(?:\*|_){0,2}\s*$"
+)
+_WORD_COUNT_LEAK_HTML_RE = re.compile(
+    r"<p>\s*(?:<em>)?\s*\(\s*~\s*[\d,]+\s*words?\s*\)\s*(?:</em>)?\s*</p>\s*",
+    re.IGNORECASE,
+)
+
+
+def strip_word_count_leaks(text: str) -> str:
+    """Remove public-facing word-count metadata lines from markdown or HTML."""
+    if not text:
+        return ""
+    cleaned = _WORD_COUNT_LEAK_MD_RE.sub("", text)
+    cleaned = _WORD_COUNT_LEAK_HTML_RE.sub("", cleaned)
+    return cleaned
+
 
 def _render_container(kind: str, inner_md: str) -> str:
     _MD.reset()
@@ -51,9 +70,9 @@ def markdown_to_html(text: str) -> str:
     """Convert article markdown body to HTML with Chronicles custom blocks."""
     if not text:
         return ""
-    prepared = preprocess_containers(text)
+    prepared = strip_word_count_leaks(preprocess_containers(text))
     _MD.reset()
-    return _MD.convert(prepared)
+    return strip_word_count_leaks(_MD.convert(prepared))
 
 
 def escape_text(value: str) -> str:

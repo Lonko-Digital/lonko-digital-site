@@ -76,5 +76,3 @@ Google gave Dynamic Search Ads a real reprieve, but folded that news into the sa
 - [Search Engine Roundtable — Google Ads DSA to AI Max Timeline Pushed Off](https://www.seroundtable.com/google-ads-dsa-ai-max-extended-41497.html)
 - [Footprint Digital — Dynamic Search Ads Are Being Replaced by AI Max. Here's What That Really Means](https://www.footprintdigital.co.uk/library/dynamic-search-ads-replaced-by-ai-max/)
 - [Google Ads Help — About the broad match keywords campaign setting](https://support.google.com/google-ads/answer/13389795?hl=en)
-
-*(~1,150 words)*

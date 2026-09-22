@@ -2918,9 +2918,11 @@ body:has(.chronicles-search-page) {
   height: auto;
 }
 
-/* Article hero — outside body; dims come from the asset (not social 1.91:1). */
+/* Article hero — outside body; dims come from the asset (not social 1.91:1).
+   Cap at the editorial reading width (42rem / 672px); fluid below that. */
 .chronicles-hero-figure {
-  margin: 1.25rem 0 0;
+  margin: 1.25rem auto 0;
+  width: min(42rem, calc(100% - 2rem));
   max-width: 100%;
 }
 
