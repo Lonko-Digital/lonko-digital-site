@@ -248,6 +248,7 @@ Before any article package reaches Alex + ChatGPT, run this self-audit — it sh
 - **AI discovery:** Important explanations explicit and independently understandable? Entities/context clear? Sources transparent?
 - **Schema:** Correct `schema_type`? Accurate publisher/author/dates/images/breadcrumb relationships? Nothing fabricated?
 - **Imagery:** Accurate? Professional? Mobile-safe? Alt text correct? Social crop works? **Run against §57's Pre- and Post-Generation QA lists specifically.**
+- **Live presentation:** Hero capped at editorial width (~42rem), breathing room under the banner, Share row aligned on one UI sans, no internal word-count / production notes in public HTML? (Shared contract: `docs/chronicles/lonko-chronicles-article-presentation.md` — not a per-article layout rebuild.)
 - **Social:** Native to LinkedIn/Meta? Useful without clicking? Human? No generic AI copy?
 - **Measurement:** Does this article rely only on the shared Chronicles GA4 foundation (§53.1), or does it need a *new* shared event? Don't conflate a measurement *specification* with completed *implementation/QA*. Foundation PRE-PUBLISH QA is a fast health check — not a per-article rebuild. What will GA4 tell us after publication?
 - **Backlinks:** Is this link-worthy? If yes, what's the specific earned-link strategy?

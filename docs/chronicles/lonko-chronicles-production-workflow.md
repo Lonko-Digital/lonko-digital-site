@@ -292,6 +292,7 @@ Cursor Web is involved only when there is an infrastructure or engineering need,
 
 - publishing bridge failure;
 - template defect;
+- shared article presentation defects (hero width/spacing, Share row, public metadata hygiene — see `docs/chronicles/lonko-chronicles-article-presentation.md`);
 - schema/metadata system defect;
 - tracking infrastructure change;
 - new article capability;
@@ -307,6 +308,7 @@ Alex should not have to open Cursor for an ordinary article.
 After the connected publishing operator confirms the article is live, Claude Blog retrieves/verifies the production URL and gives Alex a final social-distribution package containing:
 
 - final live canonical article URL;
+- quick live-page presentation check against `docs/chronicles/lonko-chronicles-article-presentation.md` (hero width/spacing, Share row, no leaked word-count notes) — escalate to Cursor Web only if the shared template is wrong;
 - final LinkedIn post copy;
 - final Meta post copy;
 - approved social banner reference;

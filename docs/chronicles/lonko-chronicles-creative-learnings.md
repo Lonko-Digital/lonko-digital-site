@@ -290,6 +290,56 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ---
 
+## L022 — Article hero is editorial-width, not full-bleed
+
+**Issue:** A correct 1600×900 hero rendered edge-to-edge across the browser, overwhelming the ~640–672px reading column.
+
+**Decision:** Cap the shared article hero at **42rem / 672px**, centered; fluid with gutters on smaller screens. Keep the source asset as-is — presentation is CSS only.
+
+**Reusable lesson:** Asset pixel size ≠ on-page display width. Chronicles heroes belong in the editorial column, not as full-viewport banners.
+
+**Applies to:** Every Chronicles article page.
+
+**Canonical record:** `docs/chronicles/lonko-chronicles-article-presentation.md`.
+
+---
+
+## L023 — Leave space under the hero before body copy
+
+**Issue:** Body text sat flush against the bottom of the hero, feeling cramped.
+
+**Decision:** Shared hero figure keeps ~**2.5rem (40px)** bottom margin before the article body.
+
+**Reusable lesson:** The hero needs breathing room before the first paragraph; don’t tighten that gap for “density.”
+
+**Applies to:** Every Chronicles article page.
+
+---
+
+## L024 — Share label and controls are one UI row
+
+**Issue:** “SHARE” rendered in article serif (global `h2`) while Share/Copy/Email/LinkedIn/X used UI sans, and vertical alignment drifted.
+
+**Decision:** Share chrome uses one UI sans stack; label and controls align on one row (no serif heading treatment for the label).
+
+**Reusable lesson:** Article body can be serif; Share controls are site UI and must match each other.
+
+**Applies to:** Every Chronicles article Share section.
+
+---
+
+## L025 — Never publish internal word-count notes
+
+**Issue:** A package included `*(~1,150 words)*` after Sources; it appeared on the live page as public copy.
+
+**Decision:** Strip such lines from packages and from the renderer. Public duration signal is byline reading time only.
+
+**Reusable lesson:** Internal production metadata is not article content — if it would look odd to a reader, it must not ship.
+
+**Applies to:** All Chronicles packages and live HTML.
+
+---
+
 ## Status
 
-L001–L021 active as of 2026-09-21. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17). For measurement gates, also read §53.1 / the GA4 foundation doc.
+L001–L025 active as of 2026-09-22. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17). For measurement gates, also read §53.1 / the GA4 foundation doc. For live article layout, read `lonko-chronicles-article-presentation.md`.

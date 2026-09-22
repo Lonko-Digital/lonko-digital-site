@@ -18,6 +18,7 @@ These Markdown files are **reference artifacts only**. They are:
 | Creative registry | [`lonko-chronicles-creative-registry.md`](./lonko-chronicles-creative-registry.md) |
 | Creative learnings | [`lonko-chronicles-creative-learnings.md`](./lonko-chronicles-creative-learnings.md) |
 | GA4 / dataLayer foundation | [`lonko-chronicles-ga4-foundation.md`](./lonko-chronicles-ga4-foundation.md) |
+| Article presentation (live page) | [`lonko-chronicles-article-presentation.md`](./lonko-chronicles-article-presentation.md) |
 | Brand production tokens | [`../brand/lonko-brand-production-tokens.md`](../brand/lonko-brand-production-tokens.md) |
 
 Full repo-relative paths:
@@ -26,6 +27,7 @@ Full repo-relative paths:
 - `docs/chronicles/lonko-chronicles-creative-registry.md`
 - `docs/chronicles/lonko-chronicles-creative-learnings.md`
 - `docs/chronicles/lonko-chronicles-ga4-foundation.md`
+- `docs/chronicles/lonko-chronicles-article-presentation.md`
 - `docs/brand/lonko-brand-production-tokens.md`
 
 **Do not use** `claude/lonko-chronicles-operating-system.md` or
