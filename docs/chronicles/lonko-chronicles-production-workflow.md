@@ -8,6 +8,19 @@
 
 **Authority:** This file is the canonical cross-role workflow. Role-specific operating documents may add detail, but they must not contradict this workflow unless Alex explicitly changes it.
 
+### Governance freshness rule
+
+**GitHub is the canonical operational source. Google Drive copies are readable mirrors only.** Before Image Production applies a permanent rule, it should prefer the current repository versions of:
+
+- `docs/chronicles/chronicles-article-contract.yaml`;
+- `chronicles/state.json`;
+- `docs/chronicles/lonko-chronicles-production-workflow.md`;
+- `docs/brand/lonko-brand-production-tokens.md`;
+- `docs/chronicles/lonko-chronicles-creative-learnings.md`;
+- `docs/chronicles/lonko-chronicles-creative-registry.md`.
+
+When a Drive mirror exposes a repo path / workflow version / sync marker, compare it with canonical GitHub. A mirror known to be stale must never override newer canonical governance. If GitHub is unavailable and a mirror is known or suspected to conflict with newer governance, **fail closed on the conflicting permanent requirement** rather than confidently applying the stale copy. Do not create a competing source of truth.
+
 ---
 
 ## 1. The normal starting point
@@ -107,23 +120,40 @@ Once the visual concept is agreed, Claude Blog gives Alex **one complete, copy-p
 
 Alex should not have to rewrite, supplement, or remember production requirements.
 
+The prompt must begin with the explicit execution directive:
+
+> **ACTION: EXECUTE HERO + SOCIAL PRODUCTION NOW**
+
+When Alex pastes a complete prompt containing that directive into the Image Production chat, **that single paste is execution authorization**. Alex does not need a second “run it” / “go ahead” message.
+
 The prompt must include, at minimum:
 
-- article title/topic and short explanation of what the story is actually about;
+- final article title/topic and short explanation of what the story is actually about;
+- final article slug;
 - audience and intended emotional/business takeaway;
 - approved visual concept;
 - exact hero requirements;
 - exact social-banner requirements;
-- exact dimensions;
 - exact on-image copy, if any;
-- exact brand colors;
-- exact typography/weight;
-- authoritative logo requirement;
 - scene-generation instructions;
 - deterministic brand-compositing instructions where exact text/logo/color fidelity matters;
 - anti-repetition / realism / no-fake-UI requirements;
 - acceptance criteria;
-- requested final filenames.
+- requested output format;
+- any deliberate permanent-rule override labeled exactly **ALEX-APPROVED EXCEPTION**.
+
+Claude may echo permanent production constants for readability/checksum purposes, but it does not redefine them.
+
+### 4A. Canonical-contract precedence
+
+The production handoff has two authority layers:
+
+- **Article-specific creative decisions:** Claude Blog's approved production prompt is authoritative.
+- **Permanent production constants:** canonical GitHub governance is authoritative.
+
+Permanent constants include at minimum: hero/social dimensions, Lonko brand red, logo policy, permanent typography rules, filename pattern, asset lifecycle/storage, and freeze/preservation rules.
+
+If Claude accidentally echoes a conflicting permanent value, Image Production must **not silently follow it**. Stop that conflicting instruction, normalize to the canonical value, and report the discrepancy. A permanent-rule override is valid only when the production prompt clearly labels it **ALEX-APPROVED EXCEPTION**. Never infer an exception.
 
 Default final dimensions are hard requirements:
 
@@ -134,17 +164,19 @@ unless Alex explicitly approves a different specification before rendering.
 
 ---
 
-## 4A. Handoff execution gate — a status update is not an image-production order
+## 4B. Handoff execution gate — a status update is not an image-production order
 
 The Lonko Chronicles image-production workspace must distinguish between **context/status** and an **actionable production handoff**.
 
 **Do not generate, edit, composite, save, or move image assets merely because Alex pastes a Claude response that mentions image work, says an image is pending, or says Claude is waiting on Lonko Chronicles.** That is context only.
 
-Image production begins only when Alex supplies the actual Claude-authored image-production brief/prompt **and** clearly asks the Lonko Chronicles workspace to execute it, for example:
+Image production begins only from an actionable production handoff. The standard handoff contains the actual Claude-authored production prompt beginning with:
 
-> “Run this Lonko Chronicles image-production prompt.”
+> **ACTION: EXECUTE HERO + SOCIAL PRODUCTION NOW**
 
-The actionable handoff should contain the locked production contract: article/topic context, approved visual concept, exact dimensions, copy, brand values, authoritative logo requirement, acceptance criteria, and final filenames.
+When Alex pastes that complete prompt, **the paste itself authorizes execution**. No second confirmation message is required. A status/planning/next-step message without the execution directive remains non-actionable.
+
+The actionable handoff contains the locked article-specific production contract and is preflighted against canonical permanent production rules before any render begins.
 
 If Alex pastes a Claude status message without the actual production brief, the Lonko Chronicles workspace should:
 
@@ -153,9 +185,9 @@ If Alex pastes a Claude status message without the actual production brief, the 
 3. tell Alex what the current gate is;
 4. ask only for the already-created production prompt if it is not present/accessible.
 
-If the production prompt is already available in shared project/Drive context, the workspace may retrieve it rather than making Alex re-copy it — but it still waits for Alex's explicit instruction to execute the image-production step.
+If the production prompt is already available in shared project/Drive context, the workspace may retrieve it rather than making Alex reconstruct it, but execution still requires the explicit production directive from Alex's actionable handoff.
 
-**Approval gate:** generated/revised assets remain drafts until Alex explicitly approves them. Drafts may be stored in Draft Assets. Only after Alex says he approves the final hero/social assets may they be moved/copied into Approved Assets and labeled ALEX-APPROVED FINAL ASSETS.
+**Approval gate:** keep four states separate: (A) candidate shown for review, (B) visually acceptable feedback, (C) final image approval, and (D) publication approval. “Looks good” or similar casual feedback does not automatically promote files unless the surrounding context clearly constitutes final image approval. Final image approval is never the same as **APPROVED FOR PUBLICATION**. Generated/revised assets remain drafts until Alex explicitly approves the final hero/social assets; only then may they be moved/copied into Approved Assets and labeled ALEX-APPROVED FINAL ASSETS.
 
 This rule prevents accidental production from status memos and keeps Alex in control of every creative execution/approval transition.
 
@@ -174,6 +206,58 @@ Lonko Chronicles then:
 5. uses image generation for scene creation/editing;
 6. uses controlled/deterministic compositing for exact logo, typography, approved copy, and exact brand colors where needed;
 7. does not reopen the article topic or creative direction unless it discovers a genuine defect or impossible requirement.
+
+### 5A. Image-production preflight
+
+Before rendering, Image Production must:
+
+1. confirm the explicit execution directive is present;
+2. resolve the slug and derive the normal final filenames:
+   - `<slug>-hero-1600x900.png`
+   - `<slug>-social-1200x628.png`;
+3. resolve permanent constants from canonical GitHub governance;
+4. compare any echoed prompt constants against canonical values;
+5. resolve the authoritative high-resolution Lonko logo from the shared Brand Assets location when branding is required;
+6. separate generated scene layers from deterministic text/logo/color layers;
+7. fail closed on any unresolved condition listed in §5C below.
+
+### 5B. Frozen-base persistence
+
+For any candidate actually shown to Alex, persist enough source state to support narrow corrections reliably. Do **not** upload every rejected generation experiment.
+
+When relevant, preserve in the shared **Draft Assets** workspace:
+
+- the exact passed scene/base image;
+- the review candidate actually shown to Alex;
+- deterministic copy inputs from the locked prompt;
+- the authoritative logo/composite input reference;
+- the exact crop/composition embodied in the frozen base.
+
+The practical rule is: **persist the image layer itself at the exact crop/composition that passed.** If social photography passes but typography fails, the next revision must rebuild the social composite from that exact frozen social scene rather than regenerating the subject, environment, lighting, composition, or hero.
+
+Draft storage is working-state storage only. It is not approval.
+
+### 5C. Image-production fail-closed conditions
+
+Stop rather than improvise when any of the following applies:
+
+- authoritative logo required but unavailable;
+- article slug missing;
+- exact social copy missing or ambiguous;
+- requested dimensions conflict with canonical rules without an **ALEX-APPROVED EXCEPTION**;
+- brand color conflicts with canonical rules without an approved exception;
+- required reference asset missing;
+- a frozen correction base is required but unavailable;
+- generated fake Lonko branding appears;
+- meaningful fabricated UI appears;
+- the image implies an unsupported real customer/client relationship;
+- final dimensions fail;
+- filename/slug/asset-role validation fails;
+- exact on-image text fails;
+- logo fidelity fails;
+- final files are not verified in Approved Assets after final image approval;
+- Alex has not explicitly approved final images;
+- the message is status/context rather than a real execution order.
 
 Alex reviews the generated assets in Lonko Chronicles.
 
@@ -205,11 +289,29 @@ Example naming convention:
 
 **Do not rely on temporary chat sandbox paths as the cross-role handoff.**
 
-Alex should not need to download the files and upload them to Claude manually.
+Alex should not need to download the files and upload them to Claude or Cursor manually.
 
-Alex returns to Claude Blog and provides only the exact asset names/references that Lonko Chronicles supplied.
+After upload, Image Production must verify the exact final files in Approved Assets and return an **authoritative asset receipt**, not filenames alone. Include, where available:
 
-Claude Blog retrieves the approved files directly from the shared location.
+- article slug;
+- hero filename;
+- hero Drive file ID;
+- hero dimensions;
+- hero format;
+- social filename;
+- social Drive file ID;
+- social dimensions;
+- social format;
+- Creative Registry IDs once assigned;
+- approval state;
+- Approved Assets folder/location;
+- checksum/hash or other stable version indicator when tooling exposes one.
+
+Never invent a checksum. Drive file ID + exact filename + dimensions + format + approval state is an acceptable stable identity when no checksum is available.
+
+Claude Blog and Cursor Web retrieve the approved files directly from the shared location using the receipt. Alex does not move, rename, or relay binary files.
+
+If Approved Assets contains similarly named candidates or duplicates, Image Production must not guess. Resolve the exact approved Drive file IDs/version identity before handoff; ask Alex only if a genuine approval ambiguity remains.
 
 If the shared location is ever unavailable to one of the roles, that is an infrastructure/setup defect to fix once — not a recurring manual-download workflow for Alex.
 
