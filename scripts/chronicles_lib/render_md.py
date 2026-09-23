@@ -108,13 +108,16 @@ def preprocess_containers(text: str) -> str:
 
 
 def markdown_to_html(text: str) -> str:
-    """Convert article markdown body to HTML with Chronicles custom blocks."""
+    """Convert article markdown body to HTML with Chronicles custom blocks.
+
+    Does not silently rewrite editorial copy. Non-public artifacts must fail
+    validation (see validate.py) rather than being stripped at render time.
+    """
     if not text:
         return ""
-    prepared = strip_word_count_leaks(preprocess_containers(text))
+    prepared = preprocess_containers(text)
     _MD.reset()
-    html_out = strip_word_count_leaks(_MD.convert(prepared))
-    return ensure_outbound_new_tab(html_out)
+    return ensure_outbound_new_tab(_MD.convert(prepared))
 
 
 def escape_text(value: str) -> str:

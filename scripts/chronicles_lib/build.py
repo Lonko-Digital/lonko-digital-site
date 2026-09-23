@@ -238,27 +238,35 @@ def related_for(article: Article, corpus: list[Article], *, limit: int = 3) -> l
 def _mark_body_source_links(body_html: str) -> str:
     """Tag authored body-source links for shared Chronicles GA4 tracking.
 
-    Some frozen articles intentionally include a visible "Sources & Further Reading"
-    section in Markdown rather than structured "sources" front matter. The renderer
-    must not duplicate that section merely to obtain tracking hooks.
+    Matches a Sources / Sources & Further Reading heading by visible text (not
+    only a fragile id), then tags anchors in the following list.
     """
     if not body_html:
         return body_html
     match = re.search(
-        r'(<h[2-6][^>]*id="sources-further-reading"[^>]*>.*?</h[2-6]>\s*<ul>)(.*?)(</ul>)',
+        r"(<h[2-6][^>]*>\s*Sources(?:\s*(?:&amp;|&)\s*Further\s+Reading)?\s*</h[2-6]>\s*)"
+        r"(<ul\b[^>]*>)(.*?)(</ul>)",
         body_html,
         flags=re.IGNORECASE | re.DOTALL,
     )
     if not match:
+        # Fallback: id-based hook used by older packages
+        match = re.search(
+            r'(<h[2-6][^>]*id="sources-further-reading"[^>]*>.*?</h[2-6]>\s*)'
+            r"(<ul\b[^>]*>)(.*?)(</ul>)",
+            body_html,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+    if not match:
         return body_html
-    items = match.group(2)
+    items = match.group(3)
     items = re.sub(
-        r'<a(?![^>]*\bdata-chronicles-outbound=)([^>]*)>',
+        r"<a(?![^>]*\bdata-chronicles-outbound=)([^>]*)>",
         r'<a data-chronicles-outbound="source"\1>',
         items,
         flags=re.IGNORECASE,
     )
-    return body_html[: match.start(2)] + items + body_html[match.end(2) :]
+    return body_html[: match.start(3)] + items + body_html[match.end(3) :]
 
 
 # —— Page builders ——————————————————————————————————————————————————————

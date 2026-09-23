@@ -43,8 +43,8 @@ def build_package(
         shutil.rmtree(package)
     assets = package / "assets"
     assets.mkdir(parents=True)
-    write_png(assets / "social.png", (200, 40, 40))
-    write_png(assets / "hero.png", (40, 40, 200))
+    write_png(assets / "social.png", (200, 40, 40), w=1200, h=628)
+    write_png(assets / "hero.png", (40, 40, 200), w=1600, h=900)
 
     full_meta = {
         "title": meta.get("title", "Bridge Test Article"),

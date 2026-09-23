@@ -26,6 +26,10 @@ bridge/quarantine/
 bridge/work/
 bridge/smoke-package/
 
+# Chronicles hosted-preview local scratch (publish script / PR workflow)
+preview-dist/
+.preview-worktree/
+
 # Python
 __pycache__/
 *.pyc

@@ -1,4 +1,7 @@
-"""Build-time validation for Lonko Chronicles articles."""
+"""Build-time validation for Lonko Chronicles articles.
+
+Contract: docs/chronicles/chronicles-article-contract.yaml (workflow_version 2).
+"""
 
 from __future__ import annotations
 
@@ -6,6 +9,7 @@ import re
 from datetime import date
 from pathlib import Path
 
+from .image_dims import read_image_size
 from .model import (
     CONTENT_TYPES,
     IMAGERY_FAMILIES,
@@ -16,18 +20,59 @@ from .model import (
 )
 
 ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 # Published articles require an explicit social_image.
 # Fixtures may fall back to site-wide assets/images/og-share.png (documented fallback).
 SITE_OG_FALLBACK = "assets/images/og-share.png"
 
+HERO_DIMS = (1600, 900)
+SOCIAL_DIMS = (1200, 628)
 
-def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -> list[str]:
+# Fail-closed editorial hygiene — reject, do not silently rewrite body copy.
+_BODY_LINT_RULES: list[tuple[str, re.Pattern[str]]] = [
+    (
+        "word-count annotation",
+        re.compile(
+            r"(?im)^\s*(?:\*|_){0,2}\(\s*~\s*[\d,]+\s*words?\s*\)(?:\*|_){0,2}\s*$"
+            r"|<p>\s*(?:<em>)?\s*\(\s*~\s*[\d,]+\s*words?\s*\)\s*(?:</em>)?\s*</p>",
+        ),
+    ),
+    (
+        "WORKING NOTE / INTERNAL NOTE marker",
+        re.compile(r"(?i)\b(?:WORKING\s+NOTE|INTERNAL\s+NOTE)\b"),
+    ),
+    (
+        "standalone TODO/FIXME editor marker",
+        re.compile(r"(?m)^\s*(?:TODO|FIXME)\b[:\s-]"),
+    ),
+    (
+        "draft-history / production-note marker",
+        re.compile(
+            r"(?i)\b(?:DRAFT\s+ONLY|DO\s+NOT\s+PUBLISH|PRODUCTION\s+NOTE|"
+            r"EDITORIAL\s+ONLY|REMOVE\s+BEFORE\s+PUBLISH)\b"
+        ),
+    ),
+]
+
+_SOURCES_HEADING_RE = re.compile(
+    r"(?im)^\s{0,3}#{2,6}\s+Sources(?:\s*&\s*Further\s+Reading)?\s*$"
+    r"|^\s{0,3}#{2,6}\s+Sources\s+and\s+Further\s+Reading\s*$"
+)
+
+
+def validate_articles(
+    articles: list[Article],
+    *,
+    forbid_drafts: bool = False,
+    enforce_production_assets: bool | None = None,
+) -> list[str]:
     """Return a list of error strings that must fail the build. Empty = ok.
 
     When forbid_drafts is True (public output set), any draft is an error.
-    Drafts are otherwise validated lightly so authoring packages can be checked
-    without requiring full social/hero readiness.
+    When enforce_production_assets is True (default for published/retired),
+    require hero+social and exact pixel dimensions. Fixtures never enforce
+    production dimensions.
     """
     errors: list[str] = []
     seen_slugs: dict[str, str] = {}
@@ -40,7 +85,6 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
         if forbid_drafts and article.status == "draft":
             errors.append(f"{prefix}draft must not appear in public output")
 
-        # Duplicate slugs
         if article.slug:
             if article.slug in seen_slugs:
                 errors.append(
@@ -48,10 +92,14 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
                 )
             else:
                 seen_slugs[article.slug] = label
+            if not SLUG_RE.match(article.slug):
+                errors.append(
+                    f"{prefix}invalid slug '{article.slug}' "
+                    f"(expected lowercase kebab-case)"
+                )
         else:
             errors.append(f"{prefix}missing required field: slug")
 
-        # Required metadata
         for field_name, value in (
             ("title", article.title),
             ("deck", article.deck),
@@ -66,7 +114,6 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
             if not value:
                 errors.append(f"{prefix}missing required field: {field_name}")
 
-        # Enums
         if article.content_type and article.content_type not in CONTENT_TYPES:
             errors.append(
                 f"{prefix}invalid content_type '{article.content_type}' "
@@ -88,7 +135,6 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
                 f"(expected {sorted(IMAGERY_FAMILIES)})"
             )
 
-        # Dates
         for field_name, value in (
             ("datePublished", article.datePublished),
             ("dateModified", article.dateModified),
@@ -96,7 +142,6 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
             if value and not _valid_iso_date(value):
                 errors.append(f"{prefix}invalid {field_name} '{value}' (expected YYYY-MM-DD)")
 
-        # Featured must be explicit bool or int (bool is a subclass of int — use type())
         featured = article.placement.get("featured", False)
         if type(featured) not in (bool, int):
             errors.append(
@@ -110,27 +155,62 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
                     f"(expected {sorted(PLACEMENT_SECTIONS)})"
                 )
 
-        is_publicish = article.status in {"published", "fixture", "retired"} or article.is_fixture
+        is_production = (
+            article.status in {"published", "retired"} and not article.is_fixture
+        )
+        enforce_assets = (
+            enforce_production_assets
+            if enforce_production_assets is not None
+            else is_production
+        )
 
-        # Hero alt required when published/fixture/retired with a hero image
-        if is_publicish and article.hero_image and not article.hero_alt:
-            errors.append(f"{prefix}published/fixture missing hero_alt")
+        # Body hygiene — fail closed (no silent rewrite)
+        for rule_name, pattern in _BODY_LINT_RULES:
+            if pattern.search(article.body or ""):
+                errors.append(
+                    f"{prefix}body contains non-public editorial artifact "
+                    f"({rule_name}); remove it from the package"
+                )
 
-        # Social metadata
-        # Published + retired: require social_image (page remains at canonical URL).
-        # Fixture: allow fallback to site og-share.png when social_image is absent.
-        if article.status in {"published", "retired"} and not article.is_fixture:
+        # Duplicate Sources presentation
+        body_has_sources = bool(_SOURCES_HEADING_RE.search(article.body or ""))
+        if article.sources and body_has_sources:
+            errors.append(
+                f"{prefix}duplicate Sources presentation: front-matter sources "
+                f"is non-empty AND body already contains a Sources heading — "
+                f"use exactly one form"
+            )
+
+        # Source URL uniqueness + shape
+        seen_urls: set[str] = set()
+        for i, src in enumerate(article.sources):
+            url = (src or {}).get("url", "")
+            desc = (src or {}).get("description", "")
+            if not url or not desc:
+                errors.append(
+                    f"{prefix}malformed sources[{i}] (must have url and description)"
+                )
+                continue
+            if not (url.startswith("http://") or url.startswith("https://")):
+                errors.append(
+                    f"{prefix}sources[{i}] url must be absolute http(s): {url!r}"
+                )
+            key = url.strip().rstrip("/")
+            if key in seen_urls:
+                errors.append(f"{prefix}duplicate sources url: {url!r}")
+            seen_urls.add(key)
+
+        if is_production or (enforce_assets and article.status != "draft"):
+            if not article.hero_image:
+                errors.append(f"{prefix}published/retired article missing hero_image")
             if not article.social_image:
                 errors.append(
                     f"{prefix}{article.status} article missing social_image "
                     f"(fixtures may fall back to {SITE_OG_FALLBACK})"
                 )
-        elif is_publicish and not article.social_image:
-            # Fixture path: fallback allowed — no error, documented above.
-            pass
+            if article.hero_image and not article.hero_alt:
+                errors.append(f"{prefix}published/retired missing hero_alt")
 
-        # Fail closed if authored package-relative image paths do not resolve.
-        # Absolute/http(s) URLs are left to the author (rare; not used by Drive intake).
         if article.package_dir is not None:
             for field_name, rel in (
                 ("hero_image", article.hero_image),
@@ -139,17 +219,24 @@ def validate_articles(articles: list[Article], *, forbid_drafts: bool = False) -
                 err = _missing_package_asset(article.package_dir, rel, field_name)
                 if err:
                     errors.append(f"{prefix}{err}")
+                    continue
+                if not rel or not enforce_assets or article.is_fixture:
+                    continue
+                path = (Path(article.package_dir) / Path(rel)).resolve()
+                dims = read_image_size(path)
+                if dims is None:
+                    errors.append(
+                        f"{prefix}{field_name} dimensions unreadable: {rel!r}"
+                    )
+                    continue
+                expected = HERO_DIMS if field_name == "hero_image" else SOCIAL_DIMS
+                if dims != expected:
+                    errors.append(
+                        f"{prefix}{field_name} must be exactly "
+                        f"{expected[0]}×{expected[1]}px, got {dims[0]}×{dims[1]} "
+                        f"({rel!r})"
+                    )
 
-        # Sources
-        for i, src in enumerate(article.sources):
-            url = (src or {}).get("url", "")
-            desc = (src or {}).get("description", "")
-            if not url or not desc:
-                errors.append(
-                    f"{prefix}malformed sources[{i}] (must have url and description)"
-                )
-
-        # Related slug references
         for rel in article.related:
             if rel not in slug_set:
                 errors.append(f"{prefix}broken related slug reference: '{rel}'")

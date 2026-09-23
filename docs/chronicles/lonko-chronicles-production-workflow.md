@@ -246,7 +246,7 @@ Claude does not casually reopen the article, approved concept, or passed image l
 
 ---
 
-## 8. Claude Blog owns publish readiness; the connected publishing operator executes deployment
+## 8. Claude Blog owns publish readiness; Cursor Web executes preview, deploy, and live verify
 
 Once the article, social copy, and final visuals all pass QA, Claude Blog prepares the complete publication package and presents the final publish-readiness state to Alex.
 
@@ -256,39 +256,34 @@ No external publication occurs until Alex explicitly authorizes publication with
 - **Publish it**
 - **Go live**
 
-**Current capability rule (2026-09-19):** the active Claude Blog session has Google Drive read access but does **not** have repository/CMS/deploy access and therefore cannot truthfully claim to push the article live itself.
+**Normal production teammates (workflow v2):**
 
-After Alex's explicit publication approval:
+1. **Claude Blog Post & Social Media** — editorial package  
+2. **ChatGPT — Lonko Chronicles / Image Production** — hero/social assets  
+3. **Cursor Web** — hosted pre-publish preview, automated validation, deploy, live production verification  
 
-1. Claude Blog freezes the approved article/social package.
-2. Claude Blog must immediately return one **PUBLISH HANDOFF** block addressed to the **Lonko Chronicles connected publishing operator**. Alex should never be asked to choose the route.
-3. The PUBLISH HANDOFF must contain:
-   - article title;
-   - final slug;
-   - status: **FROZEN — APPROVED FOR PUBLICATION**;
-   - Alex approval date;
-   - final article body or a durable package reference that the publishing operator can actually access;
-   - all required metadata/schema fields;
-   - exact approved hero filename;
-   - exact approved social filename;
-   - Approved Assets folder reference;
-   - any required placement/featured settings;
-   - explicit instruction: **DEPLOY THROUGH THE ESTABLISHED CHRONICLES PUBLISHING WORKFLOW — DO NOT EDIT CONTENT**.
-4. **Fail-closed accessibility rule:** if Claude's working article exists only inside the Claude Project and there is no durable cross-role URL/file that the publishing operator can access, Claude must include the complete frozen publication payload in the PUBLISH HANDOFF rather than asking Alex how to route it or asking Alex to reconstruct the package.
-5. Alex copies that single PUBLISH HANDOFF to the **Lonko Chronicles connected publishing operator**. In the current setup, that operator is the ChatGPT Lonko Chronicles workspace because it has the required connected Drive/GitHub access.
-6. The connected publishing operator executes the established publication-control workflow using the frozen handoff and approved Drive assets. It does not reopen editorial, SEO, creative, or social decisions unless a genuine publishing defect makes deployment impossible.
-7. **Current operator route (verified 2026-09-22):**
-   - If the configured Drive bridge Inbox is directly reachable by the operator, package the article for the bridge and let the bridge validate/build/open the publication PR.
-   - If the bridge Inbox is service-account-only or not reachable from the operator session, the operator must **not** ask Alex to locate it or choose another route. Instead, translate the frozen handoff into the canonical Chronicles authoring contract on a dedicated GitHub publication branch, include the exact approved Drive asset bytes, regenerate the required derived surfaces, and open a PR against `main`.
+There is **no** routine fourth “Publishing Operator” role. ChatGPT outside Image Production is exception/escalation only.
+
+After Alex's explicit publication approval (and after Claude + Alex have reviewed the **hosted preview** URL):
+
+1. Claude Blog freezes the approved article/social package and returns one **PUBLISH HANDOFF** to **Cursor Web** (not a separate operator).
+2. The handoff includes title, slug, frozen status, approval date, package/Drive references, exact hero/social filenames, and **DEPLOY — DO NOT EDIT CONTENT**.
+3. Cursor Web builds/validates, ensures the hosted preview remains green, merges/deploys to production, and verifies the live URL.
+4. Claude retrieves/verifies the live URL and returns LinkedIn/Meta copy + UTM URLs for Alex to post.
+
+Alex should not manage GitHub, publishing routes, GA4, or schema during a normal article.
+7. **Cursor Web publishing route (workflow v2):**
+   - Prefer the established Drive → GitHub Actions bridge when the Inbox is reachable; otherwise Cursor Web translates the frozen handoff onto a dedicated GitHub publication branch with exact approved asset bytes, regenerates derived surfaces, and opens a PR against `main`.
    - Both paths end at the same safety boundary: **a PR, never a direct push to `main`.**
-   - The PR must preserve the frozen content and identify any unavoidable technical mapping or defect without silently changing editorial decisions.
-8. **Alex merge remains authoritative.** The connected operator may prepare and validate the PR automatically after publication approval, but it does not merge to `main` until Alex explicitly authorizes the merge. Alex can give that authorization in chat; he does not need to visit GitHub manually.
-9. Alex should not manually assemble files, download/re-upload assets, reconstruct metadata, choose between Cursor/Drive/GitHub routes, or locate the bridge Inbox.
+   - The PR must produce a **hosted pre-publish preview** (see `.github/workflows/chronicles-pr-preview.yml`) before merge.
+   - The PR must preserve frozen content and identify any unavoidable technical mapping without silently changing editorial decisions.
+8. **Alex merge remains authoritative.** Cursor Web may prepare and validate the PR after publication approval, but it does not merge to `main` until Alex explicitly authorizes the merge (chat authorization is enough).
+9. Alex should not manually assemble files, download/re-upload assets, reconstruct metadata, choose routes, or locate the bridge Inbox.
 10. If Claude Blog later gains a verified writable publishing/deploy connector, direct routine publication may move there without changing the editorial or merge-authorization gates.
 
-Cursor Web is **not** part of the normal per-article operator flow.
+**Cursor Web is the normal per-article technical teammate** for preview, validation, deploy, and live verify.
 
-Cursor Web is involved only when there is an infrastructure or engineering need, such as:
+Cursor Web is also the exception path for infrastructure needs such as:
 
 - publishing bridge failure;
 - template defect;
@@ -296,16 +291,15 @@ Cursor Web is involved only when there is an infrastructure or engineering need,
 - schema/metadata system defect;
 - tracking infrastructure change;
 - new article capability;
-- site rendering/performance/accessibility defect;
-- other technical work that cannot be handled by the established publishing system.
+- site rendering/performance/accessibility defect.
 
-Alex should not have to open Cursor for an ordinary article.
+Alex should not need to open Cursor for ordinary *editorial* work — only for technical publishing steps that Cursor owns.
 
 ---
 
 ## 9. Claude Blog must return the live URL and tracked social URLs
 
-After the connected publishing operator confirms the article is live, Claude Blog retrieves/verifies the production URL and gives Alex a final social-distribution package containing:
+After Cursor Web confirms the article is live, Claude Blog retrieves/verifies the production URL and gives Alex a final social-distribution package containing:
 
 - final live canonical article URL;
 - quick live-page presentation check against `docs/chronicles/lonko-chronicles-article-presentation.md` (hero width/spacing, Share row, no leaked word-count notes) — escalate to Cursor Web only if the shared template is wrong;
@@ -360,7 +354,7 @@ Alex uses:
 - the approved 1200×628 social banner;
 - the corresponding Claude-provided UTM URL.
 
-The connected publishing operator deploys the website article from Claude Blog’s approved package; Claude Blog verifies the live article and supplies the final social package; Alex publishes the social posts.
+Cursor Web deploys the website article from Claude Blog’s approved package after hosted-preview QA; Claude Blog verifies the live article and supplies the final social package; Alex publishes the social posts.
 
 ---
 
@@ -368,7 +362,7 @@ The connected publishing operator deploys the website article from Claude Blog�
 
 The normal flow is:
 
-**Claude first checks for an active unpublished Chronicles article. If one exists, Alex → Claude Blog resumes that article at its current gate. If none exists (or Alex explicitly authorizes parallel/new production), then Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Alex gives final publication approval → Claude freezes the publish-ready package → Lonko Chronicles connected publishing operator deploys it → Claude verifies the live URL and returns LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
+**Claude first checks for an active unpublished Chronicles article (`chronicles/state.json`). If one exists, Alex → Claude Blog resumes that article at its current gate. If none exists (or Alex explicitly authorizes parallel/new production), then Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Cursor Web hosts a real pre-publish preview → Claude + Alex QA the preview → Alex gives final publication approval → Claude freezes the publish-ready package → Cursor Web deploys it and verifies production → Claude returns LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
 
 This is the default. Do not add extra handoffs unless a genuine technical or editorial problem requires them.
 
