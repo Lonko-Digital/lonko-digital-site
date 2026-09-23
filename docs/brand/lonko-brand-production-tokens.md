@@ -102,15 +102,15 @@ Do **not** default social-banner headlines to Source Serif 4 unless the creative
 | Logo mark (WebP) | `assets/images/lonko-logo.webp` | WebP | **72×72** | Header `<picture>` source |
 | Default OG share | `assets/images/og-share.png` | PNG | **1200×630** | Site-wide social fallback (not the logo) |
 
-### Higher-resolution mark (NOT in this GitHub repository)
+### Higher-resolution authoritative creative mark
 
-A larger approved mark also exists **outside** `Lonko-Digital/lonko-digital-site`:
+For **Chronicles/social creative compositing**, the durable shared authoritative high-resolution logo is:
 
-| Asset | Location | Format | Intrinsic size |
-|---|---|---|---|
-| Approved Alex mark (hi-res) | Local sibling project `marketing-agent/static/brand/lonko-logo.png` | PNG | **1024×1044** |
+| Asset | Shared production location | Drive file ID | Format | Intrinsic size | SHA-256 |
+|---|---|---|---|---|---|
+| Lonko authoritative hi-res mark | `Lonko Chronicles - Shared Production / Brand Assets / lonko-logo-authoritative-hires.png` | `1K3Ydtxgk790DZJHxWsHLO-idd3B5ryoo` | PNG (RGBA) | **2008×2048** | `1620b8ad59b46d533fb27a10be21fb4d148a98338b7df258cfb1f65b91a98072` |
 
-**Important:** That path is **not** part of the public website GitHub repo. Do not document it as a `lonko-digital-site` path. For high-res creative compositing, use the sibling file from the local Lonko platform workspace (or copy bytes into the article package `assets/`). The **canonical in-repo** logo files remain `assets/images/lonko-logo.png` and `.webp` only.
+**Role split:** the public website repository still carries the canonical small display assets `assets/images/lonko-logo.png` and `.webp`. For high-resolution branded creative, use the shared Drive hi-res mark above; do not upscale the 72×72 site asset when the hi-res mark is available. Never use a personal-Library-only copy as the permanent shared source.
 
 Noted historically in `docs/public_showcase/linkedin/README.md` (public site ships the small display copy).
 
@@ -162,8 +162,8 @@ Do not change photography, crop, or structure.
 | White text | `#ffffff` / `rgb(255, 255, 255)` |
 | Red accent | `#e10600` / `rgb(225, 6, 0)` |
 | Overlay/scrim base | `#0b0b0f` / `rgb(11, 11, 15)` (`--brand-black`); **opacity not tokenized** |
-| Logo mark path (this repo) | `assets/images/lonko-logo.png` |
-| Logo mark (hi-res, sibling project only) | Local `marketing-agent/static/brand/lonko-logo.png` — **not** in this GitHub repo |
+| Logo mark path (public-site display asset) | `assets/images/lonko-logo.png` |
+| Logo mark (authoritative hi-res creative source) | Shared Drive Brand Assets: `lonko-logo-authoritative-hires.png`; Drive file ID `1K3Ydtxgk790DZJHxWsHLO-idd3B5ryoo` |
 | Wordmark | Text “Lonko Digital” (not a generated glyph); weight 700 |
 | Placement | Bottom-right mark + wordmark, matching header pairing |
 
@@ -190,5 +190,5 @@ When briefing image tools:
 | Typography | `assets/css/site.css` `@font-face`, `body`, `h1,h2`, `.btn`, `.brand` |
 | Header logo wiring | `scripts/chronicles_lib/shell.py`, `index.html` |
 | Public logo files (this repo) | `assets/images/lonko-logo.png`, `.webp` |
-| Hi-res approved mark (sibling local project) | `marketing-agent/static/brand/lonko-logo.png` — outside this GitHub repo |
+| Hi-res authoritative creative mark | Shared Drive Brand Assets / `lonko-logo-authoritative-hires.png`; Drive ID `1K3Ydtxgk790DZJHxWsHLO-idd3B5ryoo`; SHA-256 `1620b8ad59b46d533fb27a10be21fb4d148a98338b7df258cfb1f65b91a98072` |
 | Logo provenance note | `docs/public_showcase/linkedin/README.md` |
