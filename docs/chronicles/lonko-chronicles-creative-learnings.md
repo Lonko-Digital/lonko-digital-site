@@ -340,6 +340,66 @@ at weight **700** for social-banner headlines — see `docs/brand/lonko-brand-pr
 
 ---
 
+## L026 — Canonical permanent rules outrank prompt echoes
+
+**Issue:** A Claude production prompt can accidentally repeat a stale or wrong permanent value, such as 1200×630 or the wrong brand red.
+
+**Decision:** Article-specific creative decisions come from the approved Claude prompt; permanent production constants come from canonical GitHub governance. If they conflict, do not silently follow the prompt. Normalize to the canonical value and report the discrepancy unless the prompt explicitly labels an **ALEX-APPROVED EXCEPTION**.
+
+**Reusable lesson:** Prompts carry the article; governance carries the factory settings.
+
+**Applies to:** Every Chronicles image-production handoff.
+
+---
+
+## L027 — One valid execution prompt = one authorization
+
+**Issue:** The workflow previously required Alex to paste a complete production prompt and then separately say “run it,” adding a redundant owner touch.
+
+**Decision:** A complete Claude production prompt beginning with **ACTION: EXECUTE HERO + SOCIAL PRODUCTION NOW** is itself execution authorization when Alex pastes it into Image Production. Status/planning/context without that directive remains non-actionable.
+
+**Reusable lesson:** One explicit execution directive should be enough; context alone is never enough.
+
+**Applies to:** Every normal creative-production handoff.
+
+---
+
+## L028 — Preserve the exact passed base, not just the instruction to preserve it
+
+**Issue:** “Do not regenerate a passed layer” is unreliable if the exact scene/crop shown to Alex is not persisted.
+
+**Decision:** For any candidate actually shown to Alex, persist enough source state to support narrow revision — especially the exact passed scene/base at its approved crop/composition. Do not archive every rejected generation.
+
+**Reusable lesson:** Layer freezing requires recoverable source state. If typography fails after photography passes, rebuild the deterministic layer from the exact frozen scene.
+
+**Applies to:** Every multi-layer hero/social production round.
+
+---
+
+## L029 — Final handoff needs stable asset identity, not filenames alone
+
+**Issue:** A correct filename can still be ambiguous if Drive contains multiple similar candidates or versions.
+
+**Decision:** After final image approval, verify the exact files in Approved Assets and return an asset receipt with slug, exact filenames, Drive file IDs, dimensions, format, approval state, CR IDs when assigned, folder location, and checksum/hash when tooling exposes one.
+
+**Reusable lesson:** Cross-role retrieval should identify the exact approved bytes/version, not merely “something with this name.”
+
+**Applies to:** Every final creative handoff to Claude Blog and Cursor Web.
+
+---
+
+## L030 — Drive mirrors must never silently outrank newer GitHub governance
+
+**Issue:** The Drive Creative Learnings mirror fell behind the canonical GitHub copy, creating a risk that a Drive-only role could operate from incomplete rules.
+
+**Decision:** GitHub remains the canonical operational source. Drive copies are readable mirrors. When freshness/version metadata is available, compare it; a known stale mirror must be ignored for conflicting permanent rules. If canonical freshness cannot be established and a conflict is material, fail closed rather than confidently applying stale governance.
+
+**Reusable lesson:** A mirror is useful only when its age is visible. Staleness must be detectable, never silent.
+
+**Applies to:** All Chronicles governance mirrors and cross-role production.
+
+---
+
 ## Status
 
-L001–L025 active as of 2026-09-22. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17). For measurement gates, also read §53.1 / the GA4 foundation doc. For live article layout, read `lonko-chronicles-article-presentation.md`.
+L001–L030 active as of 2026-09-23. Read this log before §57.16 step 3 / concept development, together with the Creative Registry and Legacy Creative Baseline (§57.17). For measurement gates, also read §53.1 / the GA4 foundation doc. For live article layout, read `lonko-chronicles-article-presentation.md`.
