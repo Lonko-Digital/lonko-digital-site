@@ -15,18 +15,18 @@ GTM (`GTM-53DPJ88F`) and GA4 (`G-Y8T0Q59191`) are already live sitewide. This do
 
 | Gate | Who | When |
 |---|---|---|
-| **Chronicles GA4 foundation** (this doc + site JS) | Cursor Web | Once (before first Chronicles article live) |
-| **GTM → GA4 event tags** for the shared events | Alex / GTM Admin | Once (map `dataLayer` events → GA4) |
+| **Chronicles GA4 foundation** (this doc + site JS) | Cursor Web | Once (infrastructure) |
+| **GTM → GA4 event tags** for the shared events | Alex / GTM Admin | Once |
 | **Article creative + package** | Claude Blog | Every article |
-| **PRE-PUBLISH tracking QA** | Cursor Web | Confirm foundation still healthy (fast checklist) — not a rebuild |
+| **Automated page-marker assertions** | Cursor CI / production-contract tests | Every PR/preview build |
+| **Hosted preview + deploy + live verify** | Cursor Web | Every article (normal publishing path) |
 | **Alex APPROVED FOR PUBLICATION** | Alex | Every article |
-| **POST-PUBLISH verify** | Cursor Web | After release |
 
 After foundation + one-time GTM mapping:
 
 - Claude writes the article and notes any *extra* measurement needs only.
-- Alex approves content/creative.
-- Publish does **not** wait for new GA4 engineering unless Claude requests a genuine new shared event.
+- Normal articles inherit shared events automatically — no per-article GA4 engineering.
+- Cursor verifies wiring via automated tests + deploy verification, not a separate redesign project.
 
 ## Shared event architecture
 
@@ -62,15 +62,11 @@ Publish the container. Record completion in `docs/gtm_container_install_record.m
 
 **Done (2026-09-22):** shared event tags are present in the published container. Remaining per-article work is the fast PRE-PUBLISH health check only.
 
-## PRE-PUBLISH tracking QA (fast checklist)
+## PRE-PUBLISH tracking QA (automated + light human)
 
-Use this every article — do **not** rebuild tracking:
+Prefer automated assertions (production-contract tests) that article HTML includes the shared measurement markers. Claude confirms editorial measurement intent only when requesting a *new* shared event. Cursor Web changes GA4/GTM infrastructure only when intentionally requested — not as a per-article project.
 
-1. Article HTML includes `data-chronicles-page="article"` and `data-article-slug`.
-2. `chronicles.js` loads on the article page.
-3. In Tag Assistant / preview: scrolling fires `chronicles_scroll_depth` at thresholds once each.
-4. Share / source / related / nav clicks push the expected events.
-5. No per-article one-off event names unless Alex approved a foundation extension.
+Optional human Tag Assistant check on the **hosted preview** (not production-first) remains available but is not a Cursor babysitting gate.
 
 ## What not to do
 
@@ -85,6 +81,6 @@ Use this every article — do **not** rebuild tracking:
 | Role | Owns |
 |---|---|
 | Claude Blog | Measurement *requirements* for major initiatives; flag only *new* events beyond this set |
-| Cursor Web | Site `dataLayer` implementation, template wiring, PRE/POST publish QA checklists |
+| Cursor Web | Site `dataLayer` implementation, template wiring, CI assertions, deploy verification |
 | Alex / GTM Admin | GTM container tags, GA4 custom dimensions, container publish |
 | Alex | Final publication authorization |

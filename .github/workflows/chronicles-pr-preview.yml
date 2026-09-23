@@ -1,0 +1,163 @@
+name: Chronicles PR preview
+
+# Hosted pre-publish preview (Production System v2).
+# Deploys a production-equivalent static tree for the PR to branch `preview-site`
+# under pr/<number>/, then comments a browser-openable rawcdn.githack URL
+# (text/html — jsDelivr serves .html as text/plain).
+# Production GitHub Pages remains main → lonkodigital.com (do not retarget Pages).
+# Alex must not need localhost or GitHub blob view.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "chronicles/**"
+      - "assets/css/**"
+      - "assets/js/**"
+      - "assets/fonts/**"
+      - "assets/images/**"
+      - "scripts/chronicles_lib/**"
+      - "scripts/build_chronicles.py"
+      - ".github/workflows/chronicles-pr-preview.yml"
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Optional article slug to highlight in the preview comment"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: chronicles-preview-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-chronicles-bridge.txt
+
+      - name: Build Chronicles
+        run: python scripts/build_chronicles.py
+
+      - name: Production contract validation
+        run: python scripts/test_chronicles_production_contract_v2.py
+
+      - name: Assemble preview tree
+        id: assemble
+        run: |
+          set -euo pipefail
+          PR_NUM="${{ github.event.pull_request.number }}"
+          if [ -z "$PR_NUM" ]; then
+            PR_NUM="manual-${GITHUB_RUN_ID}"
+          fi
+          DEST="preview-dist/pr/${PR_NUM}"
+          rm -rf preview-dist
+          mkdir -p "$DEST"
+          # Full site slice needed for relative asset resolution from article pages
+          cp -a assets "$DEST/"
+          cp -a chronicles "$DEST/"
+          # Optional root helpers
+          if [ -f index.html ]; then cp index.html "$DEST/"; fi
+          if [ -f CNAME ]; then cp CNAME "$DEST/"; fi
+          # Discover first published article slug for the comment
+          SLUG="${{ github.event.inputs.slug }}"
+          if [ -z "$SLUG" ]; then
+            SLUG=$(python - <<'PY'
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, "scripts")
+          from chronicles_lib.model import load_all_articles, public_articles
+          arts = public_articles(load_all_articles(Path("chronicles/content")))
+          print(arts[0].slug if arts else "")
+          PY
+            )
+          fi
+          echo "pr_num=$PR_NUM" >> "$GITHUB_OUTPUT"
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "Assembled preview for PR=$PR_NUM slug=$SLUG"
+
+      - name: Publish preview-site branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./preview-dist
+          publish_branch: preview-site
+          keep_files: true
+          allow_empty_commit: true
+          force_orphan: false
+          user_name: lonko-chronicles-preview
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_message: "Preview PR ${{ steps.assemble.outputs.pr_num }}"
+
+      - name: Resolve preview commit SHA
+        id: sha
+        run: |
+          set -euo pipefail
+          git fetch origin preview-site
+          SHA=$(git rev-parse origin/preview-site)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Preview branch tip: $SHA"
+
+      - name: Comment preview URL
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request.number;
+            const slug = `${{ steps.assemble.outputs.slug }}`;
+            const sha = `${{ steps.sha.outputs.sha }}`;
+            const base = `https://rawcdn.githack.com/${context.repo.owner}/${context.repo.repo}/${sha}/pr/${pr}`;
+            const articleUrl = slug
+              ? `${base}/chronicles/${slug}/index.html`
+              : `${base}/chronicles/index.html`;
+            const body = [
+              `## Chronicles pre-publish preview`,
+              ``,
+              `Open this URL in a normal browser (real HTML/CSS/JS/assets — not GitHub blob view):`,
+              ``,
+              `**Article preview:** ${articleUrl}`,
+              ``,
+              `**Chronicles index:** ${base}/chronicles/index.html`,
+              ``,
+              `SHA: \`${sha}\``,
+              `Host: rawcdn.githack.com (text/html). Updates on each push to this PR may lag briefly. After merge/close, the \`pr/${pr}/\` tree may remain until cleaned; production remains \`main\` → lonkodigital.com.`,
+            ].join('\n');
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr,
+            });
+            const marker = '## Chronicles pre-publish preview';
+            const existing = comments.find(c => c.user.type === 'Bot' && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr,
+                body,
+              });
+            }

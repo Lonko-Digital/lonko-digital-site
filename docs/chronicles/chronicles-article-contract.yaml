@@ -1,0 +1,177 @@
+# Lonko Chronicles — canonical article / publishing contract (machine-readable)
+# Canonical path: docs/chronicles/chronicles-article-contract.yaml
+# Source of truth for Claude Blog, Image Production (asset rules), and Cursor Web.
+# Describes REAL supported website behavior — do not invent unsupported CMS features.
+#
+# workflow_version mirrors chronicles/state.json
+
+contract_version: 2
+workflow_version: 2
+updated: "2026-09-22"
+
+identity:
+  slug:
+    required: true
+    pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    notes: "Package directory name must match slug."
+  status:
+    values: [draft, published, retired, fixture]
+    notes: >
+      draft = not rendered; published = public indexable; retired = page kept, soft-retired;
+      fixture = local/CI only, noindex, not in sitemap/feed. Drive intake rejects fixture.
+  dates:
+    datePublished: { required: true, format: YYYY-MM-DD }
+    dateModified: { required: true, format: YYYY-MM-DD }
+  author:
+    default: "Lonko Digital"
+    schema: "Organization @id https://lonkodigital.com/#organization"
+  publisher:
+    name: "Lonko Digital"
+    organization_id: "https://lonkodigital.com/#organization"
+    url: "https://lonkodigital.com/"
+
+content:
+  content_type:
+    values: [News, Analysis, Guide, How-To, Research]
+  schema_type:
+    values: [Article, BlogPosting, NewsArticle]
+  body:
+    format: markdown
+    required_for_publish: true
+  fail_closed_body_lint:
+    description: >
+      Non-public editorial artifacts in the publishable body FAIL validation.
+      Build must not silently strip editorial copy.
+    reject_patterns:
+      - "(~N words) / (~1,150 words) style word-count annotations"
+      - "WORKING NOTE / INTERNAL NOTE"
+      - "TODO / FIXME editor markers (standalone)"
+      - "obvious draft-history / production-note markers"
+  unsupported:
+    - "Category URL routes (e.g. /chronicles/topic/marketing/) — not implemented"
+    - "Per-article CMS UI — packages are files, not a database"
+
+seo:
+  canonical: "https://lonkodigital.com/chronicles/{slug}/"
+  seo_title:
+    optional: true
+    behavior: "Falls back to title when absent; used for <title> and defaults for OG"
+  meta_description:
+    optional: true
+    behavior: "Falls back to deck"
+  og_title:
+    optional: true
+    behavior: "Falls back to seo_title or title"
+  og_description:
+    optional: true
+    behavior: "Falls back to meta_description or deck"
+  twitter_card: summary_large_image
+  robots:
+    published: indexable
+    fixture: "noindex, nofollow"
+    retired: "noindex, nofollow"
+    draft: not_rendered
+
+schema:
+  supported_types: [Article, BlogPosting, NewsArticle]
+  organization_id: "https://lonkodigital.com/#organization"
+  author_publisher: "Both reference Organization @id (no fabricated Person)"
+  breadcrumb: "Home → Chronicles → article title"
+  image: "Included when hero_image present (hero URL; social may also appear)"
+  dates: "datePublished + dateModified from front matter"
+
+placement:
+  topic:
+    notes: "Free-form; normalized onto pill labels when recognized"
+    known_pills: ["AI & Technology", "Marketing", "SEO", "Growth"]
+  sections:
+    values: [owners, guides, from_lonko]
+  featured:
+    type: "bool or positive int priority"
+  unsupported:
+    - "Standalone category archive pages"
+
+assets:
+  published_required:
+    hero_image: true
+    social_image: true
+    hero_alt: true
+  dimensions_exact:
+    hero: { width: 1600, height: 900 }
+    social: { width: 1200, height: 628 }
+  formats_production: [png, jpg, jpeg, webp, avif]
+  formats_rejected_on_drive: [svg]
+  paths: "Package-relative only; no .. traversal; file must exist and be readable"
+  naming_convention: "{slug}-hero-1600x900.ext / {slug}-social-1200x628.ext (recommended)"
+  fixture_exception: >
+    status=fixture may use non-production dimensions and may omit social
+    (site og-share.png fallback). Production-contract CI must not treat fixture
+    soft rules as published certification.
+
+sources:
+  supported_forms:
+    - "Front-matter sources: list of {url, description} — rendered by template"
+    - "Body-authored Sources section — supported; must not duplicate template section"
+  duplicate_prevention: >
+    If front-matter sources is non-empty AND body contains a Sources heading,
+    validation FAILS (duplicate presentation). Prefer one form only.
+  instrumentation: >
+    chronicles_outbound_source_click applies to source links whether from
+    front-matter template or body Sources. Body detection matches Sources
+    headings by text (not only a fragile id).
+  malformed: "Missing url or description FAILS"
+  duplicate_urls: "Duplicate URLs within front-matter sources FAIL"
+
+ga4:
+  foundation_events:
+    - chronicles_scroll_depth
+    - chronicles_share
+    - chronicles_outbound_source_click
+    - chronicles_internal_link_click
+    - chronicles_to_site_nav
+  ownership: >
+    Shared site infrastructure owned by Cursor Web. Normal articles inherit
+    events automatically. No per-article GA4 redesign.
+
+publication_surfaces:
+  driven_by_single_package: true
+  outputs:
+    - "chronicles/{slug}/index.html"
+    - "chronicles/index.html (latest/featured/sections)"
+    - "chronicles/page/N/ (pagination)"
+    - "chronicles/feed.xml"
+    - "chronicles/assets/search-index*.json"
+    - "sitemap-chronicles.xml (+ sitemap index)"
+  search_ui: "chronicles/search/ — noindex"
+  related: "From front-matter related[] or auto same-topic/tags"
+
+presentation:
+  doc: docs/chronicles/lonko-chronicles-article-presentation.md
+  hero_max_width: "42rem / 672px centered; fluid below"
+  hero_body_gap: "~2.5rem"
+  share_controls: [native, copy, email, facebook, instagram, linkedin, x]
+  outbound_links: "External http(s) open in new tab (target=_blank + noopener noreferrer)"
+
+roles:
+  normal_path:
+    - Claude Blog Post & Social Media
+    - ChatGPT — Lonko Chronicles / Image Production
+    - Cursor Web
+  owner: Alex
+  no_routine_publishing_operator: true
+  cursor_owns:
+    - website/template/builder
+    - publishing pipeline
+    - hosted pre-publish preview
+    - automated validation
+    - deploy + live verify
+    - infrastructure defects only (not per-article babysitting)
+
+preview:
+  required_before_alex_approval: true
+  must_not_be: [github_blob, localhost_for_alex, production_after_merge_only]
+  implementation: "See .github/workflows/chronicles-pr-preview.yml"
+
+active_article:
+  state_file: chronicles/state.json
+  rule: "At most one active (in-production unpublished) article slug at a time"
