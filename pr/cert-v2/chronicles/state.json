@@ -1,0 +1,6 @@
+{
+  "workflow_version": 2,
+  "active_article": null,
+  "updated": "2026-09-22",
+  "notes": "One active in-production unpublished article at a time. Set active_article to the slug when a launch is in progress; set null when published or cancelled."
+}

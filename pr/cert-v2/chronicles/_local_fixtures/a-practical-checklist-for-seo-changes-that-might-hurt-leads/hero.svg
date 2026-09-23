@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img">
+  <rect width="640" height="360" fill="#f7f8fa"/>
+  <text x="32" y="40" font-family="Segoe UI,sans-serif" font-size="18" fill="#1a1d24">Illustrative conversion rate</text>
+  <polyline fill="none" stroke="#5c6370" stroke-width="3" points="60,280 140,240 220,250 300,190 380,200 460,140 540,160"/>
+  <line x1="60" y1="300" x2="580" y2="300" stroke="#dfe3ea"/>
+  <line x1="60" y1="80" x2="60" y2="300" stroke="#dfe3ea"/>
+</svg>
