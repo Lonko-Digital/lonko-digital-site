@@ -140,11 +140,25 @@ class Article:
         """Published and fixture articles appear on promotional/listing UX.
 
         Retired articles are intentionally excluded (soft-retire v1).
+        In CHRONICLES_PREVIEW builds, drafts are also listing-visible so the
+        pre-publish hosted preview can exercise real chrome.
         """
+        from chronicles_lib.preview import preview_mode_enabled
+
+        if self.status == "draft" and preview_mode_enabled():
+            return True
         return self.status in {"published", "fixture"}
 
     def is_renderable(self) -> bool:
-        """Articles that keep a canonical HTML page (includes soft-retired)."""
+        """Articles that keep a canonical HTML page (includes soft-retired).
+
+        Drafts render only when CHRONICLES_PREVIEW=1 (hosted pre-publish preview).
+        Production builds never emit draft HTML.
+        """
+        from chronicles_lib.preview import preview_mode_enabled
+
+        if self.status == "draft" and preview_mode_enabled():
+            return True
         return self.status in {"published", "fixture", "retired"}
 
     def is_retired(self) -> bool:

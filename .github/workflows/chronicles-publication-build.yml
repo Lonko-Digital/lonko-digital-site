@@ -57,6 +57,9 @@ jobs:
       - name: Validate production contract v2
         run: python scripts/test_chronicles_production_contract_v2.py
 
+      - name: Validate draft preview regression
+        run: python scripts/test_chronicles_draft_preview.py
+
       - name: Public safety audit
         run: |
           if [ -f scripts/audit_public_site.py ]; then

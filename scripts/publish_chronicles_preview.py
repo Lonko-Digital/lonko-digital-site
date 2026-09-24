@@ -11,6 +11,7 @@ Requires git push access. Production Pages stays on main (lonkodigital.com).
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -29,19 +30,37 @@ def main() -> int:
     ap.add_argument("--slug", default="", help="article slug to highlight")
     args = ap.parse_args()
 
-    # Ensure build is current
-    subprocess.check_call([sys.executable, str(ROOT / "scripts" / "build_chronicles.py")])
+    # Ensure preview build includes unpublished drafts
+    env = os.environ.copy()
+    env["CHRONICLES_PREVIEW"] = "1"
+    subprocess.check_call(
+        [sys.executable, str(ROOT / "scripts" / "build_chronicles.py")],
+        env=env,
+    )
 
     slug = args.slug
     if not slug:
         sys.path.insert(0, str(ROOT / "scripts"))
-        from chronicles_lib.model import load_all_articles, public_articles
+        import json
 
-        arts = public_articles(load_all_articles(ROOT / "chronicles" / "content"))
-        if not arts:
-            print("No published articles to preview", file=sys.stderr)
-            return 1
-        slug = arts[0].slug
+        from chronicles_lib.model import load_all_articles
+
+        state_path = ROOT / "chronicles" / "state.json"
+        if state_path.is_file():
+            active = json.loads(state_path.read_text(encoding="utf-8")).get("active_article")
+            if active:
+                slug = active
+        if not slug:
+            arts = load_all_articles(ROOT / "chronicles" / "content")
+            drafts = [a for a in arts if a.status == "draft"]
+            published = [a for a in arts if a.status == "published" and not a.is_fixture]
+            if drafts:
+                slug = drafts[0].slug
+            elif published:
+                slug = published[0].slug
+            else:
+                print("No articles to preview", file=sys.stderr)
+                return 1
 
     dist = ROOT / "preview-dist"
     dest = dist / "pr" / args.label
