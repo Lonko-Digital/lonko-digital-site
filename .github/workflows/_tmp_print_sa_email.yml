@@ -1,0 +1,36 @@
+name: TMP Print SA Email
+
+# One-off: print ONLY client_email from DRIVE_SERVICE_ACCOUNT_JSON, then delete this branch/workflow.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  print-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print service account client_email only
+        env:
+          DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, sys
+          raw = os.environ.get("DRIVE_SERVICE_ACCOUNT_JSON", "").strip()
+          if not raw:
+              print("Missing secret DRIVE_SERVICE_ACCOUNT_JSON", file=sys.stderr)
+              sys.exit(1)
+          try:
+              info = json.loads(raw)
+          except json.JSONDecodeError as e:
+              print("DRIVE_SERVICE_ACCOUNT_JSON is not valid JSON", file=sys.stderr)
+              sys.exit(1)
+          email = info.get("client_email")
+          if not email or not isinstance(email, str):
+              print("client_email missing from service account JSON", file=sys.stderr)
+              sys.exit(1)
+          # Never print private_key, project_id dumps, or full JSON.
+          print(f"SERVICE ACCOUNT EMAIL: {email}")
+          PY
