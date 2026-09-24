@@ -1,0 +1,86 @@
+name: TMP Article1 handoff Drive search (delete me)
+
+on:
+  push:
+    branches: [tmp/article1-asset-sha-retest]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: |
+          pip install -r requirements-chronicles-bridge.txt
+      - name: Search Drive for handoff / article package
+        env:
+          DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, "scripts")
+          from chronicles_bridge.drive import _service
+          from googleapiclient.http import MediaIoBaseDownload
+          import io
+
+          svc = _service()
+          queries = [
+              "name = 'article-01-preview-handoff.md' and trashed = false",
+              "name contains 'article-01-preview-handoff' and trashed = false",
+              "name contains 'ai-overviews-local-search-what-changed' and mimeType != 'application/vnd.google-apps.folder' and trashed = false",
+              "name contains 'chronicles-article-01' and trashed = false",
+              "fullText contains 'AI Overviews and Local Search: What Actually Changed for Small Businesses' and trashed = false",
+          ]
+          found = []
+          for q in queries:
+              print("QUERY:", q)
+              resp = svc.files().list(
+                  q=q,
+                  fields="files(id,name,mimeType,size,parents,modifiedTime)",
+                  pageSize=50,
+                  supportsAllDrives=True,
+                  includeItemsFromAllDrives=True,
+                  corpora="allDrives",
+              ).execute()
+              files = resp.get("files", [])
+              print("  hits", len(files))
+              for f in files:
+                  print(" ", json.dumps(f))
+                  found.append(f)
+
+          # Dedup by id
+          by_id = {f["id"]: f for f in found}
+          out = Path("handoff-search")
+          out.mkdir(exist_ok=True)
+          Path("handoff-search/results.json").write_text(json.dumps(list(by_id.values()), indent=2)+"\n", encoding="utf-8")
+
+          # Download any .md that looks like handoff/article
+          for f in by_id.values():
+              name = f.get("name") or ""
+              if not name.lower().endswith((".md", ".txt", ".yaml", ".yml")):
+                  continue
+              if any(x in name.lower() for x in ["handoff", "article-01", "ai-overviews", "chronicles-article"]):
+                  dest = out / name
+                  req = svc.files().get_media(fileId=f["id"], supportsAllDrives=True)
+                  buf = io.BytesIO()
+                  dl = MediaIoBaseDownload(buf, req)
+                  done = False
+                  while not done:
+                      _, done = dl.next_chunk()
+                  dest.write_bytes(buf.getvalue())
+                  print("DOWNLOADED", name, "bytes", len(buf.getvalue()))
+          print("SEARCH DONE total_unique", len(by_id))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: article1-handoff-search
+          path: handoff-search/
