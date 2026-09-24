@@ -1,0 +1,125 @@
+name: TMP download Article #1 Drive assets
+
+# One-off ops helper: list Chronicles Drive folders + download known A1 asset IDs.
+# Safe to delete after use. Never merges / never touches main content.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install bridge deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-chronicles-bridge.txt
+
+      - name: List Drive folders + download A1 assets
+        env:
+          DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}
+          DRIVE_INBOX_FOLDER_ID: ${{ secrets.DRIVE_INBOX_FOLDER_ID }}
+          DRIVE_PROCESSED_FOLDER_ID: ${{ secrets.DRIVE_PROCESSED_FOLDER_ID }}
+          DRIVE_QUARANTINE_FOLDER_ID: ${{ secrets.DRIVE_QUARANTINE_FOLDER_ID }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a1-assets
+          python - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, "scripts")
+          from chronicles_bridge.drive import (
+              _service,
+              _download_file,
+              list_child_folders,
+              list_inbox_folders,
+          )
+
+          svc = _service()
+          report = {"folders": {}, "files": {}}
+
+          def list_files(parent_id: str):
+              q = f"'{parent_id}' in parents and trashed = false"
+              resp = (
+                  svc.files()
+                  .list(
+                      q=q,
+                      fields="files(id,name,mimeType)",
+                      pageSize=200,
+                      supportsAllDrives=True,
+                      includeItemsFromAllDrives=True,
+                  )
+                  .execute()
+              )
+              return resp.get("files", [])
+
+          mapping = {
+              "inbox": os.environ.get("DRIVE_INBOX_FOLDER_ID", "").strip(),
+              "processed": os.environ.get("DRIVE_PROCESSED_FOLDER_ID", "").strip(),
+              "quarantine": os.environ.get("DRIVE_QUARANTINE_FOLDER_ID", "").strip(),
+          }
+          for label, fid in mapping.items():
+              if not fid:
+                  report["folders"][label] = {"error": "missing folder id secret"}
+                  continue
+              children = list_files(fid)
+              report["folders"][label] = {
+                  "id": fid,
+                  "children": [
+                      {"id": c["id"], "name": c["name"], "mimeType": c["mimeType"]}
+                      for c in children
+                  ],
+              }
+
+          assets = {
+              "hero": {
+                  "id": "1GUKnbyWiNJrqQcVtYLnbAEFfJi3X3JoQ",
+                  "name": "ai-overviews-local-search-what-changed-hero-1600x900.png",
+              },
+              "social": {
+                  "id": "1v2B5KwIq-UmhFvm9hIOXr7KrxB3YsQXZ",
+                  "name": "ai-overviews-local-search-what-changed-social-1200x628.png",
+              },
+          }
+          out = Path("/tmp/a1-assets")
+          for key, meta in assets.items():
+              dest = out / meta["name"]
+              try:
+                  info = svc.files().get(
+                      fileId=meta["id"],
+                      fields="id,name,mimeType,size,parents",
+                      supportsAllDrives=True,
+                  ).execute()
+                  _download_file(svc, meta["id"], dest)
+                  report["files"][key] = {
+                      "ok": True,
+                      "meta": info,
+                      "bytes": dest.stat().st_size,
+                      "path": str(dest),
+                  }
+              except Exception as exc:  # noqa: BLE001
+                  report["files"][key] = {"ok": False, "error": str(exc), "id": meta["id"]}
+
+          Path("/tmp/a1-assets/report.json").write_text(
+              json.dumps(report, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(report, indent=2))
+          PY
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: a1-drive-assets
+          path: /tmp/a1-assets/
+          if-no-files-found: warn
