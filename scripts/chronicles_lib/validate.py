@@ -107,12 +107,20 @@ def validate_articles(
             ("content_type", article.content_type),
             ("author", article.author),
             ("status", article.status),
-            ("datePublished", article.datePublished),
-            ("dateModified", article.dateModified),
             ("schema_type", article.schema_type),
         ):
             if not value:
                 errors.append(f"{prefix}missing required field: {field_name}")
+
+        # Published/retired require real dates. Drafts may omit them until
+        # APPROVED FOR PUBLICATION; preview builds apply an in-memory overlay.
+        if article.status != "draft":
+            for field_name, value in (
+                ("datePublished", article.datePublished),
+                ("dateModified", article.dateModified),
+            ):
+                if not value:
+                    errors.append(f"{prefix}missing required field: {field_name}")
 
         if article.content_type and article.content_type not in CONTENT_TYPES:
             errors.append(
@@ -158,10 +166,13 @@ def validate_articles(
         is_production = (
             article.status in {"published", "retired"} and not article.is_fixture
         )
+        from chronicles_lib.preview import preview_mode_enabled
+
+        is_preview_draft = article.status == "draft" and preview_mode_enabled()
         enforce_assets = (
             enforce_production_assets
             if enforce_production_assets is not None
-            else is_production
+            else (is_production or is_preview_draft)
         )
 
         # Body hygiene — fail closed (no silent rewrite)
@@ -200,16 +211,22 @@ def validate_articles(
                 errors.append(f"{prefix}duplicate sources url: {url!r}")
             seen_urls.add(key)
 
-        if is_production or (enforce_assets and article.status != "draft"):
+        if is_production or is_preview_draft or (enforce_assets and article.status != "draft"):
             if not article.hero_image:
-                errors.append(f"{prefix}published/retired article missing hero_image")
+                errors.append(
+                    f"{prefix}{'preview draft' if is_preview_draft else 'published/retired'} "
+                    f"article missing hero_image"
+                )
             if not article.social_image:
                 errors.append(
                     f"{prefix}{article.status} article missing social_image "
                     f"(fixtures may fall back to {SITE_OG_FALLBACK})"
                 )
             if article.hero_image and not article.hero_alt:
-                errors.append(f"{prefix}published/retired missing hero_alt")
+                errors.append(
+                    f"{prefix}{'preview draft' if is_preview_draft else 'published/retired'} "
+                    f"missing hero_alt"
+                )
 
         if article.package_dir is not None:
             for field_name, rel in (

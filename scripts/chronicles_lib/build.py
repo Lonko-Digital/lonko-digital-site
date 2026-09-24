@@ -273,6 +273,9 @@ def _mark_body_source_links(body_html: str) -> str:
 
 
 def render_article_page(article: Article, corpus: list[Article]) -> str:
+    from chronicles_lib.preview import apply_preview_date_overlay
+
+    article = apply_preview_date_overlay(article)
     depth = 2
     body_html = markdown_to_html(article.body)
     # Frozen editorial bodies may carry their own visible "Sources & Further Reading"
@@ -284,6 +287,9 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     if article.is_retired():
         robots = "noindex, nofollow"
     elif article.is_fixture or article.status == "fixture":
+        robots = "noindex, nofollow"
+    elif article.status == "draft":
+        # Unpublished pre-publish preview — browsable, never indexable.
         robots = "noindex, nofollow"
     else:
         robots = None
@@ -408,6 +414,13 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         <p>This article has been retired from Lonko Chronicles. It remains available at this URL for reference.</p>
       </div>
 """
+    draft_notice = ""
+    if article.status == "draft":
+        draft_notice = """
+      <div class="chronicles-preview-notice" role="status">
+        <p>PRE-PUBLICATION PREVIEW — not live. Dates shown may be preview overlays until Alex approves publication.</p>
+      </div>
+"""
 
     main = f"""
   <main id="main" class="chronicles-article-page" data-chronicles-page="article" data-article-slug="{escape_text(article.slug)}">
@@ -420,7 +433,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             <li aria-current="page">{escape_text(article.title)}</li>
           </ol>
         </nav>
-{retired_notice}
+{retired_notice}{draft_notice}
         <p class="chronicles-kicker">{escape_text(article.content_type)} · {escape_text(article.topic)}</p>
         <h1>{escape_text(article.title)}</h1>
         <p class="chronicles-deck">{escape_text(article.deck)}</p>
@@ -1244,15 +1257,20 @@ def write_chronicles_js() -> None:
 
 
 def build() -> int:
+    from chronicles_lib.preview import apply_preview_date_overlay, preview_mode_enabled
+
     CONTENT.mkdir(parents=True, exist_ok=True)
     OUT.mkdir(parents=True, exist_ok=True)
+    preview = preview_mode_enabled()
 
     articles = load_all_articles(CONTENT)
     if articles:
         errors = validate_articles(articles)
         visible = site_visible_articles(articles)
         renderable = renderable_articles(articles)
-        errors.extend(validate_articles(visible, forbid_drafts=True))
+        # In production, drafts must never appear in listing/output sets.
+        # In preview mode, drafts are intentionally visible/renderable.
+        errors.extend(validate_articles(visible, forbid_drafts=not preview))
         # Deduplicate while preserving order
         seen: set[str] = set()
         uniq: list[str] = []
@@ -1265,6 +1283,14 @@ def build() -> int:
             for e in uniq:
                 print(f"  - {e}", file=sys.stderr)
             return 1
+        # Preview: apply in-memory date overlay after validation (never writes packages).
+        if preview:
+            articles = [
+                apply_preview_date_overlay(a) if a.status == "draft" else a
+                for a in articles
+            ]
+            visible = site_visible_articles(articles)
+            renderable = renderable_articles(articles)
     else:
         visible = []
         renderable = []
@@ -1273,6 +1299,7 @@ def build() -> int:
     published = public_articles(articles)
     fixtures = fixture_articles(articles)
     retired = [a for a in articles if a.is_retired()]
+    drafts = [a for a in articles if a.status == "draft"]
 
     # Clean generated article dirs (keep content/, assets/, and local-only fixtures)
     for child in list(OUT.iterdir()):
@@ -1283,7 +1310,7 @@ def build() -> int:
         elif child.name in {"feed.xml", "index.html"}:
             child.unlink(missing_ok=True)
 
-    # Article pages: published + fixture + soft-retired (canonical URL preserved)
+    # Article pages: published + fixture + soft-retired (+ drafts in preview only)
     for article in renderable:
         copy_package_assets(article)
         html = render_article_page(article, visible)
@@ -1295,7 +1322,7 @@ def build() -> int:
     latest_all = sort_by_date(visible)
     total_pages = max(1, (len(latest_all) + PAGE_SIZE - 1) // PAGE_SIZE)
 
-    # Sitemap pagination reflects indexable published corpus only (never fixture/retired)
+    # Sitemap pagination reflects indexable published corpus only (never fixture/retired/draft)
     published_latest = sort_by_date(published)
     published_pages = (
         max(1, (len(published_latest) + PAGE_SIZE - 1) // PAGE_SIZE) if published else 1
@@ -1324,11 +1351,15 @@ def build() -> int:
     write_sitemaps(published, published_pages)
     write_search_indexes(visible)
     write_chronicles_js()
-    write_robots([a.slug for a in fixtures])
+    disallow_slugs = [a.slug for a in fixtures]
+    if preview:
+        disallow_slugs.extend(a.slug for a in drafts)
+    write_robots(disallow_slugs)
 
+    mode = "preview" if preview else "production"
     print(
-        f"Chronicles build OK: {len(published)} published, {len(fixtures)} fixture, "
-        f"{len(retired)} retired, {total_pages} latest page(s)."
+        f"Chronicles build OK ({mode}): {len(published)} published, {len(fixtures)} fixture, "
+        f"{len(retired)} retired, {len(drafts)} draft, {total_pages} latest page(s)."
     )
     return 0
 

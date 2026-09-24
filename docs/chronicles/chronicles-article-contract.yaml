@@ -17,11 +17,25 @@ identity:
   status:
     values: [draft, published, retired, fixture]
     notes: >
-      draft = not rendered; published = public indexable; retired = page kept, soft-retired;
-      fixture = local/CI only, noindex, not in sitemap/feed. Drive intake rejects fixture.
+      draft = not rendered in production builds; published = public indexable;
+      retired = page kept, soft-retired; fixture = local/CI only, noindex, not in
+      sitemap/feed. Drive intake rejects fixture. In CHRONICLES_PREVIEW=1 builds,
+      drafts ARE rendered with robots noindex,nofollow for pre-publication QA.
   dates:
-    datePublished: { required: true, format: YYYY-MM-DD }
-    dateModified: { required: true, format: YYYY-MM-DD }
+    datePublished:
+      required_for: [published, retired]
+      optional_for: [draft]
+      format: YYYY-MM-DD
+      notes: >
+        Unpublished drafts may omit dates until APPROVED FOR PUBLICATION.
+        Preview builds apply an in-memory date overlay for display/schema only;
+        that overlay is never written into the package and must not become a
+        false production publication date.
+    dateModified:
+      required_for: [published, retired]
+      optional_for: [draft]
+      format: YYYY-MM-DD
+      notes: "Same rules as datePublished."
   author:
     default: "Lonko Digital"
     schema: "Organization @id https://lonkodigital.com/#organization"
@@ -70,7 +84,7 @@ seo:
     published: indexable
     fixture: "noindex, nofollow"
     retired: "noindex, nofollow"
-    draft: not_rendered
+    draft: "not_rendered in production; in CHRONICLES_PREVIEW builds: noindex, nofollow"
 
 schema:
   supported_types: [Article, BlogPosting, NewsArticle]
@@ -171,6 +185,14 @@ preview:
   required_before_alex_approval: true
   must_not_be: [github_blob, localhost_for_alex, production_after_merge_only]
   implementation: "See .github/workflows/chronicles-pr-preview.yml"
+  env: "CHRONICLES_PREVIEW=1"
+  draft_behavior: >
+    Unpublished status=draft packages render in preview builds with production
+    assets, real template/CSS/JS, schema intent, and robots noindex,nofollow.
+    Missing draft dates are filled only in-memory for display/schema.
+    Production builds (env unset) never emit draft HTML and never index drafts.
+  must_not: >
+    Casually changing draft → published to satisfy preview validation.
 
 active_article:
   state_file: chronicles/state.json

@@ -54,9 +54,17 @@ jobs:
           pip install -r requirements-chronicles-bridge.txt
 
       - name: Build Chronicles
+        env:
+          CHRONICLES_PREVIEW: "1"
         run: python scripts/build_chronicles.py
 
+      - name: Draft-preview regression
+        env:
+          CHRONICLES_PREVIEW: "1"
+        run: python scripts/test_chronicles_draft_preview.py
+
       - name: Production contract validation
+        # Unset preview mode — production contract must not soft-certify via draft overlay.
         run: python scripts/test_chronicles_production_contract_v2.py
 
       - name: Assemble preview tree
@@ -76,16 +84,28 @@ jobs:
           # Optional root helpers
           if [ -f index.html ]; then cp index.html "$DEST/"; fi
           if [ -f CNAME ]; then cp CNAME "$DEST/"; fi
-          # Discover first published article slug for the comment
+          # Prefer active draft / state.json slug, then any draft, then published
           SLUG="${{ github.event.inputs.slug }}"
           if [ -z "$SLUG" ]; then
             SLUG=$(python - <<'PY'
           from pathlib import Path
-          import sys
+          import json, sys
           sys.path.insert(0, "scripts")
-          from chronicles_lib.model import load_all_articles, public_articles
-          arts = public_articles(load_all_articles(Path("chronicles/content")))
-          print(arts[0].slug if arts else "")
+          from chronicles_lib.model import load_all_articles
+          state_path = Path("chronicles/state.json")
+          if state_path.is_file():
+              state = json.loads(state_path.read_text(encoding="utf-8"))
+              active = state.get("active_article")
+              if active:
+                  print(active)
+                  raise SystemExit(0)
+          arts = load_all_articles(Path("chronicles/content"))
+          drafts = [a for a in arts if a.status == "draft"]
+          if drafts:
+              print(drafts[0].slug)
+              raise SystemExit(0)
+          published = [a for a in arts if a.status == "published" and not a.is_fixture]
+          print(published[0].slug if published else "")
           PY
             )
           fi
