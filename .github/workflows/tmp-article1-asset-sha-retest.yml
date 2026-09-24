@@ -1,0 +1,118 @@
+name: TMP Article1 asset SHA retest (delete me)
+
+on:
+  push:
+    branches: [tmp/article1-asset-sha-retest]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  download-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-chronicles-bridge.txt
+          pip install pillow
+
+      - name: Download + verify SHA256 + dimensions
+        env:
+          DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, io, json, os, sys
+          from pathlib import Path
+          from googleapiclient.http import MediaIoBaseDownload
+          from PIL import Image
+          sys.path.insert(0, "scripts")
+          from chronicles_bridge.drive import _service
+
+          EXPECTED = {
+              "hero": {
+                  "id": "1GUKnbyWiNJrqQcVtYLnbAEFfJi3X3JoQ",
+                  "name": "ai-overviews-local-search-what-changed-hero-1600x900.png",
+                  "sha256": "e3a6e87e5a47d17d3a7ff8ab9f7a92a4e442efd3b42e74022058445778b73b7f",
+                  "dims": (1600, 900),
+              },
+              "social": {
+                  "id": "1v2B5KwIq-UmhFvm9hIOXr7KrxB3YsQXZ",
+                  "name": "ai-overviews-local-search-what-changed-social-1200x628.png",
+                  "sha256": "e2b876681829452aba1af272a031913cc1623e46cf2d751b3067aa68ad287ce8",
+                  "dims": (1200, 628),
+              },
+              "chart": {
+                  "id": "1O92ZzPaPze1mbi6L9oAx63CehKJxWDed",
+                  "name": "ai-overviews-local-search-what-changed-chart-local-pack-vs-ai-overview.png",
+                  "sha256": "250681a18acea0a72b7f102407b9c2017eeefe2298b5e38f7d88568d23ffd72c",
+                  "dims": (900, 506),
+                  "bytes": 5169,
+              },
+          }
+
+          out = Path("article1-assets")
+          out.mkdir(parents=True, exist_ok=True)
+          svc = _service()
+          report = {}
+          failed = False
+
+          for key, spec in EXPECTED.items():
+              dest = out / spec["name"]
+              meta = svc.files().get(
+                  fileId=spec["id"],
+                  fields="id,name,mimeType,size",
+                  supportsAllDrives=True,
+              ).execute()
+              req = svc.files().get_media(fileId=spec["id"], supportsAllDrives=True)
+              buf = io.BytesIO()
+              downloader = MediaIoBaseDownload(buf, req)
+              done = False
+              while not done:
+                  _, done = downloader.next_chunk()
+              data = buf.getvalue()
+              dest.write_bytes(data)
+              sha = hashlib.sha256(data).hexdigest()
+              with Image.open(io.BytesIO(data)) as im:
+                  dims = im.size
+              ok = sha == spec["sha256"] and dims == spec["dims"]
+              if "bytes" in spec:
+                  ok = ok and len(data) == spec["bytes"]
+              row = {
+                  "id": spec["id"],
+                  "name": meta.get("name"),
+                  "bytes": len(data),
+                  "sha256": sha,
+                  "dims": list(dims),
+                  "expected_sha256": spec["sha256"],
+                  "expected_dims": list(spec["dims"]),
+                  "pass": ok,
+              }
+              report[key] = row
+              status = "PASS" if ok else "FAIL"
+              print(f"{key.upper()} {status} sha={sha} dims={dims[0]}x{dims[1]} bytes={len(data)}")
+              if not ok:
+                  failed = True
+
+          Path("article1-assets/VERIFY_REPORT.json").write_text(
+              json.dumps(report, indent=2) + "\n", encoding="utf-8"
+          )
+          if failed:
+              raise SystemExit("One or more assets failed SHA/dimension checks")
+          print("ALL ASSETS PASS")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: article1-drive-assets
+          path: article1-assets/
+          if-no-files-found: warn
