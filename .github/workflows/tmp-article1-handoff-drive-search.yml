@@ -19,17 +19,16 @@ jobs:
       - name: Install deps
         run: |
           pip install -r requirements-chronicles-bridge.txt
-      - name: Search Drive for handoff / article package
+      - name: Search Drive for handoff / Google Docs / folders
         env:
           DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT_JSON }}
         run: |
-          python - <<'PY'
-          import json, os, sys
+          python <<'PY'
+          import json, sys, io
           from pathlib import Path
           sys.path.insert(0, "scripts")
           from chronicles_bridge.drive import _service
           from googleapiclient.http import MediaIoBaseDownload
-          import io
 
           svc = _service()
           queries = [
@@ -38,45 +37,129 @@ jobs:
               "name contains 'ai-overviews-local-search-what-changed' and mimeType != 'application/vnd.google-apps.folder' and trashed = false",
               "name contains 'chronicles-article-01' and trashed = false",
               "fullText contains 'AI Overviews and Local Search: What Actually Changed for Small Businesses' and trashed = false",
+              "fullText contains 'article-01-preview-handoff' and trashed = false",
+              "name contains 'Lonko Chronicles' and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+              "name contains 'Chronicles' and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+              "name = 'Inbox' and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+              "name contains 'Approved Assets' and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+              "mimeType = 'application/vnd.google-apps.document' and fullText contains 'AI Overviews and Local Search' and trashed = false",
+              "mimeType = 'application/vnd.google-apps.document' and name contains 'AI Overviews' and trashed = false",
+              "mimeType = 'application/vnd.google-apps.document' and name contains 'article-01' and trashed = false",
+              "mimeType = 'application/vnd.google-apps.document' and name contains 'preview-handoff' and trashed = false",
+              "mimeType = 'application/vnd.google-apps.document' and name contains 'handoff' and trashed = false",
+              "name contains 'handoff' and trashed = false",
           ]
           found = []
           for q in queries:
               print("QUERY:", q)
-              resp = svc.files().list(
-                  q=q,
-                  fields="files(id,name,mimeType,size,parents,modifiedTime)",
-                  pageSize=50,
-                  supportsAllDrives=True,
-                  includeItemsFromAllDrives=True,
-                  corpora="allDrives",
-              ).execute()
+              try:
+                  resp = svc.files().list(
+                      q=q,
+                      fields="files(id,name,mimeType,size,parents,modifiedTime,webViewLink)",
+                      pageSize=50,
+                      supportsAllDrives=True,
+                      includeItemsFromAllDrives=True,
+                      corpora="allDrives",
+                  ).execute()
+              except Exception as e:
+                  print("  ERR", e)
+                  continue
               files = resp.get("files", [])
               print("  hits", len(files))
               for f in files:
                   print(" ", json.dumps(f))
                   found.append(f)
 
-          # Dedup by id
           by_id = {f["id"]: f for f in found}
           out = Path("handoff-search")
           out.mkdir(exist_ok=True)
-          Path("handoff-search/results.json").write_text(json.dumps(list(by_id.values()), indent=2)+"\n", encoding="utf-8")
+          Path("handoff-search/results.json").write_text(json.dumps(list(by_id.values()), indent=2) + "\n", encoding="utf-8")
 
-          # Download any .md that looks like handoff/article
+          folder_listings = {}
+          for f in by_id.values():
+              if f.get("mimeType") != "application/vnd.google-apps.folder":
+                  continue
+              fid = f["id"]
+              print("LIST FOLDER", f.get("name"), fid)
+              try:
+                  kids = svc.files().list(
+                      q=f"'{fid}' in parents and trashed = false",
+                      fields="files(id,name,mimeType,size,modifiedTime,webViewLink)",
+                      pageSize=100,
+                      supportsAllDrives=True,
+                      includeItemsFromAllDrives=True,
+                      corpora="allDrives",
+                      orderBy="modifiedTime desc",
+                  ).execute().get("files", [])
+              except Exception as e:
+                  print("  list err", e)
+                  kids = []
+              folder_listings[f.get("name", "?") + "|" + fid] = kids
+              for k in kids[:50]:
+                  print("   child", json.dumps(k))
+          Path("handoff-search/folder_listings.json").write_text(json.dumps(folder_listings, indent=2) + "\n", encoding="utf-8")
+
+          asset_parent = "1sGbYPmWpo-cSyFxhCi8HF9Rz3LOplV-P"
+          print("LIST ASSET PARENT", asset_parent)
+          try:
+              kids = svc.files().list(
+                  q=f"'{asset_parent}' in parents and trashed = false",
+                  fields="files(id,name,mimeType,size,modifiedTime,webViewLink)",
+                  pageSize=100,
+                  supportsAllDrives=True,
+                  includeItemsFromAllDrives=True,
+                  corpora="allDrives",
+                  orderBy="modifiedTime desc",
+              ).execute().get("files", [])
+              Path("handoff-search/approved_assets_folder.json").write_text(json.dumps(kids, indent=2) + "\n", encoding="utf-8")
+              for k in kids:
+                  print("  asset-folder child", json.dumps(k))
+              meta = svc.files().get(fileId=asset_parent, fields="id,name,parents", supportsAllDrives=True).execute()
+              print("ASSET PARENT META", json.dumps(meta))
+              Path("handoff-search/approved_assets_meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
+              for parent in meta.get("parents") or []:
+                  print("LIST GRANDPARENT", parent)
+                  gkids = svc.files().list(
+                      q=f"'{parent}' in parents and trashed = false",
+                      fields="files(id,name,mimeType,size,modifiedTime,webViewLink)",
+                      pageSize=100,
+                      supportsAllDrives=True,
+                      includeItemsFromAllDrives=True,
+                      corpora="allDrives",
+                      orderBy="modifiedTime desc",
+                  ).execute().get("files", [])
+                  Path("handoff-search/grandparent_folder.json").write_text(json.dumps(gkids, indent=2) + "\n", encoding="utf-8")
+                  for k in gkids:
+                      print("  grandparent child", json.dumps(k))
+          except Exception as e:
+              print(" asset parent list err", e)
+
           for f in by_id.values():
               name = f.get("name") or ""
-              if not name.lower().endswith((".md", ".txt", ".yaml", ".yml")):
-                  continue
-              if any(x in name.lower() for x in ["handoff", "article-01", "ai-overviews", "chronicles-article"]):
-                  dest = out / name
-                  req = svc.files().get_media(fileId=f["id"], supportsAllDrives=True)
-                  buf = io.BytesIO()
-                  dl = MediaIoBaseDownload(buf, req)
-                  done = False
-                  while not done:
-                      _, done = dl.next_chunk()
-                  dest.write_bytes(buf.getvalue())
-                  print("DOWNLOADED", name, "bytes", len(buf.getvalue()))
+              mime = f.get("mimeType") or ""
+              fid = f["id"]
+              safe = "".join(c if c.isalnum() or c in "-_." else "_" for c in name)[:120]
+              if mime == "application/vnd.google-apps.document":
+                  try:
+                      data = svc.files().export(fileId=fid, mimeType="text/plain").execute()
+                      dest = out / f"{safe}.txt"
+                      dest.write_bytes(data if isinstance(data, bytes) else data.encode("utf-8"))
+                      print("EXPORTED DOC", name, "bytes", dest.stat().st_size)
+                  except Exception as e:
+                      print("EXPORT FAIL", name, e)
+              elif name.lower().endswith((".md", ".txt", ".yaml", ".yml")):
+                  try:
+                      req = svc.files().get_media(fileId=fid, supportsAllDrives=True)
+                      buf = io.BytesIO()
+                      dl = MediaIoBaseDownload(buf, req)
+                      done = False
+                      while not done:
+                          _, done = dl.next_chunk()
+                      dest = out / name
+                      dest.write_bytes(buf.getvalue())
+                      print("DOWNLOADED", name, "bytes", len(buf.getvalue()))
+                  except Exception as e:
+                      print("DL FAIL", name, e)
           print("SEARCH DONE total_unique", len(by_id))
           PY
       - uses: actions/upload-artifact@v4
