@@ -5,8 +5,8 @@
   "observed_h1": [
     "AI Overviews and Local Search: What Actually Changed for Small Businesses"
   ],
-  "verified_at": "2026-09-25T19:27:15Z",
-  "github_actions_run_id": "36179757100",
+  "verified_at": "2026-09-25T20:07:20Z",
+  "github_actions_run_id": "36183806426",
   "production_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
@@ -26,8 +26,8 @@
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
         "server": "GitHub.com",
-        "x-cache": "HIT",
-        "age": "11",
+        "x-cache": "MISS",
+        "age": "0",
         "via": "1.1 varnish"
       }
     },
@@ -42,7 +42,7 @@
         "cache-control": "max-age=600",
         "server": "GitHub.com",
         "x-cache": "HIT",
-        "age": "11",
+        "age": "0",
         "via": "1.1 varnish"
       }
     }
