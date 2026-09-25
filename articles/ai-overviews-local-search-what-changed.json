@@ -2,30 +2,93 @@
   "slug": "ai-overviews-local-search-what-changed",
   "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
   "expected_title": "AI Overviews and Local Search: What Actually Changed for Small Businesses",
-  "verified_at": "2026-09-25T13:43:50Z",
-  "production_commit": "4ae6dba9a3d3a409949f04a81d77408d3b5a9172",
+  "observed_h1": [
+    "AI Overviews and Local Search: What Actually Changed for Small Businesses"
+  ],
+  "verified_at": "2026-09-25T19:26:45Z",
+  "github_actions_run_id": "36179699599",
+  "production_commit": "acda80b312a0319968008df90092d9eb938d792b",
+  "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
+  "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "http_status": 200,
   "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
+  "response_bytes": 22672,
+  "response_body_sha256": "c0dd11145d6093e00a5f12c9b46092332c4f6e6e57c9689a766efc5049e72003",
   "fetch_attempt": 1,
   "fetch_attempts": [
     {
-      "user_agent": "LonkoChroniclesVerifier",
+      "user_agent": "LonkoChroniclesVerifier/1.0",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
-      "cache": "MISS",
-      "bytes": 22589
+      "bytes": 22672,
+      "body_sha256": "c0dd11145d6093e00a5f12c9b46092332c4f6e6e57c9689a766efc5049e72003",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "max-age=600",
+        "server": "GitHub.com",
+        "x-cache": "MISS",
+        "age": "0",
+        "via": "1.1 varnish"
+      }
     },
     {
-      "user_agent": "Mozilla",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
-      "cache": "HIT",
-      "bytes": 22589
+      "bytes": 22672,
+      "body_sha256": "c0dd11145d6093e00a5f12c9b46092332c4f6e6e57c9689a766efc5049e72003",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "max-age=600",
+        "server": "GitHub.com",
+        "x-cache": "HIT",
+        "age": "0",
+        "via": "1.1 varnish"
+      }
     }
   ],
-  "supporting_asset_count": 1,
+  "hero": {
+    "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-hero-1600x900.png",
+    "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-hero-1600x900.png",
+    "http_status": 200,
+    "content_type": "image/png",
+    "pass": true
+  },
+  "supporting_assets": [
+    {
+      "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-chart-local-pack-vs-ai-overview.png",
+      "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-chart-local-pack-vs-ai-overview.png",
+      "http_status": 200,
+      "content_type": "image/png",
+      "pass": true
+    }
+  ],
+  "og_image": {
+    "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-social-1200x628.png",
+    "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-social-1200x628.png",
+    "http_status": 200,
+    "content_type": "image/png",
+    "pass": true
+  },
+  "sitemap_url": "https://lonkodigital.com/sitemap-chronicles.xml",
   "sources_heading_count": 1,
   "hygiene_hits": [],
+  "checks_performed": [
+    "h1_pass",
+    "canonical_pass",
+    "indexable_pass",
+    "preview_hygiene_pass",
+    "schema_pass",
+    "breadcrumb_schema_pass",
+    "hero_pass",
+    "supporting_assets_pass",
+    "og_metadata_pass",
+    "og_image_pass",
+    "sitemap_pass",
+    "content_hygiene_pass",
+    "tracking_foundation_pass"
+  ],
+  "overall_definition": "PASS means every required automated test in this verifier passed. FAIL means one or more of those tests failed. The result is scoped to the checks listed in checks_performed.",
   "h1_pass": true,
   "canonical_pass": true,
   "indexable_pass": true,
