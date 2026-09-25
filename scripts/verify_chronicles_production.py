@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""Verify a live Chronicles article against production (lonkodigital.com).
+"""Check a live Chronicles article URL and write an evidence record.
 
-Writes a machine-readable JSON result. Does not modify article content.
-Claude Blog reads the published result from branch chronicles-verify; it must
-not treat its own web-fetch failure as a production outage when this record
-says PASS.
+PASS means every required check in this script passed.
+FAIL means one or more of those checks failed.
+The record does not instruct any reader how to reconcile other observations.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import re
+import subprocess
 import sys
 import time
 import urllib.error
@@ -115,19 +117,31 @@ class _Page(HTMLParser):
             self.sources_headings += 1
 
 
+_HEADER_KEYS = ("content-type", "cache-control", "server", "x-cache", "age", "via")
+
+
+def _sha256(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8", errors="replace")).hexdigest()
+
+
+def _selected_headers(headers: dict[str, str]) -> dict[str, str]:
+    return {key: headers[key] for key in _HEADER_KEYS if headers.get(key)}
+
+
 def _fetch(url: str, ua: str, timeout: int = 30) -> tuple[int, str, str, dict[str, str]]:
     sep = "&" if "?" in url else "?"
     bust = f"{url}{sep}_verify={int(time.time())}"
-    req = urllib.request.Request(bust, headers={"User-Agent": ua, "Accept": "text/html,application/xml,*/*"})
+    req = urllib.request.Request(bust, headers={"User-Agent": ua, "Accept": "text/html,application/xml,image/*"})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            body = resp.read().decode("utf-8", errors="replace")
+            raw = resp.read()
             headers = {k.lower(): v for k, v in resp.headers.items()}
-            return resp.status, resp.geturl().split("?")[0], body, headers
+            return resp.status, resp.geturl().split("?")[0], raw.decode("utf-8", errors="replace"), headers
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
+        raw = exc.read()
+        headers = {k.lower(): v for k, v in exc.headers.items()} if exc.headers else {}
         final = getattr(exc, "url", url) or url
-        return exc.code, str(final).split("?")[0], body, {}
+        return exc.code, str(final).split("?")[0], raw.decode("utf-8", errors="replace"), headers
 
 
 def _fetch_with_retry(url: str, attempts: int = 4, pause: float = 12.0) -> dict:
@@ -139,11 +153,12 @@ def _fetch_with_retry(url: str, attempts: int = 4, pause: float = 12.0) -> dict:
             status, final, body, headers = _fetch(url, ua)
             per_ua.append(
                 {
-                    "user_agent": ua.split("/")[0][:40],
+                    "user_agent": ua,
                     "http_status": status,
                     "final_url": final,
-                    "cache": headers.get("x-cache", ""),
-                    "bytes": len(body),
+                    "bytes": len(body.encode("utf-8", errors="replace")),
+                    "body_sha256": _sha256(body),
+                    "headers": _selected_headers(headers),
                 }
             )
             if chosen is None and status == 200 and body:
@@ -156,13 +171,35 @@ def _fetch_with_retry(url: str, attempts: int = 4, pause: float = 12.0) -> dict:
     return last
 
 
-def _asset_ok(src: str, page_url: str) -> bool:
-    if not src or src.startswith("data:"):
-        return False
-    absolute = src if src.startswith("http") else urljoin(page_url, src)
-    status, _, _, headers = _fetch(absolute, USER_AGENTS[1])
+def _absolute(src: str, page_url: str) -> str:
+    if src.startswith("http://") or src.startswith("https://"):
+        return src
+    return urljoin(page_url, src)
+
+
+def _asset_check(src: str, page_url: str) -> dict:
+    absolute = _absolute(src, page_url)
+    status, final, _, headers = _fetch(absolute, USER_AGENTS[1])
     ctype = headers.get("content-type", "")
-    return status == 200 and "image/" in ctype
+    ok = status == 200 and "image/" in ctype
+    return {
+        "url": absolute,
+        "final_url": final,
+        "http_status": status,
+        "content_type": ctype,
+        "pass": ok,
+    }
+
+
+def _git_file_sha(path: str) -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "log", "-1", "--format=%H", "--", path],
+            cwd=ROOT,
+            text=True,
+        ).strip()
+    except Exception:
+        return ""
 
 
 def _expected_title(slug: str, explicit: str) -> str:
@@ -177,8 +214,6 @@ def _expected_title(slug: str, explicit: str) -> str:
 
 
 def _commit_sha() -> str:
-    import subprocess
-
     try:
         return subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
@@ -232,7 +267,14 @@ def verify(slug: str, title: str = "") -> dict:
             breadcrumb_pass = names[:2] == ["Home", "Chronicles"] and (not expected or expected in names)
 
     hero_src = page.hero_src
-    hero_pass = bool(hero_src) and _asset_ok(hero_src, url)
+    hero = _asset_check(hero_src, url) if hero_src else {
+        "url": "",
+        "final_url": "",
+        "http_status": None,
+        "content_type": "",
+        "pass": False,
+    }
+    hero_pass = bool(hero["pass"])
     supporting = []
     for src in page.imgs:
         if not src or src == hero_src:
@@ -241,14 +283,21 @@ def verify(slug: str, title: str = "") -> dict:
             continue
         if src.startswith("../../assets/"):
             continue
-        supporting.append(src)
-    supporting_pass = all(_asset_ok(src, url) for src in supporting) if supporting else True
+        supporting.append(_asset_check(src, url))
+    supporting_pass = all(item["pass"] for item in supporting) if supporting else True
 
     og_title = page.og.get("og:title", "")
     og_desc = page.og.get("og:description", "")
     og_image = page.og.get("og:image", "")
     og_metadata_pass = bool(og_title and og_desc and og_image)
-    og_image_pass = bool(og_image) and _asset_ok(og_image, url)
+    og_image_result = _asset_check(og_image, url) if og_image else {
+        "url": "",
+        "final_url": "",
+        "http_status": None,
+        "content_type": "",
+        "pass": False,
+    }
+    og_image_pass = bool(og_image_result["pass"])
 
     sm_status, _, sm_body, _ = _fetch(SITEMAP, USER_AGENTS[0])
     sitemap_pass = sm_status == 200 and url in sm_body
@@ -276,15 +325,30 @@ def verify(slug: str, title: str = "") -> dict:
         "slug": slug,
         "url": url,
         "expected_title": expected,
+        "observed_h1": page.h1,
         "verified_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "production_commit": _commit_sha(),
+        "github_actions_run_id": os.environ.get("GITHUB_RUN_ID", ""),
+        "production_commit": os.environ.get("GITHUB_SHA") or _commit_sha(),
+        "verifier_script_commit": _git_file_sha("scripts/verify_chronicles_production.py"),
+        "workflow_commit": _git_file_sha(".github/workflows/chronicles-production-verify.yml"),
         "http_status": fetched.get("http_status"),
         "final_url": fetched.get("final_url", ""),
+        "response_bytes": len(body.encode("utf-8", errors="replace")),
+        "response_body_sha256": _sha256(body),
         "fetch_attempt": fetched.get("attempt"),
         "fetch_attempts": fetched.get("attempts", []),
-        "supporting_asset_count": len(supporting),
+        "hero": hero,
+        "supporting_assets": supporting,
+        "og_image": og_image_result,
+        "sitemap_url": SITEMAP,
         "sources_heading_count": page.sources_headings,
         "hygiene_hits": hygiene_hits,
+        "checks_performed": list(checks.keys()),
+        "overall_definition": (
+            "PASS means every required automated test in this verifier passed. "
+            "FAIL means one or more of those tests failed. "
+            "The result is scoped to the checks listed in checks_performed."
+        ),
         **checks,
         "overall": overall,
     }
