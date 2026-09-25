@@ -5,7 +5,9 @@ slug: ai-overviews-local-search-what-changed
 topic: SEO
 content_type: Analysis
 author: Lonko Digital
-status: draft
+status: published
+datePublished: "2026-09-24"
+dateModified: "2026-09-24"
 schema_type: Article
 seo_title: "AI Overviews & Local Search for Small Businesses | Lonko"
 meta_description: "Ahrefs found AI Overviews correlated with 58% lower CTR for position-one pages. See what local-search data means for small businesses."
