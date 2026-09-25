@@ -2,8 +2,8 @@
   "slug": "ai-overviews-local-search-what-changed",
   "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
   "expected_title": "AI Overviews and Local Search: What Actually Changed for Small Businesses",
-  "verified_at": "2026-09-25T13:36:40Z",
-  "production_commit": "f189761cd0fd8a7696e5b9fe32726eedc265d505",
+  "verified_at": "2026-09-25T13:43:50Z",
+  "production_commit": "4ae6dba9a3d3a409949f04a81d77408d3b5a9172",
   "http_status": 200,
   "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
   "fetch_attempt": 1,
@@ -13,6 +13,13 @@
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
       "cache": "MISS",
+      "bytes": 22589
+    },
+    {
+      "user_agent": "Mozilla",
+      "http_status": 200,
+      "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
+      "cache": "HIT",
       "bytes": 22589
     }
   ],
