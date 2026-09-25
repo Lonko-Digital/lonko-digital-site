@@ -134,6 +134,7 @@ def _fetch_with_retry(url: str, attempts: int = 4, pause: float = 12.0) -> dict:
     last: dict = {}
     for i in range(1, attempts + 1):
         per_ua = []
+        chosen: dict | None = None
         for ua in USER_AGENTS:
             status, final, body, headers = _fetch(url, ua)
             per_ua.append(
@@ -145,15 +146,11 @@ def _fetch_with_retry(url: str, attempts: int = 4, pause: float = 12.0) -> dict:
                     "bytes": len(body),
                 }
             )
-            if status == 200 and body:
-                return {
-                    "http_status": status,
-                    "final_url": final,
-                    "body": body,
-                    "attempts": per_ua,
-                    "attempt": i,
-                }
-            last = {"http_status": status, "final_url": final, "body": body, "attempts": per_ua, "attempt": i}
+            if chosen is None and status == 200 and body:
+                chosen = {"http_status": status, "final_url": final, "body": body}
+        if chosen is not None:
+            return {**chosen, "attempts": per_ua, "attempt": i}
+        last = {"http_status": None, "final_url": url, "body": "", "attempts": per_ua, "attempt": i}
         if i < attempts:
             time.sleep(pause)
     return last
