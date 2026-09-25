@@ -1,0 +1,36 @@
+{
+  "slug": "ai-overviews-local-search-what-changed",
+  "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
+  "expected_title": "AI Overviews and Local Search: What Actually Changed for Small Businesses",
+  "verified_at": "2026-09-25T13:36:40Z",
+  "production_commit": "f189761cd0fd8a7696e5b9fe32726eedc265d505",
+  "http_status": 200,
+  "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
+  "fetch_attempt": 1,
+  "fetch_attempts": [
+    {
+      "user_agent": "LonkoChroniclesVerifier",
+      "http_status": 200,
+      "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
+      "cache": "MISS",
+      "bytes": 22589
+    }
+  ],
+  "supporting_asset_count": 1,
+  "sources_heading_count": 1,
+  "hygiene_hits": [],
+  "h1_pass": true,
+  "canonical_pass": true,
+  "indexable_pass": true,
+  "preview_hygiene_pass": true,
+  "schema_pass": true,
+  "breadcrumb_schema_pass": true,
+  "hero_pass": true,
+  "supporting_assets_pass": true,
+  "og_metadata_pass": true,
+  "og_image_pass": true,
+  "sitemap_pass": true,
+  "content_hygiene_pass": true,
+  "tracking_foundation_pass": true,
+  "overall": "PASS"
+}
