@@ -371,7 +371,13 @@ After Alex's explicit publication approval (and after Claude + Alex have reviewe
 1. Claude Blog freezes the approved article/social package and returns one **PUBLISH HANDOFF** to **Cursor Web** (not a separate operator).
 2. The handoff includes title, slug, frozen status, approval date, package/Drive references, exact hero/social filenames, and **DEPLOY — DO NOT EDIT CONTENT**.
 3. Cursor Web builds/validates, ensures the hosted preview remains green, merges/deploys to production, and verifies the live URL.
-4. Claude retrieves/verifies the live URL and returns LinkedIn/Meta copy + UTM URLs for Alex to post.
+4. Cursor Web deploys the exact approved candidate. The only non-editorial changes allowed at deploy time are publication status and the real publication dates.
+5. Automated production verification runs against the live URL (`scripts/verify_chronicles_production.py`, workflow `.github/workflows/chronicles-production-verify.yml`). It writes a machine-readable result Claude can read without using its own web fetch:
+   - https://raw.githubusercontent.com/Lonko-Digital/lonko-digital-site/chronicles-verify/articles/{slug}.json
+   - https://raw.githubusercontent.com/Lonko-Digital/lonko-digital-site/chronicles-verify/latest.json
+6. Claude reads that result. `overall: PASS` means **PRODUCTION VERIFIED**. `overall: FAIL` is a real production signal for Cursor Web.
+7. Claude may also try a direct live check. If that fetch returns 404, 403, a cache error, a proxy error, or any result that disagrees with a PASS verification record, Claude classifies its own fetch as **TOOL / PROXY INCONCLUSIVE**. It must not call the article down, reopen editorial QA, or ask for a site change whose only purpose is to make Claude's fetch succeed.
+8. Claude then returns LinkedIn/Meta copy + UTM URLs for Alex to post.
 
 Alex should not manage GitHub, publishing routes, GA4, or schema during a normal article.
 7. **Cursor Web publishing route (workflow v2):**
@@ -401,7 +407,7 @@ Alex should not need to open Cursor for ordinary *editorial* work — only for t
 
 ## 9. Claude Blog must return the live URL and tracked social URLs
 
-After Cursor Web confirms the article is live, Claude Blog retrieves/verifies the production URL and gives Alex a final social-distribution package containing:
+After automated production verification records `overall: PASS` for the live URL, Claude Blog gives Alex a final social-distribution package containing:
 
 - final live canonical article URL;
 - quick live-page presentation check against `docs/chronicles/lonko-chronicles-article-presentation.md` (hero width/spacing, Share row, no leaked word-count notes) — escalate to Cursor Web only if the shared template is wrong;
@@ -464,7 +470,7 @@ Cursor Web deploys the website article from Claude Blog’s approved package aft
 
 The normal flow is:
 
-**Claude first checks for an active unpublished Chronicles article (`chronicles/state.json`). If one exists, Alex → Claude Blog resumes that article at its current gate. If none exists (or Alex explicitly authorizes parallel/new production), then Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Cursor Web hosts a real pre-publish preview → Claude + Alex QA the preview → Alex gives final publication approval → Claude freezes the publish-ready package → Cursor Web deploys it and verifies production → Claude returns LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
+**Claude first checks for an active unpublished Chronicles article (`chronicles/state.json`). If one exists, Alex → Claude Blog resumes that article at its current gate. If none exists (or Alex explicitly authorizes parallel/new production), then Alex → Claude Blog topic discovery → Alex approves topic/angle → Claude Blog researches/writes + develops creative direction → Claude gives one complete prompt to Lonko Chronicles → Lonko Chronicles creates hero + social banner → Alex revises/approves images → Lonko Chronicles saves approved assets and returns canonical names/references → Claude retrieves and QA-checks the assets → Cursor Web hosts a real pre-publish preview → Claude + Alex QA the preview → Alex gives final publication approval → Claude immediately returns the complete Publish Handoff to Cursor Web → Cursor deploys the exact approved candidate → automated production verification runs → Claude reads the machine-readable result → if Claude's own fetch disagrees with a PASS record, it labels that fetch TOOL / PROXY INCONCLUSIVE and does not reopen the article → Claude returns LinkedIn/Meta copy + UTM links → Alex posts LinkedIn + Meta.**
 
 This is the default. Do not add extra handoffs unless a genuine technical or editorial problem requires them.
 
