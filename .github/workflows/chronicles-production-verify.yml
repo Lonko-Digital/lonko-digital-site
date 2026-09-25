@@ -1,0 +1,131 @@
+name: Chronicles production verify
+
+# After a Chronicles article reaches main (GitHub Pages), re-check the live URL
+# and publish a machine-readable result on branch chronicles-verify.
+# That branch is not the Pages source, so this does not redeploy the site.
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Published article slug"
+        required: true
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - "chronicles/*/index.html"
+      - "sitemap-chronicles.xml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chronicles-production-verify
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Choose slugs
+        id: slugs
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "slugs=${{ inputs.slug }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mapfile -t files < <(git diff --name-only "${{ github.event.before }}" HEAD -- 'chronicles/*/index.html' || true)
+          slugs=""
+          for f in "${files[@]:-}"; do
+            [ -n "$f" ] || continue
+            slug=$(echo "$f" | cut -d/ -f2)
+            case "$slug" in
+              index.html|search|page|assets|content) continue ;;
+            esac
+            slugs="${slugs}${slug}"$'\n'
+          done
+          if [ -z "$slugs" ]; then
+            echo "No article HTML changes; nothing to verify."
+            echo "slugs=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          printf 'slugs<<EOF\n%sEOF\n' "$slugs" >> "$GITHUB_OUTPUT"
+
+      - name: Verify production URLs
+        id: verify
+        if: steps.slugs.outputs.slugs != ''
+        run: |
+          set -euo pipefail
+          mkdir -p verify-out/articles
+          fail=0
+          while IFS= read -r slug; do
+            [ -n "$slug" ] || continue
+            echo "Verifying $slug"
+            if ! python scripts/verify_chronicles_production.py --slug "$slug" --output "verify-out/articles/${slug}.json"; then
+              fail=1
+            fi
+          done <<< "${{ steps.slugs.outputs.slugs }}"
+          latest=$(find verify-out/articles -name '*.json' -print | head -n 1)
+          if [ -n "$latest" ]; then
+            cp "$latest" verify-out/latest.json
+          fi
+          echo "fail=$fail" >> "$GITHUB_OUTPUT"
+
+      - name: Publish verification branch
+        if: steps.slugs.outputs.slugs != ''
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/chronicles-verify"
+          rm -rf "$work"
+          git fetch origin chronicles-verify || true
+          if git show-ref --verify --quiet refs/remotes/origin/chronicles-verify; then
+            git worktree add -B chronicles-verify "$work" origin/chronicles-verify
+          else
+            git worktree add --orphan -B chronicles-verify "$work"
+          fi
+          mkdir -p "$work/articles"
+          cp -a verify-out/articles/. "$work/articles/"
+          if [ -f verify-out/latest.json ]; then
+            cp verify-out/latest.json "$work/latest.json"
+          fi
+          cat > "$work/README.md" <<'EOF'
+          # Chronicles production verification
+
+          Machine-readable evidence from scripts/verify_chronicles_production.py.
+          This branch is not the public website. GitHub Pages stays on main.
+
+          Claude reads articles/<slug>.json and latest.json.
+
+          overall PASS means the production URL passed the automated checks.
+          overall FAIL is a real production signal for Cursor Web.
+
+          If Claude's own fetch returns 404/403 while this record is PASS,
+          classify the fetch as TOOL / PROXY INCONCLUSIVE. Do not treat the
+          article as down.
+          EOF
+          git -C "$work" add articles latest.json README.md
+          if git -C "$work" diff --cached --quiet; then
+            echo "Verification records unchanged."
+          else
+            git -C "$work" -c user.name="lonko-chronicles-verify" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "Record Chronicles production verification"
+            git -C "$work" push -u origin chronicles-verify
+          fi
+          git worktree remove -f "$work"
+
+      - name: Fail the job when production checks fail
+        if: steps.verify.outputs.fail == '1'
+        run: exit 1
