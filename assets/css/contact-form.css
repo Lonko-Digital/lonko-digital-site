@@ -1,9 +1,6 @@
 /* Contact form. Loaded after Brevo's stylesheet so Lonko styles win. */
 
-.contact-reach .container,
-.contact-security .container,
-.contact-expect .container,
-.contact-explore .container {
+.contact-reach .container {
   width: min(28rem, calc(100% - 2rem));
   text-align: left;
 }
