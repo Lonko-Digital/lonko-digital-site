@@ -51,6 +51,85 @@ CORE_PAGES = [
     ("/terms/", None),
 ]
 
+# One Chronicles notes form per page. IDs (sib-form, EMAIL) must stay unique.
+NOTES_FORM_ACTION = (
+    "https://b6b78b33.sibforms.com/serve/"
+    "MUIFAFGjVWpoE1q3fvh4e2UZsSDb_Z5obpkRKeh96GbfhH3yCAVvLCrQ-gfJZE0iyM7hgEk7Bx-aGNAg1phIey-X_6bk1bWgoPwoPklSha3-rDu6pq1JTVFCYay8LiKBn-Y3rbotBuexpQqiikdueIE5P_RdJCAYtQwRDy9Nu_rif9RYVoLc4pODMooy3w3qQoQRz-ukGjub05E8dw=="
+)
+
+
+def chronicles_notes_styles(depth: int) -> str:
+    p = asset_prefix(depth)
+    return (
+        '  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">\n'
+        f'  <link rel="stylesheet" href="{p}assets/css/chronicles-notes.css">\n'
+    )
+
+
+def chronicles_notes_html(depth: int) -> str:
+    privacy = f"{asset_prefix(depth)}privacy/"
+    return f"""      <section class="lonko-notes" aria-labelledby="notes-heading">
+        <div class="sib-form lonko-notes-form">
+          <div id="sib-form-container" class="sib-form-container">
+            <div id="error-message" class="sib-form-message-panel" role="alert">
+              <span class="sib-form-message-panel__inner-text">The request could not be saved. Please try again.</span>
+            </div>
+            <div id="success-message" class="sib-form-message-panel" role="status">
+              <span class="sib-form-message-panel__inner-text">Check your email to confirm these notes.</span>
+            </div>
+            <div id="sib-container" class="sib-container--large sib-container--vertical">
+              <form id="sib-form" method="POST" action="{NOTES_FORM_ACTION}" data-type="subscription">
+                <h2 id="notes-heading" class="lonko-notes-title">Notes from Lonko Digital</h2>
+                <p class="lonko-notes-lead">Short notes for business owners on the changes that affect marketing decisions.</p>
+                <div class="sib-input sib-form-block">
+                  <div class="form__entry entry_block">
+                    <div class="form__label-row">
+                      <label class="entry__label" for="EMAIL" data-required="*">Email</label>
+                      <div class="entry__field">
+                        <input class="input" type="text" id="EMAIL" name="EMAIL" autocomplete="email" placeholder="you@example.com" data-required="true" required>
+                      </div>
+                    </div>
+                    <label class="entry__error entry__error--primary"></label>
+                  </div>
+                </div>
+                <div class="sib-form-block">
+                  <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
+                    <svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" aria-hidden="true">
+                      <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z" />
+                    </svg>
+                    Send these notes
+                  </button>
+                </div>
+                <input type="text" name="email_address_check" value="" class="input--hidden" tabindex="-1" autocomplete="off">
+                <input type="hidden" name="locale" value="en">
+              </form>
+            </div>
+          </div>
+        </div>
+        <p class="lonko-notes-privacy">Occasional notes only. You confirm by email before anything is sent. <a href="{privacy}">Privacy Policy</a></p>
+      </section>
+      <script>
+        window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
+        window.LOCALE = 'en';
+        window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "This email doesn't look right. Check it and try again.";
+        window.REQUIRED_ERROR_MESSAGE = "This field cannot be left blank. ";
+        window.GENERIC_INVALID_MESSAGE = "This email doesn't look right. Check it and try again.";
+        window.INVALID_NUMBER = "This email doesn't look right. Check it and try again.";
+        window.INVALID_DATE = "Please enter a valid date";
+        window.REQUIRED_MULTISELECT_MESSAGE = 'Please select at least 1 option';
+        window.translation = {{
+          common: {{
+            selectedList: '{{quantity}} list selected',
+            selectedLists: '{{quantity}} lists selected',
+            selectedOption: '{{quantity}} selected',
+            selectedOptions: '{{quantity}} selected',
+          }}
+        }};
+        var AUTOHIDE = Boolean(0);
+      </script>
+      <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
+"""
+
 
 # —— Path / asset helpers ————————————————————————————————————————————————
 
@@ -450,6 +529,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         </div>
 {sources_html}
 {related_html}
+{chronicles_notes_html(depth)}
 {share_html}
       </div>
     </article>
@@ -477,7 +557,8 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             json.dumps(breadcrumbs, ensure_ascii=False, indent=2),
         ],
         extra_head=f'  <meta property="article:published_time" content="{escape_text(article.datePublished)}">\n'
-        f'  <meta property="article:modified_time" content="{escape_text(article.dateModified)}">\n',
+        f'  <meta property="article:modified_time" content="{escape_text(article.dateModified)}">\n'
+        + chronicles_notes_styles(depth),
     )
     return (
         head
@@ -585,12 +666,15 @@ def render_index(
     </section>
 """
 
-        curated += """
+        curated += f"""
     <section class="chronicles-editorial-close" aria-labelledby="close-heading">
       <div class="container narrow">
         <p id="close-heading" class="chronicles-close-line">Understand more. Guess less.</p>
       </div>
     </section>
+    <div class="container narrow">
+{chronicles_notes_html(depth)}
+    </div>
 """
 
     title = "Lonko Chronicles — Marketing Intelligence Editorial"
@@ -681,6 +765,7 @@ def render_index(
             json.dumps(collection_schema, ensure_ascii=False, indent=2),
             json.dumps(crumbs, ensure_ascii=False, indent=2),
         ],
+        extra_head=chronicles_notes_styles(depth) if is_home else "",
     )
     return (
         head

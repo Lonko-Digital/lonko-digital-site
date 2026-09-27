@@ -32,7 +32,7 @@ Static public website for **Lonko Digital**. This repository is intentionally se
 - **Stack:** HTML, CSS, minimal vanilla JavaScript
 - **Hosting target:** GitHub Pages (free tier)
 - **No backend, database, or Node runtime**
-- **Contact form:** the public Contact page embeds a Brevo form. The site itself has no server-side form handler.
+- **Contact form:** the public Contact page embeds a Brevo form. Lonko Chronicles pages embed a separate Brevo notes signup. The site itself has no server-side form handler.
 - **Google Tag Manager:** container `GTM-53DPJ88F` is installed sitewide and currently fires Google Analytics 4 (`G-Y8T0Q59191`), a Google Ads tag (`AW-18390009990`), and a LinkedIn Insight Tag (partner ID `10662377`), plus GA4 custom events for link/button clicks and scroll depth. No Meta Pixel is configured. See the Privacy Policy for the public description of these tags.
 
 ```
