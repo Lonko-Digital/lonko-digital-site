@@ -1,9 +1,9 @@
 {
-  "slug": "ai-overviews-local-search-what-changed",
-  "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
-  "expected_title": "AI Overviews and Local Search: What Actually Changed for Small Businesses",
+  "slug": "google-ads-ai-max-migration-what-changed",
+  "url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
+  "expected_title": "Google Delayed the AI Max Migration \u2014 But Not All of It",
   "observed_h1": [
-    "AI Overviews and Local Search: What Actually Changed for Small Businesses"
+    "Google Delayed the AI Max Migration \u2014 But Not All of It"
   ],
   "verified_at": "2026-09-27T21:41:15Z",
   "github_actions_run_id": "36352627747",
@@ -11,22 +11,22 @@
   "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "http_status": 200,
-  "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
-  "response_bytes": 22672,
-  "response_body_sha256": "c0dd11145d6093e00a5f12c9b46092332c4f6e6e57c9689a766efc5049e72003",
+  "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
+  "response_bytes": 19580,
+  "response_body_sha256": "c6f8d39fa24096ea1138692f1be8eae508fe21c4d5527240cdd261e36e549b98",
   "fetch_attempt": 1,
   "fetch_attempts": [
     {
       "user_agent": "LonkoChroniclesVerifier/1.0",
       "http_status": 200,
-      "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
-      "bytes": 22672,
-      "body_sha256": "c0dd11145d6093e00a5f12c9b46092332c4f6e6e57c9689a766efc5049e72003",
+      "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
+      "bytes": 19580,
+      "body_sha256": "c6f8d39fa24096ea1138692f1be8eae508fe21c4d5527240cdd261e36e549b98",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
         "server": "GitHub.com",
-        "x-cache": "MISS",
+        "x-cache": "HIT",
         "age": "0",
         "via": "1.1 varnish"
       }
@@ -34,9 +34,9 @@
     {
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
       "http_status": 200,
-      "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/",
-      "bytes": 22672,
-      "body_sha256": "c0dd11145d6093e00a5f12c9b46092332c4f6e6e57c9689a766efc5049e72003",
+      "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
+      "bytes": 19580,
+      "body_sha256": "c6f8d39fa24096ea1138692f1be8eae508fe21c4d5527240cdd261e36e549b98",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -48,24 +48,16 @@
     }
   ],
   "hero": {
-    "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-hero-1600x900.png",
-    "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-hero-1600x900.png",
+    "url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
+    "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
     "http_status": 200,
     "content_type": "image/png",
     "pass": true
   },
-  "supporting_assets": [
-    {
-      "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-chart-local-pack-vs-ai-overview.png",
-      "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-chart-local-pack-vs-ai-overview.png",
-      "http_status": 200,
-      "content_type": "image/png",
-      "pass": true
-    }
-  ],
+  "supporting_assets": [],
   "og_image": {
-    "url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-social-1200x628.png",
-    "final_url": "https://lonkodigital.com/chronicles/ai-overviews-local-search-what-changed/assets/ai-overviews-local-search-what-changed-social-1200x628.png",
+    "url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-social-1200x628.png",
+    "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-social-1200x628.png",
     "http_status": 200,
     "content_type": "image/png",
     "pass": true
