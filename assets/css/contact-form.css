@@ -2,7 +2,8 @@
 
 .lonko-contact-form,
 .lonko-contact-form.sib-form {
-  margin: 1.35rem 0 1.5rem;
+  max-width: 28rem;
+  margin: 1rem 0 1.15rem;
   padding: 0;
   border: 0;
   background: transparent;
@@ -29,12 +30,12 @@
 
 .lonko-form-intro,
 .lonko-form-declaration {
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   color: var(--text-muted);
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .lonko-form-declaration {
@@ -42,33 +43,33 @@
 }
 
 .lonko-contact-form .sib-form-block {
-  margin: 0 0 1rem;
+  margin: 0 0 0.6rem;
   padding: 0;
   font-family: inherit;
 }
 
 .lonko-contact-form .entry__label {
   display: block;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.25rem;
   color: var(--text);
   font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 600;
   text-align: left;
 }
 
 .lonko-contact-form .entry__field .input,
 .lonko-contact-form select.input {
   width: 100%;
-  min-height: 2.75rem;
-  padding: 0.65rem 0.8rem;
+  min-height: 2.25rem;
+  padding: 0.4rem 0.65rem;
   border: 1px solid var(--border);
-  border-radius: 0.6rem;
+  border-radius: 0.45rem;
   background: var(--bg-elevated);
   color: var(--text);
   font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.4;
+  font-size: 0.95rem;
+  line-height: 1.35;
   box-shadow: none;
   appearance: auto;
 }
@@ -125,14 +126,20 @@
 .lonko-contact-form .checkbox {
   position: relative;
   flex: 0 0 auto;
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.05rem;
+  height: 1.05rem;
   margin: 0.15rem 0 0;
   border: 1px solid var(--border);
-  border-radius: 0.28rem;
+  border-radius: 0.25rem;
   background: var(--bg-elevated);
   background-image: none;
   box-shadow: none;
+}
+
+.lonko-contact-form .entry__choice .checkbox::before {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
 }
 
 .lonko-contact-form .entry__choice input:focus-visible + .checkbox {
@@ -167,15 +174,15 @@
   align-items: center;
   justify-content: center;
   width: auto;
-  min-height: 2.75rem;
+  min-height: 2.25rem;
   margin: 0;
-  padding: 0.8rem 1.2rem;
+  padding: 0.5rem 0.95rem;
   border: 1px solid transparent;
   border-radius: 0.6rem;
   background: var(--brand-red);
   color: #fff;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
