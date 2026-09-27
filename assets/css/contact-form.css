@@ -1,0 +1,243 @@
+/* Contact form. Loaded after Brevo's stylesheet so Lonko styles win. */
+
+.lonko-contact-form,
+.lonko-contact-form.sib-form {
+  margin: 1.35rem 0 1.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.lonko-contact-form .sib-form-container,
+.lonko-contact-form #sib-container,
+.lonko-contact-form .sib-container--large,
+.lonko-contact-form .sib-container--vertical {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+}
+
+.lonko-form-intro,
+.lonko-form-declaration {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.lonko-form-declaration {
+  margin-top: 0.15rem;
+}
+
+.lonko-contact-form .sib-form-block {
+  margin: 0 0 1rem;
+  padding: 0;
+  font-family: inherit;
+}
+
+.lonko-contact-form .entry__label {
+  display: block;
+  margin: 0 0 0.4rem;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.lonko-contact-form .entry__field .input,
+.lonko-contact-form select.input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  box-shadow: none;
+  appearance: auto;
+}
+
+.lonko-contact-form .entry__field .input:focus,
+.lonko-contact-form select.input:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-color: var(--border);
+}
+
+.lonko-contact-form .entry__field .input::placeholder {
+  color: var(--text-muted);
+  font-family: inherit;
+  opacity: 1;
+}
+
+.lonko-contact-form .entry__choice label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin: 0;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.lonko-contact-form .lonko-check-copy,
+.lonko-contact-form .lonko-check-copy p {
+  margin: 0;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.lonko-contact-form .lonko-check-copy a {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.lonko-contact-form .entry__choice .input_replaced {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+
+.lonko-contact-form .checkbox {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0.15rem 0 0;
+  border: 1px solid var(--border);
+  border-radius: 0.28rem;
+  background: var(--bg-elevated);
+  background-image: none;
+  box-shadow: none;
+}
+
+.lonko-contact-form .entry__choice input:focus-visible + .checkbox {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.lonko-contact-form .entry__choice input:checked + .checkbox {
+  border-color: var(--brand-red);
+  background: var(--brand-red);
+  background-image: none;
+}
+
+.lonko-contact-form .entry__choice input:checked + .checkbox::after {
+  content: "";
+  position: absolute;
+  left: 0.32rem;
+  top: 0.12rem;
+  width: 0.28rem;
+  height: 0.55rem;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.lonko-form-submit {
+  margin: 0.35rem 0 0;
+}
+
+.lonko-contact-form .sib-form-block__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  background: var(--brand-red);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.lonko-contact-form .sib-form-block__button:hover,
+.lonko-contact-form .sib-form-block__button:focus {
+  background: var(--brand-red-hover);
+  color: #fff;
+}
+
+.lonko-contact-form .sib-form-message-panel {
+  display: none;
+  max-width: none;
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.6rem;
+  text-align: left;
+  font-family: inherit;
+}
+
+.lonko-contact-form .sib-form-message-panel[style*="block"],
+.lonko-contact-form .sib-form-message-panel.sib-form-message-panel--active {
+  display: block;
+}
+
+.lonko-contact-form #error-message {
+  color: #661d1d;
+  background: #ffeded;
+  border: 1px solid #f3b4b4;
+}
+
+.lonko-contact-form #success-message {
+  color: #085229;
+  background: #e7faf0;
+  border: 1px solid #b7e7c9;
+}
+
+[data-theme="dark"] .lonko-contact-form #error-message {
+  color: #ffd4d4;
+  background: #2a1214;
+  border-color: #6b3030;
+}
+
+[data-theme="dark"] .lonko-contact-form #success-message {
+  color: #d5f5e3;
+  background: #102117;
+  border-color: #1f5c38;
+}
+
+.lonko-contact-form .entry__error {
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+.lonko-contact-form .input--hidden {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
