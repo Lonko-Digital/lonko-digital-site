@@ -210,16 +210,19 @@ def collect_product_status_findings(root: Path | None = None) -> list[str]:
 NOTES_CONFIRMED_PAGE = Path("notes") / "confirmed" / "index.html"
 NOTES_CONFIRMED_CANONICAL = "https://lonkodigital.com/notes/confirmed/"
 NOTES_CONFIRMED_ROBOTS = '<meta name="robots" content="noindex, nofollow">'
+# Catch /notes/confirmed destinations including query strings and fragments.
+# Does not match bare path text outside an href attribute.
 NOTES_CONFIRMED_HREF = re.compile(
-    r"""href\s*=\s*["'][^"']*notes/confirmed/?["']""",
+    r"""href\s*=\s*(["'])(?:[^"']*?)notes/confirmed(?:/)?(?:[?#][^"']*)?\1""",
     re.I,
 )
 NOTES_CONFIRMED_SITEMAP_LOC = re.compile(
     r"notes/confirmed/?",
     re.I,
 )
+# Reject Disallow rules that block the DOI page (crawlers must fetch noindex).
 NOTES_CONFIRMED_ROBOTS_DISALLOW = re.compile(
-    r"(?im)^\s*Disallow\s*:\s*/notes/confirmed/?\s*$",
+    r"(?im)^\s*Disallow\s*:\s*/notes/confirmed(?:\*|/|/\*)?\s*$",
 )
 
 # Public discovery surfaces that must not promote the DOI landing page.
