@@ -5,28 +5,28 @@
   "observed_h1": [
     "Google Delayed the AI Max Migration \u2014 But Not All of It"
   ],
-  "verified_at": "2026-09-27T21:41:15Z",
-  "github_actions_run_id": "36352627747",
-  "production_commit": "f98655478f82742e4a13ce7fd1f8856f5a5e4c72",
+  "verified_at": "2026-10-03T16:39:23Z",
+  "github_actions_run_id": "37137638353",
+  "production_commit": "a18130ea1dd51b10f3421c6a1c2c790ec873757d",
   "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "http_status": 200,
   "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-  "response_bytes": 19580,
-  "response_body_sha256": "c6f8d39fa24096ea1138692f1be8eae508fe21c4d5527240cdd261e36e549b98",
+  "response_bytes": 23984,
+  "response_body_sha256": "cd487841aa9dc1e702482e6b6ab4262bd4a3a0680d10e20ffc14d362522ba586",
   "fetch_attempt": 1,
   "fetch_attempts": [
     {
       "user_agent": "LonkoChroniclesVerifier/1.0",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-      "bytes": 19580,
-      "body_sha256": "c6f8d39fa24096ea1138692f1be8eae508fe21c4d5527240cdd261e36e549b98",
+      "bytes": 23984,
+      "body_sha256": "cd487841aa9dc1e702482e6b6ab4262bd4a3a0680d10e20ffc14d362522ba586",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
         "server": "GitHub.com",
-        "x-cache": "HIT",
+        "x-cache": "MISS",
         "age": "0",
         "via": "1.1 varnish"
       }
@@ -35,8 +35,8 @@
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-      "bytes": 19580,
-      "body_sha256": "c6f8d39fa24096ea1138692f1be8eae508fe21c4d5527240cdd261e36e549b98",
+      "bytes": 23984,
+      "body_sha256": "cd487841aa9dc1e702482e6b6ab4262bd4a3a0680d10e20ffc14d362522ba586",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
