@@ -19,11 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # Directories/files to skip
 SKIP_DIRS = {".git", "__pycache__", "node_modules", ".pytest_cache", "tests"}
-SKIP_FILES = {
-    "public_safety_audit.py",
-    "test_notes_confirmed_indexing.py",
-    "test_public_product_status_copy.py",
-}
+SKIP_FILES = {"public_safety_audit.py"}
 
 # Universal patterns (all scanned text files)
 UNIVERSAL_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
@@ -220,10 +216,34 @@ NOTES_CONFIRMED_SITEMAP_LOC = re.compile(
     r"notes/confirmed/?",
     re.I,
 )
-# Reject Disallow rules that block the DOI page (crawlers must fetch noindex).
-NOTES_CONFIRMED_ROBOTS_DISALLOW = re.compile(
-    r"(?im)^\s*Disallow\s*:\s*/notes/confirmed(?:\*|/|/\*)?\s*$",
+# Exact DOI path targets after comment-strip / trim / optional trailing $.
+_NOTES_CONFIRMED_ROBOTS_PATH = re.compile(
+    r"^/notes/confirmed(?:\*|/|/\*)?$",
+    re.I,
 )
+
+
+def robots_disallows_notes_confirmed(robots_text: str) -> bool:
+    """True when robots.txt clearly Disallows the DOI confirmation path.
+
+    Uses normalized line parsing (strip inline comments, trim, case-insensitive
+    Disallow) so trailing $, wildcards, and comments cannot bypass the check.
+    Does not match unrelated paths like /notes/confirmed-archive.
+    """
+    for raw_line in robots_text.splitlines():
+        line = raw_line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        if not line.lower().startswith("disallow:"):
+            continue
+        path = line.split(":", 1)[1].strip()
+        while path.endswith("$"):
+            path = path[:-1]
+        path = path.rstrip()
+        if _NOTES_CONFIRMED_ROBOTS_PATH.fullmatch(path):
+            return True
+    return False
+
 
 # Public discovery surfaces that must not promote the DOI landing page.
 NOTES_CONFIRMED_DISCOVERY_SURFACES = (
@@ -295,7 +315,7 @@ def collect_notes_confirmed_indexing_findings(root: Path | None = None) -> list[
     robots = root / "robots.txt"
     if robots.is_file():
         robots_text = robots.read_text(encoding="utf-8", errors="replace")
-        if NOTES_CONFIRMED_ROBOTS_DISALLOW.search(robots_text):
+        if robots_disallows_notes_confirmed(robots_text):
             findings.append(
                 f"{robots}: must not Disallow /notes/confirmed/ "
                 "(crawlers need to see the page noindex directive)"

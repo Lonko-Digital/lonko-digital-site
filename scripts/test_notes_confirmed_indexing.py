@@ -16,8 +16,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from public_safety_audit import (  # noqa: E402
     NOTES_CONFIRMED_HREF,
-    NOTES_CONFIRMED_ROBOTS_DISALLOW,
     collect_notes_confirmed_indexing_findings,
+    robots_disallows_notes_confirmed,
 )
 
 # Explicit discovery href variants that must be caught.
@@ -42,7 +42,19 @@ ROBOTS_DISALLOW_CASES = (
     "Disallow: /notes/confirmed/",
     "Disallow: /notes/confirmed/*",
     "Disallow: /notes/confirmed*",
+    "Disallow: /notes/confirmed$",
+    "Disallow: /notes/confirmed/$",
+    "Disallow: /notes/confirmed/*$",
+    "Disallow: /notes/confirmed/ # private page",
     "  disallow: /notes/confirmed/  ",
+)
+
+ROBOTS_NON_TARGETS = (
+    "Disallow: /notes/confirmed-archive",
+    "Disallow: /notes/confirmed-archive/",
+    "Disallow: /notes/",
+    "Allow: /notes/confirmed/",
+    "# Disallow: /notes/confirmed/",
 )
 
 
@@ -75,14 +87,19 @@ def run_negative_fixtures() -> list[str]:
             failures.append(f"href matcher false-positive on non-href text: {case!r}")
 
     for case in ROBOTS_DISALLOW_CASES:
-        if not NOTES_CONFIRMED_ROBOTS_DISALLOW.search(case):
+        if not robots_disallows_notes_confirmed(case + "\n"):
             failures.append(f"robots matcher missed: {case!r}")
+
+    for case in ROBOTS_NON_TARGETS:
+        if robots_disallows_notes_confirmed(case + "\n"):
+            failures.append(f"robots matcher false-positive: {case!r}")
 
     root = Path(tempfile.mkdtemp(prefix="notes-idx-neg-"))
     try:
         _write_minimal_page(root)
         (root / "robots.txt").write_text(
-            "User-agent: *\nAllow: /\nDisallow: /notes/confirmed/*\n",
+            "User-agent: *\nAllow: /\n"
+            "Disallow: /notes/confirmed/$ # private page\n",
             encoding="utf-8",
         )
         (root / "index.html").write_text(
@@ -95,7 +112,7 @@ def run_negative_fixtures() -> list[str]:
         if "discovery" not in joined:
             failures.append("fixture missing discovery findings for query/fragment hrefs")
         if "Disallow" not in joined:
-            failures.append("fixture missing robots Disallow finding for /* variant")
+            failures.append("fixture missing robots Disallow finding for $/comment variant")
         if len([f for f in findings if "discovery" in f]) < 2:
             failures.append("fixture expected at least two discovery findings")
     finally:
@@ -127,8 +144,8 @@ def main() -> int:
         return 1
 
     print(
-        "PASS — query/fragment href variants and robots Disallow wildcards fail closed; "
-        "non-href path mentions ignored."
+        "PASS — query/fragment href variants and robots Disallow "
+        "($ / wildcard / inline-comment) fail closed; non-targets ignored."
     )
     return 0
 
