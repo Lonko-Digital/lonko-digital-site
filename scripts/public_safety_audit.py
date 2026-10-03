@@ -172,8 +172,39 @@ def collect_findings(root: Path | None = None) -> list[str]:
     return findings
 
 
+# Brittle Google Ads countdown copy must not survive on Home/About.
+PRODUCT_STATUS_TARGETS = (
+    Path("index.html"),
+    Path("about") / "index.html",
+)
+PRODUCT_STATUS_BRITTLE: list[tuple[str, re.Pattern[str]]] = [
+    ("one final live-account check", re.compile(r"one final live-account check", re.I)),
+    ("final live-account", re.compile(r"final live-account", re.I)),
+    ("internal testing complete", re.compile(r"internal testing complete", re.I)),
+]
+
+
+def collect_product_status_findings(root: Path | None = None) -> list[str]:
+    root = root or ROOT
+    findings: list[str] = []
+    for rel in PRODUCT_STATUS_TARGETS:
+        path = root / rel
+        if not path.is_file():
+            findings.append(f"{path}: missing Home/About product-status target")
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for label, pattern in PRODUCT_STATUS_BRITTLE:
+            for match in pattern.finditer(text):
+                line_no = text.count("\n", 0, match.start()) + 1
+                findings.append(
+                    f"{path}:{line_no}: [brittle product-status copy] {label}"
+                )
+    return findings
+
+
 def main() -> int:
     findings = collect_findings(ROOT)
+    findings.extend(collect_product_status_findings(ROOT))
     scanned = sum(
         1
         for p in ROOT.rglob("*")
