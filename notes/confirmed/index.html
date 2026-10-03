@@ -275,7 +275,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       } catch (e) {}
     }
 
-    // Confirmed-signup key event only for the Brevo DOI landing context, once per browser.
+    // Confirmed-signup key event only for the Brevo DOI landing context, once per browser session.
     (function fireConfirmedIfEligible() {
       var params = new URLSearchParams(window.location.search);
       var isDoi =
