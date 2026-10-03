@@ -28,6 +28,7 @@ PAGES = [
     ROOT / "contact" / "index.html",
     ROOT / "privacy" / "index.html",
     ROOT / "terms" / "index.html",
+    ROOT / "notes" / "confirmed" / "index.html",
 ]
 
 
@@ -85,12 +86,20 @@ def main() -> int:
         else:
             print(f"unchanged {path.relative_to(ROOT)}")
 
-        head_count = updated.count("GTM-53DPJ88F")
-        # head script + noscript iframe = 2 references per page
-        if head_count != 2:
-            raise SystemExit(f"{path}: expected 2 GTM-53DPJ88F refs, found {head_count}")
+        # Exactly one head install + one body install. Body copy may mention the
+        # container ID (e.g. Privacy), so do not count raw GTM-53DPJ88F occurrences.
         if updated.count(HEAD_MARK_START) != 1 or updated.count(BODY_MARK_START) != 1:
-            raise SystemExit(f"{path}: duplicate GTM blocks detected")
+            raise SystemExit(f"{path}: expected exactly one GTM head and body install")
+        if updated.count(HEAD_MARK_END) != 1 or updated.count(BODY_MARK_END) != 1:
+            raise SystemExit(f"{path}: GTM install markers are mismatched")
+        head_start = updated.index(HEAD_MARK_START)
+        head_end = updated.index(HEAD_MARK_END) + len(HEAD_MARK_END)
+        body_start = updated.index(BODY_MARK_START)
+        body_end = updated.index(BODY_MARK_END) + len(BODY_MARK_END)
+        if "GTM-53DPJ88F" not in updated[head_start:head_end]:
+            raise SystemExit(f"{path}: GTM container missing from head install")
+        if "GTM-53DPJ88F" not in updated[body_start:body_end]:
+            raise SystemExit(f"{path}: GTM container missing from body install")
     print("OK — GTM-53DPJ88F synced to all public HTML pages")
     return 0
 

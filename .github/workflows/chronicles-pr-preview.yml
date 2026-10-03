@@ -12,6 +12,7 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - "chronicles/**"
+      - "notes/**"
       - "assets/css/**"
       - "assets/js/**"
       - "assets/fonts/**"
@@ -81,6 +82,7 @@ jobs:
           # Full site slice needed for relative asset resolution from article pages
           cp -a assets "$DEST/"
           cp -a chronicles "$DEST/"
+          if [ -d notes ]; then cp -a notes "$DEST/"; fi
           # Optional root helpers
           if [ -f index.html ]; then cp index.html "$DEST/"; fi
           if [ -f CNAME ]; then cp CNAME "$DEST/"; fi
