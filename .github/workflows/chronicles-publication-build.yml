@@ -70,6 +70,9 @@ jobs:
             echo "No dedicated public safety audit script found; build validations completed."
           fi
 
+      - name: Public product-status copy regression
+        run: python scripts/test_public_product_status_copy.py
+
       - name: Commit generated publication outputs
         run: |
           set -euo pipefail
