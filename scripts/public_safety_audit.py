@@ -19,7 +19,11 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # Directories/files to skip
 SKIP_DIRS = {".git", "__pycache__", "node_modules", ".pytest_cache", "tests"}
-SKIP_FILES = {"public_safety_audit.py"}
+SKIP_FILES = {
+    "public_safety_audit.py",
+    "test_notes_confirmed_indexing.py",
+    "test_public_product_status_copy.py",
+}
 
 # Universal patterns (all scanned text files)
 UNIVERSAL_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
@@ -202,9 +206,114 @@ def collect_product_status_findings(root: Path | None = None) -> list[str]:
     return findings
 
 
+# /notes/confirmed/ is a DOI landing page: noindex, unlisted, directly reachable.
+NOTES_CONFIRMED_PAGE = Path("notes") / "confirmed" / "index.html"
+NOTES_CONFIRMED_CANONICAL = "https://lonkodigital.com/notes/confirmed/"
+NOTES_CONFIRMED_ROBOTS = '<meta name="robots" content="noindex, nofollow">'
+NOTES_CONFIRMED_HREF = re.compile(
+    r"""href\s*=\s*["'][^"']*notes/confirmed/?["']""",
+    re.I,
+)
+NOTES_CONFIRMED_SITEMAP_LOC = re.compile(
+    r"notes/confirmed/?",
+    re.I,
+)
+NOTES_CONFIRMED_ROBOTS_DISALLOW = re.compile(
+    r"(?im)^\s*Disallow\s*:\s*/notes/confirmed/?\s*$",
+)
+
+# Public discovery surfaces that must not promote the DOI landing page.
+NOTES_CONFIRMED_DISCOVERY_SURFACES = (
+    Path("index.html"),
+    Path("about") / "index.html",
+    Path("contact") / "index.html",
+    Path("privacy") / "index.html",
+    Path("terms") / "index.html",
+    Path("insights") / "index.html",
+    Path("chronicles") / "index.html",
+)
+
+
+def _notes_confirmed_discovery_html(root: Path) -> list[Path]:
+    """Home/About/Insights/Chronicles/Contact/Privacy/Terms HTML surfaces."""
+    paths: list[Path] = []
+    for rel in NOTES_CONFIRMED_DISCOVERY_SURFACES:
+        path = root / rel
+        if path.is_file():
+            paths.append(path)
+    for section in ("insights", "chronicles"):
+        section_root = root / section
+        if not section_root.is_dir():
+            continue
+        for path in sorted(section_root.rglob("index.html")):
+            if "content" in path.parts:
+                continue
+            if path.resolve() == (root / NOTES_CONFIRMED_PAGE).resolve():
+                continue
+            if path not in paths:
+                paths.append(path)
+    return paths
+
+
+def collect_notes_confirmed_indexing_findings(root: Path | None = None) -> list[str]:
+    """Fail if the DOI confirmation page becomes indexable or normally discoverable."""
+    root = root or ROOT
+    findings: list[str] = []
+    page = root / NOTES_CONFIRMED_PAGE
+
+    if not page.is_file():
+        findings.append(
+            f"{page}: missing — DOI confirmation page must remain a normal reachable HTML page"
+        )
+        return findings
+
+    text = page.read_text(encoding="utf-8", errors="replace")
+    if NOTES_CONFIRMED_ROBOTS not in text:
+        findings.append(
+            f"{page}: missing exact robots meta {NOTES_CONFIRMED_ROBOTS!r}"
+        )
+    if f'rel="canonical" href="{NOTES_CONFIRMED_CANONICAL}"' not in text:
+        findings.append(
+            f"{page}: canonical must be exactly {NOTES_CONFIRMED_CANONICAL}"
+        )
+    if "<!DOCTYPE html>" not in text and "<!doctype html>" not in text.lower():
+        findings.append(f"{page}: must remain a normal HTML document")
+
+    for sitemap_name in ("sitemap.xml", "sitemap-pages.xml", "sitemap-chronicles.xml"):
+        sitemap = root / sitemap_name
+        if not sitemap.is_file():
+            continue
+        sitemap_text = sitemap.read_text(encoding="utf-8", errors="replace")
+        if NOTES_CONFIRMED_SITEMAP_LOC.search(sitemap_text):
+            findings.append(
+                f"{sitemap}: must not list /notes/confirmed/ (DOI landing is intentionally unlisted)"
+            )
+
+    robots = root / "robots.txt"
+    if robots.is_file():
+        robots_text = robots.read_text(encoding="utf-8", errors="replace")
+        if NOTES_CONFIRMED_ROBOTS_DISALLOW.search(robots_text):
+            findings.append(
+                f"{robots}: must not Disallow /notes/confirmed/ "
+                "(crawlers need to see the page noindex directive)"
+            )
+
+    for path in _notes_confirmed_discovery_html(root):
+        html = path.read_text(encoding="utf-8", errors="replace")
+        for match in NOTES_CONFIRMED_HREF.finditer(html):
+            line_no = html.count("\n", 0, match.start()) + 1
+            findings.append(
+                f"{path}:{line_no}: [notes-confirmed discovery] "
+                "DOI landing must not appear as a normal navigation/destination link"
+            )
+
+    return findings
+
+
 def main() -> int:
     findings = collect_findings(ROOT)
     findings.extend(collect_product_status_findings(ROOT))
+    findings.extend(collect_notes_confirmed_indexing_findings(ROOT))
     scanned = sum(
         1
         for p in ROOT.rglob("*")

@@ -73,6 +73,9 @@ jobs:
       - name: Public product-status copy regression
         run: python scripts/test_public_product_status_copy.py
 
+      - name: Notes confirmed indexing regression
+        run: python scripts/test_notes_confirmed_indexing.py
+
       - name: Commit generated publication outputs
         run: |
           set -euo pipefail
