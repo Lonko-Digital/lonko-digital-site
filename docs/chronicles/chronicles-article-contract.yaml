@@ -190,7 +190,9 @@ preview:
   draft_behavior: >
     Unpublished status=draft packages render in preview builds with production
     assets, real template/CSS/JS, schema intent, and robots noindex,nofollow.
-    Missing draft dates are filled only in-memory for display/schema.
+    Draft previews preserve authored dates. Unset datePublished and/or
+    dateModified remain unset. Preview rendering does not fabricate dates in
+    visible bylines, metadata, or JSON-LD.
     Production builds (env unset) never emit draft HTML and never index drafts.
   must_not: >
     Casually changing draft → published to satisfy preview validation.
