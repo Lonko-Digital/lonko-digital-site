@@ -12,8 +12,10 @@ from pathlib import Path
 from typing import Iterable
 from urllib.parse import quote
 from xml.sax.saxutils import escape as xml_escape
+from xml.etree import ElementTree as ET
 
 from .image_dims import read_image_size
+from .responsive_images import generate_images, picture
 from .model import (
     TOPIC_PILLS,
     Article,
@@ -214,6 +216,7 @@ def copy_package_assets(article: Article) -> None:
         target = dest / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
+    generate_images(article.package_dir, dest, article.hero_image)
 
 
 # —— Card / section HTML ————————————————————————————————————————————————
@@ -246,7 +249,11 @@ def story_card(
     else:
         href = f"{asset_prefix(depth - 1)}{article.slug}/"
 
-    img_rel = package_media_href(article, article.hero_image, from_depth=depth)
+    # Card media belongs to the target article, including on a different article page.
+    def card_media(rel: str) -> str:
+        return rel if "://" in rel or rel.startswith("/") else href + rel
+
+    img_rel = card_media(article.hero_image) if article.hero_image else None
     img_html = ""
     if img_rel and variant != "compact":
         alt = escape_text(article.hero_alt or "")
@@ -262,6 +269,16 @@ def story_card(
             f'<img src="{escape_text(img_rel)}" alt="{alt}" loading="lazy" decoding="async">'
             f"</div>"
         )
+
+    if img_html and article.hero_image:
+        card_sizes = (
+            "(max-width: 900px) calc(100vw - 32px), (max-width: 1200px) 60vw, 672px"
+            if variant == "feature" else
+            "(max-width: 900px) calc(100vw - 32px), (max-width: 1100px) 50vw, 360px"
+        )
+        img_html = re.sub(r"<img[^>]+>", lambda match: picture(
+            match.group(), article.hero_image, OUT / article.slug, card_media, card_sizes,
+        ), img_html)
 
     cls = {
         "feature": "story-feature",
@@ -361,8 +378,21 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     # section. Mark those links for the shared GA4 source-click event without
     # duplicating or rewriting the authored source section.
     body_html = _mark_body_source_links(body_html)
+    # Preserve authored image attributes, alt text, location and original fallback.
+    def body_picture(match: re.Match) -> str:
+        tag = match.group()
+        src_match = re.search(r'src="([^"]+)"', tag)
+        if not src_match:
+            return tag
+        rel = src_match.group(1)
+        return picture(tag, rel, OUT / article.slug, lambda value: value,
+                       "(max-width: 672px) calc(100vw - 32px), 640px")
+    body_html = re.sub(r"<img\b[^>]*>", body_picture, body_html)
     canonical = article_url(article.slug)
     og_image = resolve_social_image_url(article)
+    preview_base = __import__("os").environ.get("CHRONICLES_PREVIEW_BASE_URL", "").rstrip("/")
+    if article.status == "draft" and preview_base and article.social_image:
+        og_image = f"{preview_base}/chronicles/{article.slug}/{article.social_image}"
     if article.is_retired():
         robots = "noindex, nofollow"
     elif article.is_fixture or article.status == "fixture":
@@ -395,10 +425,14 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         "inLanguage": "en-US",
         "isPartOf": {"@id": f"{SITE}/#website"},
     }
+    if not article.datePublished:
+        schema.pop("datePublished", None)
+    if not article.dateModified:
+        schema.pop("dateModified", None)
     if article.hero_image:
         images = [abs_asset_url(f"chronicles/{article.slug}/{article.hero_image}")]
         social = resolve_social_image_url(article)
-        if social not in images:
+        if social not in images and article.status != "draft":
             images.append(social)
         schema["image"] = images
 
@@ -428,10 +462,15 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             dims = read_image_size(hero_path)
             if dims:
                 size_attrs = f' width="{dims[0]}" height="{dims[1]}"'
+        hero_img = picture(
+            f'<img src="{escape_text(src)}" alt="{escape_text(article.hero_alt or "")}"{size_attrs} decoding="async" fetchpriority="high">',
+            article.hero_image, OUT / article.slug, lambda value: value,
+            "(max-width: 704px) calc(100vw - 32px), 672px",
+        )
         hero_html = f"""
         <figure class="chronicles-hero-figure chronicles-imagery-{escape_text(article.imagery_family or 'abstraction')}">
-          <img src="{escape_text(src)}" alt="{escape_text(article.hero_alt or '')}"{size_attrs} decoding="async">
-          {caption}
+          {hero_img}
+{caption}
         </figure>
 """
 
@@ -497,10 +536,19 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     if article.status == "draft":
         draft_notice = """
       <div class="chronicles-preview-notice" role="status">
-        <p>PRE-PUBLICATION PREVIEW — not live. Dates shown may be preview overlays until Alex approves publication.</p>
+        <p>PRE-PUBLICATION PREVIEW — not live. Publication dates are pending approval.</p>
       </div>
 """
 
+    published = (
+        f' · <time datetime="{escape_text(article.datePublished)}">{escape_text(article.datePublished)}</time>{modified}'
+        if article.datePublished else ""
+    )
+    date_meta = ""
+    if article.datePublished:
+        date_meta += f'  <meta property="article:published_time" content="{escape_text(article.datePublished)}">\n'
+    if article.dateModified:
+        date_meta += f'  <meta property="article:modified_time" content="{escape_text(article.dateModified)}">\n'
     main = f"""
   <main id="main" class="chronicles-article-page" data-chronicles-page="article" data-article-slug="{escape_text(article.slug)}">
     <article class="chronicles-article">
@@ -518,7 +566,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         <p class="chronicles-deck">{escape_text(article.deck)}</p>
         <p class="chronicles-byline">
           <span class="chronicles-author">{escape_text(article.author)}</span>
-          · <time datetime="{escape_text(article.datePublished)}">{escape_text(article.datePublished)}</time>{modified}
+          {published}
           · <span class="chronicles-reading-time">{article.reading_time} min read</span>
         </p>
       </header>
@@ -547,6 +595,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         og_title=article.display_og_title,
         og_description=article.display_og_description,
         og_image=og_image,
+        og_image_alt=article.social_alt,
         og_image_width=og_dims[0] if og_dims else None,
         og_image_height=og_dims[1] if og_dims else None,
         og_type="article",
@@ -556,9 +605,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             json.dumps(schema, ensure_ascii=False, indent=2),
             json.dumps(breadcrumbs, ensure_ascii=False, indent=2),
         ],
-        extra_head=f'  <meta property="article:published_time" content="{escape_text(article.datePublished)}">\n'
-        f'  <meta property="article:modified_time" content="{escape_text(article.dateModified)}">\n'
-        + chronicles_notes_styles(depth),
+        extra_head=date_meta + chronicles_notes_styles(depth),
     )
     return (
         head
@@ -882,11 +929,21 @@ def write_sitemaps(published: list[Article], total_pages: int) -> None:
             pages_urls.append(loc)
     # Fallback: also scrape sitemap-pages.xml if present from a prior build
     pages_map = ROOT / "sitemap-pages.xml"
+    existing_lastmods: dict[str, str | None] = {}
     if pages_map.is_file():
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        for entry in ET.fromstring(pages_map.read_text(encoding="utf-8")).findall("sm:url", namespace):
+            loc = entry.findtext("sm:loc", namespaces=namespace)
+            if loc:
+                existing_lastmods[loc.strip()] = entry.findtext("sm:lastmod", namespaces=namespace)
         for m in re.finditer(r"<loc>(.*?)</loc>", pages_map.read_text(encoding="utf-8")):
             loc = m.group(1).strip()
             if "/insights/" in loc and loc not in pages_urls:
                 pages_urls.append(loc)
+        # Retain established route order and authored update dates on rebuilds.
+        pages_urls = [u for u in existing_lastmods if u in pages_urls] + [
+            u for u in pages_urls if u not in existing_lastmods
+        ]
 
     def urlset(urls: Iterable[tuple[str, str | None]]) -> str:
         lines = [
@@ -904,7 +961,7 @@ def write_sitemaps(published: list[Article], total_pages: int) -> None:
         return "\n".join(lines)
 
     (ROOT / "sitemap-pages.xml").write_text(
-        urlset((u, None) for u in pages_urls),
+        urlset((u, existing_lastmods.get(u)) for u in pages_urls),
         encoding="utf-8",
     )
 
@@ -1368,7 +1425,7 @@ def build() -> int:
             for e in uniq:
                 print(f"  - {e}", file=sys.stderr)
             return 1
-        # Preview: apply in-memory date overlay after validation (never writes packages).
+        # Preview: preserve authored dates, including unset draft publication dates.
         if preview:
             articles = [
                 apply_preview_date_overlay(a) if a.status == "draft" else a
@@ -1398,6 +1455,8 @@ def build() -> int:
     # Article pages: published + fixture + soft-retired (+ drafts in preview only)
     for article in renderable:
         copy_package_assets(article)
+    # All targets must have delivery derivatives before related cards render.
+    for article in renderable:
         html = render_article_page(article, visible)
         dest = OUT / article.slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
