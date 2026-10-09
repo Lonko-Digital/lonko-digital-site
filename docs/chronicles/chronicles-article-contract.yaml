@@ -1,6 +1,6 @@
 # Lonko Chronicles — canonical article / publishing contract (machine-readable)
 # Canonical path: docs/chronicles/chronicles-article-contract.yaml
-# Source of truth for Claude Blog, Image Production (asset rules), and Cursor Web.
+# Source of truth for Claude Blog, Image Production (asset rules), and Codex Web.
 # Describes REAL supported website behavior — do not invent unsupported CMS features.
 #
 # workflow_version mirrors chronicles/state.json
@@ -28,9 +28,10 @@ identity:
       format: YYYY-MM-DD
       notes: >
         Unpublished drafts may omit dates until APPROVED FOR PUBLICATION.
-        Preview builds apply an in-memory date overlay for display/schema only;
-        that overlay is never written into the package and must not become a
-        false production publication date.
+        Draft previews preserve authored dates. If datePublished and/or
+        dateModified are unset, preview rendering must leave them unset.
+        Preview rendering must not fabricate publication or modification dates
+        in visible bylines, metadata, or JSON-LD.
     dateModified:
       required_for: [published, retired]
       optional_for: [draft]
@@ -144,7 +145,7 @@ ga4:
     - chronicles_internal_link_click
     - chronicles_to_site_nav
   ownership: >
-    Shared site infrastructure owned by Cursor Web. Normal articles inherit
+    Shared site infrastructure owned by Codex Web. Normal articles inherit
     events automatically. No per-article GA4 redesign.
 
 publication_surfaces:
@@ -170,7 +171,7 @@ roles:
   normal_path:
     - Claude Blog Post & Social Media
     - ChatGPT — Lonko Chronicles / Image Production
-    - Cursor Web
+    - Codex Web
   owner: Alex
   no_routine_publishing_operator: true
   cursor_owns:
