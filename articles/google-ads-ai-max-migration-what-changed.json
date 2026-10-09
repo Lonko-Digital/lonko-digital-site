@@ -5,23 +5,23 @@
   "observed_h1": [
     "Google Delayed the AI Max Migration \u2014 But Not All of It"
   ],
-  "verified_at": "2026-10-03T16:39:23Z",
-  "github_actions_run_id": "37137638353",
-  "production_commit": "a18130ea1dd51b10f3421c6a1c2c790ec873757d",
+  "verified_at": "2026-10-09T22:29:01Z",
+  "github_actions_run_id": "37999440502",
+  "production_commit": "09715b28e3ebb2acca675117875cf17e51c89b5d",
   "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "http_status": 200,
   "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-  "response_bytes": 23984,
-  "response_body_sha256": "cd487841aa9dc1e702482e6b6ab4262bd4a3a0680d10e20ffc14d362522ba586",
+  "response_bytes": 23985,
+  "response_body_sha256": "8839bd8bbe637f4ee95bbb2d428cf5c35a9fb55f223c838105f7de05d12974a7",
   "fetch_attempt": 1,
   "fetch_attempts": [
     {
       "user_agent": "LonkoChroniclesVerifier/1.0",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-      "bytes": 23984,
-      "body_sha256": "cd487841aa9dc1e702482e6b6ab4262bd4a3a0680d10e20ffc14d362522ba586",
+      "bytes": 23985,
+      "body_sha256": "8839bd8bbe637f4ee95bbb2d428cf5c35a9fb55f223c838105f7de05d12974a7",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -35,8 +35,8 @@
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-      "bytes": 23984,
-      "body_sha256": "cd487841aa9dc1e702482e6b6ab4262bd4a3a0680d10e20ffc14d362522ba586",
+      "bytes": 23985,
+      "body_sha256": "8839bd8bbe637f4ee95bbb2d428cf5c35a9fb55f223c838105f7de05d12974a7",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",

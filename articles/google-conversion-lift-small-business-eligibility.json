@@ -1,0 +1,113 @@
+{
+  "slug": "google-conversion-lift-small-business-eligibility",
+  "url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/",
+  "expected_title": "Google Opened Up Real Ad-Impact Testing. Most Small Businesses Still Can't Get In the Door.",
+  "observed_h1": [
+    "Google Opened Up Real Ad-Impact Testing. Most Small Businesses Still Can't Get In the Door."
+  ],
+  "verified_at": "2026-10-09T22:29:14Z",
+  "github_actions_run_id": "37999440502",
+  "production_commit": "09715b28e3ebb2acca675117875cf17e51c89b5d",
+  "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
+  "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
+  "http_status": 200,
+  "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/",
+  "response_bytes": 28402,
+  "response_body_sha256": "79a1ea5edb2a30d1d48ff917b7c9c7eea0264d823305215e4e3889fcf7b427ee",
+  "fetch_attempt": 2,
+  "fetch_attempts": [
+    {
+      "user_agent": "LonkoChroniclesVerifier/1.0",
+      "http_status": 200,
+      "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/",
+      "bytes": 28402,
+      "body_sha256": "79a1ea5edb2a30d1d48ff917b7c9c7eea0264d823305215e4e3889fcf7b427ee",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "max-age=600",
+        "server": "GitHub.com",
+        "x-cache": "MISS",
+        "age": "0",
+        "via": "1.1 varnish"
+      }
+    },
+    {
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "http_status": 200,
+      "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/",
+      "bytes": 28402,
+      "body_sha256": "79a1ea5edb2a30d1d48ff917b7c9c7eea0264d823305215e4e3889fcf7b427ee",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "max-age=600",
+        "server": "GitHub.com",
+        "x-cache": "HIT",
+        "age": "0",
+        "via": "1.1 varnish"
+      }
+    }
+  ],
+  "hero": {
+    "url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-hero-1600x900.png",
+    "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-hero-1600x900.png",
+    "http_status": 200,
+    "content_type": "image/png",
+    "pass": true
+  },
+  "supporting_assets": [
+    {
+      "url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-chart-budget-threshold-comparison.png",
+      "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-chart-budget-threshold-comparison.png",
+      "http_status": 200,
+      "content_type": "image/png",
+      "pass": true
+    },
+    {
+      "url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
+      "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
+      "http_status": 200,
+      "content_type": "image/png",
+      "pass": true
+    }
+  ],
+  "og_image": {
+    "url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-social-1200x628.png",
+    "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-social-1200x628.png",
+    "http_status": 200,
+    "content_type": "image/png",
+    "pass": true
+  },
+  "sitemap_url": "https://lonkodigital.com/sitemap-chronicles.xml",
+  "sources_heading_count": 1,
+  "hygiene_hits": [],
+  "checks_performed": [
+    "h1_pass",
+    "canonical_pass",
+    "indexable_pass",
+    "preview_hygiene_pass",
+    "schema_pass",
+    "breadcrumb_schema_pass",
+    "hero_pass",
+    "supporting_assets_pass",
+    "og_metadata_pass",
+    "og_image_pass",
+    "sitemap_pass",
+    "content_hygiene_pass",
+    "tracking_foundation_pass"
+  ],
+  "overall_definition": "PASS means every required automated test in this verifier passed. FAIL means one or more of those tests failed. The result is scoped to the checks listed in checks_performed.",
+  "h1_pass": true,
+  "canonical_pass": true,
+  "indexable_pass": true,
+  "preview_hygiene_pass": true,
+  "schema_pass": true,
+  "breadcrumb_schema_pass": true,
+  "hero_pass": true,
+  "supporting_assets_pass": true,
+  "og_metadata_pass": true,
+  "og_image_pass": true,
+  "sitemap_pass": true,
+  "content_hygiene_pass": true,
+  "tracking_foundation_pass": true,
+  "overall": "PASS"
+}
