@@ -86,6 +86,10 @@ jobs:
           if [ -d notes ]; then cp -a notes "$DEST/"; fi
           # Optional root helpers
           if [ -f index.html ]; then cp index.html "$DEST/"; fi
+          # Include destinations used by shared navigation and newsletter privacy links.
+          for SECTION in about contact privacy terms insights; do
+            if [ -d "$SECTION" ]; then cp -a "$SECTION" "$DEST/"; fi
+          done
           if [ -f CNAME ]; then cp CNAME "$DEST/"; fi
           # Prefer active draft / state.json slug, then any draft, then published
           SLUG="${{ github.event.inputs.slug }}"
