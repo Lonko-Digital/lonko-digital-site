@@ -470,7 +470,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         hero_html = f"""
         <figure class="chronicles-hero-figure chronicles-imagery-{escape_text(article.imagery_family or 'abstraction')}">
           {hero_img}
-          {caption}
+{caption}
         </figure>
 """
 
