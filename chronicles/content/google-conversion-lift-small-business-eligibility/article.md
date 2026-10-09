@@ -2,7 +2,9 @@
 title: Google Opened Up Real Ad-Impact Testing. Most Small Businesses Still Can't Get In the Door.
 deck: Conversion Lift studies used to need a Google rep. Now advertisers can run them directly, but the eligibility bar leaves most small-business budgets outside looking in.
 slug: google-conversion-lift-small-business-eligibility
-status: draft
+status: published
+datePublished: 2026-10-09
+dateModified: 2026-10-09
 content_type: Analysis
 schema_type: Article
 topic: Marketing

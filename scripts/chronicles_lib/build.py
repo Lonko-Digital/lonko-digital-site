@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Iterable
 from urllib.parse import quote
 from xml.sax.saxutils import escape as xml_escape
+from xml.etree import ElementTree as ET
 
 from .image_dims import read_image_size
 from .responsive_images import generate_images, picture
@@ -928,11 +929,21 @@ def write_sitemaps(published: list[Article], total_pages: int) -> None:
             pages_urls.append(loc)
     # Fallback: also scrape sitemap-pages.xml if present from a prior build
     pages_map = ROOT / "sitemap-pages.xml"
+    existing_lastmods: dict[str, str | None] = {}
     if pages_map.is_file():
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        for entry in ET.fromstring(pages_map.read_text(encoding="utf-8")).findall("sm:url", namespace):
+            loc = entry.findtext("sm:loc", namespaces=namespace)
+            if loc:
+                existing_lastmods[loc.strip()] = entry.findtext("sm:lastmod", namespaces=namespace)
         for m in re.finditer(r"<loc>(.*?)</loc>", pages_map.read_text(encoding="utf-8")):
             loc = m.group(1).strip()
             if "/insights/" in loc and loc not in pages_urls:
                 pages_urls.append(loc)
+        # Retain established route order and authored update dates on rebuilds.
+        pages_urls = [u for u in existing_lastmods if u in pages_urls] + [
+            u for u in pages_urls if u not in existing_lastmods
+        ]
 
     def urlset(urls: Iterable[tuple[str, str | None]]) -> str:
         lines = [
@@ -950,7 +961,7 @@ def write_sitemaps(published: list[Article], total_pages: int) -> None:
         return "\n".join(lines)
 
     (ROOT / "sitemap-pages.xml").write_text(
-        urlset((u, None) for u in pages_urls),
+        urlset((u, existing_lastmods.get(u)) for u in pages_urls),
         encoding="utf-8",
     )
 
@@ -1444,6 +1455,8 @@ def build() -> int:
     # Article pages: published + fixture + soft-retired (+ drafts in preview only)
     for article in renderable:
         copy_package_assets(article)
+    # All targets must have delivery derivatives before related cards render.
+    for article in renderable:
         html = render_article_page(article, visible)
         dest = OUT / article.slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
