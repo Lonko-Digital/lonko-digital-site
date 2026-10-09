@@ -65,6 +65,9 @@ jobs:
           CHRONICLES_PREVIEW: "1"
         run: python scripts/test_chronicles_draft_preview.py
 
+      - name: Responsive images and related-card regression
+        run: python scripts/test_chronicles_responsive_images.py
+
       - name: Production contract validation
         # Unset preview mode — production contract must not soft-certify via draft overlay.
         run: python scripts/test_chronicles_production_contract_v2.py

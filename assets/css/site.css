@@ -2502,6 +2502,12 @@ main.legal-page.section--reading h2 {
   margin-bottom: 0.65rem;
 }
 
+.chronicles-card-media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .chronicles-card-media img,
 .story-media img {
   display: block;

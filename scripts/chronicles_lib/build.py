@@ -14,6 +14,7 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape as xml_escape
 
 from .image_dims import read_image_size
+from .responsive_images import generate_images, picture
 from .model import (
     TOPIC_PILLS,
     Article,
@@ -214,6 +215,7 @@ def copy_package_assets(article: Article) -> None:
         target = dest / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
+    generate_images(article.package_dir, dest, article.hero_image)
 
 
 # —— Card / section HTML ————————————————————————————————————————————————
@@ -246,7 +248,11 @@ def story_card(
     else:
         href = f"{asset_prefix(depth - 1)}{article.slug}/"
 
-    img_rel = package_media_href(article, article.hero_image, from_depth=depth)
+    # Card media belongs to the target article, including on a different article page.
+    def card_media(rel: str) -> str:
+        return rel if "://" in rel or rel.startswith("/") else href + rel
+
+    img_rel = card_media(article.hero_image) if article.hero_image else None
     img_html = ""
     if img_rel and variant != "compact":
         alt = escape_text(article.hero_alt or "")
@@ -262,6 +268,16 @@ def story_card(
             f'<img src="{escape_text(img_rel)}" alt="{alt}" loading="lazy" decoding="async">'
             f"</div>"
         )
+
+    if img_html and article.hero_image:
+        card_sizes = (
+            "(max-width: 900px) calc(100vw - 32px), (max-width: 1200px) 60vw, 672px"
+            if variant == "feature" else
+            "(max-width: 900px) calc(100vw - 32px), (max-width: 1100px) 50vw, 360px"
+        )
+        img_html = re.sub(r"<img[^>]+>", lambda match: picture(
+            match.group(), article.hero_image, OUT / article.slug, card_media, card_sizes,
+        ), img_html)
 
     cls = {
         "feature": "story-feature",
@@ -361,6 +377,16 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     # section. Mark those links for the shared GA4 source-click event without
     # duplicating or rewriting the authored source section.
     body_html = _mark_body_source_links(body_html)
+    # Preserve authored image attributes, alt text, location and original fallback.
+    def body_picture(match: re.Match) -> str:
+        tag = match.group()
+        src_match = re.search(r'src="([^"]+)"', tag)
+        if not src_match:
+            return tag
+        rel = src_match.group(1)
+        return picture(tag, rel, OUT / article.slug, lambda value: value,
+                       "(max-width: 672px) calc(100vw - 32px), 640px")
+    body_html = re.sub(r"<img\b[^>]*>", body_picture, body_html)
     canonical = article_url(article.slug)
     og_image = resolve_social_image_url(article)
     preview_base = __import__("os").environ.get("CHRONICLES_PREVIEW_BASE_URL", "").rstrip("/")
@@ -435,9 +461,14 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             dims = read_image_size(hero_path)
             if dims:
                 size_attrs = f' width="{dims[0]}" height="{dims[1]}"'
+        hero_img = picture(
+            f'<img src="{escape_text(src)}" alt="{escape_text(article.hero_alt or "")}"{size_attrs} decoding="async" fetchpriority="high">',
+            article.hero_image, OUT / article.slug, lambda value: value,
+            "(max-width: 704px) calc(100vw - 32px), 672px",
+        )
         hero_html = f"""
         <figure class="chronicles-hero-figure chronicles-imagery-{escape_text(article.imagery_family or 'abstraction')}">
-          <img src="{escape_text(src)}" alt="{escape_text(article.hero_alt or '')}"{size_attrs} decoding="async">
+          {hero_img}
           {caption}
         </figure>
 """
