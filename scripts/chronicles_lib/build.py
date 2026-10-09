@@ -363,6 +363,9 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     body_html = _mark_body_source_links(body_html)
     canonical = article_url(article.slug)
     og_image = resolve_social_image_url(article)
+    preview_base = __import__("os").environ.get("CHRONICLES_PREVIEW_BASE_URL", "").rstrip("/")
+    if article.status == "draft" and preview_base and article.social_image:
+        og_image = f"{preview_base}/chronicles/{article.slug}/{article.social_image}"
     if article.is_retired():
         robots = "noindex, nofollow"
     elif article.is_fixture or article.status == "fixture":
@@ -395,10 +398,14 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         "inLanguage": "en-US",
         "isPartOf": {"@id": f"{SITE}/#website"},
     }
+    if not article.datePublished:
+        schema.pop("datePublished", None)
+    if not article.dateModified:
+        schema.pop("dateModified", None)
     if article.hero_image:
         images = [abs_asset_url(f"chronicles/{article.slug}/{article.hero_image}")]
         social = resolve_social_image_url(article)
-        if social not in images:
+        if social not in images and article.status != "draft":
             images.append(social)
         schema["image"] = images
 
@@ -497,10 +504,19 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     if article.status == "draft":
         draft_notice = """
       <div class="chronicles-preview-notice" role="status">
-        <p>PRE-PUBLICATION PREVIEW — not live. Dates shown may be preview overlays until Alex approves publication.</p>
+        <p>PRE-PUBLICATION PREVIEW — not live. Publication dates are pending approval.</p>
       </div>
 """
 
+    published = (
+        f' · <time datetime="{escape_text(article.datePublished)}">{escape_text(article.datePublished)}</time>{modified}'
+        if article.datePublished else ""
+    )
+    date_meta = ""
+    if article.datePublished:
+        date_meta += f'  <meta property="article:published_time" content="{escape_text(article.datePublished)}">\n'
+    if article.dateModified:
+        date_meta += f'  <meta property="article:modified_time" content="{escape_text(article.dateModified)}">\n'
     main = f"""
   <main id="main" class="chronicles-article-page" data-chronicles-page="article" data-article-slug="{escape_text(article.slug)}">
     <article class="chronicles-article">
@@ -518,7 +534,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         <p class="chronicles-deck">{escape_text(article.deck)}</p>
         <p class="chronicles-byline">
           <span class="chronicles-author">{escape_text(article.author)}</span>
-          · <time datetime="{escape_text(article.datePublished)}">{escape_text(article.datePublished)}</time>{modified}
+          {published}
           · <span class="chronicles-reading-time">{article.reading_time} min read</span>
         </p>
       </header>
@@ -547,6 +563,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         og_title=article.display_og_title,
         og_description=article.display_og_description,
         og_image=og_image,
+        og_image_alt=article.social_alt,
         og_image_width=og_dims[0] if og_dims else None,
         og_image_height=og_dims[1] if og_dims else None,
         og_type="article",
@@ -556,9 +573,7 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
             json.dumps(schema, ensure_ascii=False, indent=2),
             json.dumps(breadcrumbs, ensure_ascii=False, indent=2),
         ],
-        extra_head=f'  <meta property="article:published_time" content="{escape_text(article.datePublished)}">\n'
-        f'  <meta property="article:modified_time" content="{escape_text(article.dateModified)}">\n'
-        + chronicles_notes_styles(depth),
+        extra_head=date_meta + chronicles_notes_styles(depth),
     )
     return (
         head
@@ -1368,7 +1383,7 @@ def build() -> int:
             for e in uniq:
                 print(f"  - {e}", file=sys.stderr)
             return 1
-        # Preview: apply in-memory date overlay after validation (never writes packages).
+        # Preview: preserve authored dates, including unset draft publication dates.
         if preview:
             articles = [
                 apply_preview_date_overlay(a) if a.status == "draft" else a

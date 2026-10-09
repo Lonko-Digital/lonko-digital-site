@@ -57,6 +57,7 @@ jobs:
       - name: Build Chronicles
         env:
           CHRONICLES_PREVIEW: "1"
+          CHRONICLES_PREVIEW_BASE_URL: https://raw.githack.com/${{ github.repository }}/preview-site/pr/${{ github.event.pull_request.number || github.run_id }}
         run: python scripts/build_chronicles.py
 
       - name: Draft-preview regression
