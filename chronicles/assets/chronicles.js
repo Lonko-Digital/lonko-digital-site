@@ -3,7 +3,9 @@
 
   var statusEl = document.querySelector(".chronicles-filter-status");
   var pills = Array.prototype.slice.call(document.querySelectorAll("[data-topic-filter]"));
-  var cards = Array.prototype.slice.call(document.querySelectorAll("[data-filterable-cards] .chronicles-card"));
+  var cards = Array.prototype.slice.call(
+    document.querySelectorAll("[data-filterable-cards] .chronicles-card, .chronicles-featured-hero .chronicles-card")
+  );
   var searchInput = document.querySelector(".chronicles-search-input");
   var activeTopic = "all";
   var indexCache = null;
@@ -33,6 +35,17 @@
       card.hidden = !ok;
       if (ok) shown += 1;
     });
+    function hideSectionIfEmpty(section) {
+      if (!section) return;
+      var sectionCards = section.querySelectorAll(".chronicles-card");
+      var any = false;
+      sectionCards.forEach(function (card) {
+        if (!card.hidden) any = true;
+      });
+      section.hidden = sectionCards.length > 0 && !any;
+    }
+    hideSectionIfEmpty(document.querySelector(".chronicles-featured-hero"));
+    hideSectionIfEmpty(document.querySelector("[data-chronicles-latest]"));
     if (!cards.length) return;
     if (shown === 0) {
       announce("No stories match your filters. Try another topic or clear search.");

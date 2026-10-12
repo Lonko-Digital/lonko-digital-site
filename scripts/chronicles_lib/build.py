@@ -42,6 +42,10 @@ _content_env = __import__("os").environ.get("CHRONICLES_CONTENT", "").strip()
 CONTENT = (ROOT / _content_env).resolve() if _content_env else (ROOT / "chronicles" / "content")
 OUT = ROOT / "chronicles"
 PAGE_SIZE = 10
+# The 60/40 magazine grid needs enough distinct stories to fill a lead,
+# two supporting cards, and a Latest list that does not repeat them.
+# Below this count, the homepage is one lead plus the other stories.
+MAGAZINE_GRID_MIN = 6
 FEED_RETENTION = 20
 
 CORE_PAGES = [
@@ -305,6 +309,20 @@ def pick_featured(articles: list[Article]) -> Article | None:
     if not candidates:
         return None
     return max(candidates, key=lambda a: (a.featured_priority() or 0, a.datePublished, a.slug))
+
+
+def feature_block_articles(articles: list[Article]) -> tuple[Article | None, list[Article]]:
+    """Lead story, plus two supporting cards only once the catalog can fill them.
+
+    Supporting cards are the next stories by date, never a second copy of the lead.
+    """
+    featured = pick_featured(articles)
+    ordered = [a for a in sort_by_date(articles) if not featured or a.slug != featured.slug]
+    if len(articles) >= MAGAZINE_GRID_MIN:
+        return featured, ordered[:2]
+    if featured:
+        return featured, []
+    return None, []
 
 
 def section_articles(articles: list[Article], section: str) -> list[Article]:
@@ -633,33 +651,43 @@ def render_index(
     page_num: int,
     total_pages: int,
     is_home: bool,
+    featured: Article | None = None,
+    standards: list[Article] | None = None,
 ) -> str:
     depth = 1 if is_home or page_num == 1 else 3  # chronicles/page/N/
     if not is_home:
         depth = 3
 
-    featured = pick_featured(visible) if is_home else None
-    standards: list[Article] = []
-    if is_home and featured:
-        rest = [a for a in sort_by_date(visible) if a.slug != featured.slug]
-        standards = rest[:2]
-    elif is_home:
-        standards = sort_by_date(visible)[:2]
+    if not is_home:
+        featured = None
+        standards = []
+    standards = standards or []
+    shown_slugs = {a.slug for a in standards}
+    if featured is not None:
+        shown_slugs.add(featured.slug)
+    latest_slugs = {a.slug for a in latest_page}
 
-    # Hero featured block (index only)
+    # Hero featured block (index only). One lead until the catalog can fill 60/40.
     featured_block = ""
-    if is_home:
+    if is_home and (featured is not None or standards):
         feature_html = story_card(featured, variant="feature", depth=1) if featured else ""
         std_html = "\n".join(story_card(a, variant="standard", depth=1) for a in standards)
-        featured_block = f"""
-    <section class="chronicles-featured-hero" aria-label="Featured stories">
-      <div class="container chronicles-featured-grid">
-        <div class="chronicles-featured-primary">
-          {feature_html or '<p class="chronicles-empty">No featured story yet.</p>'}
-        </div>
+        grid_class = "container chronicles-featured-grid"
+        if not standards:
+            grid_class += " chronicles-featured-grid--lead"
+        standards_block = ""
+        if standards:
+            standards_block = f"""
         <div class="chronicles-featured-standards">
           {std_html}
-        </div>
+        </div>"""
+        primary = feature_html or '<p class="chronicles-empty">No featured story yet.</p>'
+        featured_block = f"""
+    <section class="chronicles-featured-hero" aria-label="Featured stories">
+      <div class="{grid_class}">
+        <div class="chronicles-featured-primary">
+          {primary}
+        </div>{standards_block}
       </div>
     </section>
 """
@@ -696,16 +724,20 @@ def render_index(
             ("guides", "Learn / Guides", "guides"),
             ("from_lonko", "From Lonko", "from-lonko"),
         ):
-            items = section_articles(visible, section_key)
-            if section_key == "from_lonko" and not items:
+            items = [
+                a
+                for a in section_articles(visible, section_key)
+                if a.slug not in shown_slugs and a.slug not in latest_slugs
+            ]
+            if not items:
                 continue
-            cards = "\n".join(story_card(a, variant="compact", depth=1) for a in items) if items else (
-                '<p class="chronicles-empty">Nothing in this section yet.</p>'
-            )
+            cards = "\n".join(story_card(a, variant="compact", depth=1) for a in items)
             curated += f"""
     <section class="chronicles-section chronicles-section--{section_id}" aria-labelledby="{section_id}-heading">
       <div class="container">
-        <h2 id="{section_id}-heading">{escape_text(heading)}</h2>
+        <div class="chronicles-section-head">
+          <h2 id="{section_id}-heading">{escape_text(heading)}</h2>
+        </div>
         <div class="chronicles-card-grid" data-section="{section_key}">
 {cards}
         </div>
@@ -778,7 +810,9 @@ def render_index(
     </section>
 """
 
-    latest_section = f"""
+    latest_section = ""
+    if latest_page or not is_home:
+        latest_section = f"""
     <section class="chronicles-section chronicles-section--latest" aria-labelledby="latest-heading" data-chronicles-latest>
       <div class="container">
         <h2 id="latest-heading">{"Latest" if is_home else f"Latest — Page {page_num}"}</h2>
@@ -1048,7 +1082,9 @@ CHRONICLES_JS = r"""(function () {
 
   var statusEl = document.querySelector(".chronicles-filter-status");
   var pills = Array.prototype.slice.call(document.querySelectorAll("[data-topic-filter]"));
-  var cards = Array.prototype.slice.call(document.querySelectorAll("[data-filterable-cards] .chronicles-card"));
+  var cards = Array.prototype.slice.call(
+    document.querySelectorAll("[data-filterable-cards] .chronicles-card, .chronicles-featured-hero .chronicles-card")
+  );
   var searchInput = document.querySelector(".chronicles-search-input");
   var activeTopic = "all";
   var indexCache = null;
@@ -1078,6 +1114,17 @@ CHRONICLES_JS = r"""(function () {
       card.hidden = !ok;
       if (ok) shown += 1;
     });
+    function hideSectionIfEmpty(section) {
+      if (!section) return;
+      var sectionCards = section.querySelectorAll(".chronicles-card");
+      var any = false;
+      sectionCards.forEach(function (card) {
+        if (!card.hidden) any = true;
+      });
+      section.hidden = sectionCards.length > 0 && !any;
+    }
+    hideSectionIfEmpty(document.querySelector(".chronicles-featured-hero"));
+    hideSectionIfEmpty(document.querySelector("[data-chronicles-latest]"));
     if (!cards.length) return;
     if (shown === 0) {
       announce("No stories match your filters. Try another topic or clear search.");
@@ -1462,19 +1509,31 @@ def build() -> int:
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(html, encoding="utf-8")
 
-    # Latest/Featured/sections use listing-visible only (retired excluded)
-    latest_all = sort_by_date(visible)
+    # Latest excludes stories already placed in the homepage feature block.
+    featured, standards = feature_block_articles(visible)
+    shown = {a.slug for a in standards}
+    if featured is not None:
+        shown.add(featured.slug)
+    latest_all = [a for a in sort_by_date(visible) if a.slug not in shown]
     total_pages = max(1, (len(latest_all) + PAGE_SIZE - 1) // PAGE_SIZE)
 
     # Sitemap pagination reflects indexable published corpus only (never fixture/retired/draft)
-    published_latest = sort_by_date(published)
+    published_latest = [a for a in sort_by_date(published) if a.slug not in shown]
     published_pages = (
         max(1, (len(published_latest) + PAGE_SIZE - 1) // PAGE_SIZE) if published else 1
     )
 
     page1 = latest_all[:PAGE_SIZE]
     (OUT / "index.html").write_text(
-        render_index(visible, latest_page=page1, page_num=1, total_pages=total_pages, is_home=True),
+        render_index(
+            visible,
+            latest_page=page1,
+            page_num=1,
+            total_pages=total_pages,
+            is_home=True,
+            featured=featured,
+            standards=standards,
+        ),
         encoding="utf-8",
     )
 
