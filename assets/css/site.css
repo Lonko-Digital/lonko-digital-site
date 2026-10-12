@@ -2428,6 +2428,10 @@ main.legal-page.section--reading h2 {
   max-width: 72rem;
 }
 
+.chronicles-featured-grid--lead {
+  grid-template-columns: minmax(0, 42rem);
+}
+
 .chronicles-featured-primary,
 .chronicles-hero-feature {
   min-width: 0;
@@ -2500,6 +2504,12 @@ main.legal-page.section--reading h2 {
 .chronicles-card-media--compact {
   aspect-ratio: 16 / 10;
   margin-bottom: 0.65rem;
+}
+
+.chronicles-card-media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .chronicles-card-media img,
@@ -2720,6 +2730,12 @@ body:has(.chronicles-search-page) {
   margin: 0 0 2.5rem;
 }
 
+.chronicles-section + .chronicles-section {
+  margin-top: 1.5rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--border);
+}
+
 .chronicles-section-head {
   display: flex;
   flex-wrap: wrap;
@@ -2729,6 +2745,12 @@ body:has(.chronicles-search-page) {
   margin: 0 0 1.15rem;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--border);
+}
+
+.chronicles-section-head h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
 }
 
 .chronicles-section-title {

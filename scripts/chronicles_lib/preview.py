@@ -2,14 +2,12 @@
 
 Production builds leave CHRONICLES_PREVIEW unset: drafts are not rendered.
 Preview builds set CHRONICLES_PREVIEW=1 so drafts render with noindex and an
-in-memory date overlay that never writes publication dates into package files.
+unset publication dates until approval. Preview rendering never fabricates dates.
 """
 
 from __future__ import annotations
 
 import os
-from dataclasses import replace
-from datetime import date
 
 from chronicles_lib.model import Article
 
@@ -24,12 +22,5 @@ def preview_mode_enabled() -> bool:
 
 
 def apply_preview_date_overlay(article: Article) -> Article:
-    """Fill missing draft dates for render/schema only. Does not mutate packages."""
-    if article.status != "draft":
-        return article
-    today = date.today().isoformat()
-    pub = (article.datePublished or "").strip() or today
-    mod = (article.dateModified or "").strip() or pub
-    if pub == article.datePublished and mod == article.dateModified:
-        return article
-    return replace(article, datePublished=pub, dateModified=mod)
+    """Compatibility hook: preserve authored dates, including missing draft dates."""
+    return article

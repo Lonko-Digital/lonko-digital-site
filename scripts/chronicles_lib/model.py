@@ -74,6 +74,7 @@ class Article:
     og_title: str | None = None
     og_description: str | None = None
     social_image: str | None = None
+    social_alt: str | None = None
     hero_image: str | None = None
     hero_alt: str | None = None
     imagery_family: str | None = None
@@ -224,6 +225,7 @@ def load_article(package_dir: Path) -> Article:
         og_title=_opt_str(meta.get("og_title")),
         og_description=_opt_str(meta.get("og_description")),
         social_image=_opt_str(meta.get("social_image")),
+        social_alt=_opt_str(meta.get("social_alt")),
         hero_image=_opt_str(meta.get("hero_image")),
         hero_alt=_opt_str(meta.get("hero_alt")),
         imagery_family=_opt_str(meta.get("imagery_family")),

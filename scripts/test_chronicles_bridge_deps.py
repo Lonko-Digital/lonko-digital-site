@@ -18,6 +18,7 @@ import sys
 REQUIRED = (
     ("yaml", "pyyaml"),
     ("markdown", "markdown"),
+    ("PIL.Image", "Pillow"),
     ("google.oauth2.service_account", "google-auth"),
     ("googleapiclient.discovery", "google-api-python-client"),
 )

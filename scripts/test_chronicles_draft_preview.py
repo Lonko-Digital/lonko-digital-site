@@ -131,6 +131,13 @@ def main() -> int:
 
         article = load_article(pkg)
         html = render_article_page(article, arts)
+        # Undated drafts must stay undated in schema, social metadata and byline.
+        for forbidden in ('"datePublished"', '"dateModified"',
+                          'article:published_time', 'article:modified_time', '<time '):
+            if forbidden in html:
+                failures.append(f"fabricated draft date: {forbidden}")
+        if article.datePublished or article.dateModified:
+            failures.append("draft package dates mutated during rendering")
         checks = {
             "title": "Draft Preview Regression: AI Overviews Local Search",
             "deck": "Unpublished draft used only to certify",

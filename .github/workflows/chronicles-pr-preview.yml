@@ -57,12 +57,16 @@ jobs:
       - name: Build Chronicles
         env:
           CHRONICLES_PREVIEW: "1"
+          CHRONICLES_PREVIEW_BASE_URL: https://raw.githack.com/${{ github.repository }}/preview-site/pr/${{ github.event.pull_request.number || github.run_id }}
         run: python scripts/build_chronicles.py
 
       - name: Draft-preview regression
         env:
           CHRONICLES_PREVIEW: "1"
         run: python scripts/test_chronicles_draft_preview.py
+
+      - name: Responsive images and related-card regression
+        run: python scripts/test_chronicles_responsive_images.py
 
       - name: Production contract validation
         # Unset preview mode — production contract must not soft-certify via draft overlay.
@@ -85,6 +89,10 @@ jobs:
           if [ -d notes ]; then cp -a notes "$DEST/"; fi
           # Optional root helpers
           if [ -f index.html ]; then cp index.html "$DEST/"; fi
+          # Include destinations used by shared navigation and newsletter privacy links.
+          for SECTION in about contact privacy terms insights; do
+            if [ -d "$SECTION" ]; then cp -a "$SECTION" "$DEST/"; fi
+          done
           if [ -f CNAME ]; then cp CNAME "$DEST/"; fi
           # Prefer active draft / state.json slug, then any draft, then published
           SLUG="${{ github.event.inputs.slug }}"
