@@ -5,23 +5,23 @@
   "observed_h1": [
     "Google Delayed the AI Max Migration \u2014 But Not All of It"
   ],
-  "verified_at": "2026-10-09T22:29:01Z",
-  "github_actions_run_id": "37999440502",
-  "production_commit": "09715b28e3ebb2acca675117875cf17e51c89b5d",
+  "verified_at": "2026-10-14T05:40:16Z",
+  "github_actions_run_id": "38517867117",
+  "production_commit": "8515b7fc53c3d441f95d6019cfec2c631ebc6a9d",
   "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "http_status": 200,
   "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-  "response_bytes": 23985,
-  "response_body_sha256": "8839bd8bbe637f4ee95bbb2d428cf5c35a9fb55f223c838105f7de05d12974a7",
+  "response_bytes": 26860,
+  "response_body_sha256": "4d9d9003a4705da04afaa9c37fe10af4b7799c6f464f07af28270b90be4ad08c",
   "fetch_attempt": 1,
   "fetch_attempts": [
     {
       "user_agent": "LonkoChroniclesVerifier/1.0",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-      "bytes": 23985,
-      "body_sha256": "8839bd8bbe637f4ee95bbb2d428cf5c35a9fb55f223c838105f7de05d12974a7",
+      "bytes": 26860,
+      "body_sha256": "4d9d9003a4705da04afaa9c37fe10af4b7799c6f464f07af28270b90be4ad08c",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -35,8 +35,8 @@
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
       "http_status": 200,
       "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/",
-      "bytes": 23985,
-      "body_sha256": "8839bd8bbe637f4ee95bbb2d428cf5c35a9fb55f223c838105f7de05d12974a7",
+      "bytes": 26860,
+      "body_sha256": "4d9d9003a4705da04afaa9c37fe10af4b7799c6f464f07af28270b90be4ad08c",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -54,7 +54,15 @@
     "content_type": "image/png",
     "pass": true
   },
-  "supporting_assets": [],
+  "supporting_assets": [
+    {
+      "url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-hero-1600x900.png",
+      "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-hero-1600x900.png",
+      "http_status": 200,
+      "content_type": "image/png",
+      "pass": true
+    }
+  ],
   "og_image": {
     "url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-social-1200x628.png",
     "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-social-1200x628.png",
