@@ -2550,6 +2550,47 @@ main.legal-page.section--reading h2 {
   display: none;
 }
 
+.capability-list.capability-list--five {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.capability-list.capability-list--five > .capability-card {
+  grid-column: span 2;
+}
+
+.capability-list.capability-list--five > .capability-card:nth-child(4),
+.capability-list.capability-list--five > .capability-card:nth-child(5) {
+  grid-column: span 3;
+}
+
+@media (max-width: 1100px) {
+  .capability-list.capability-list--five {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .capability-list.capability-list--five > .capability-card,
+  .capability-list.capability-list--five > .capability-card:nth-child(4) {
+    grid-column: auto;
+  }
+
+  .capability-list.capability-list--five > .capability-card:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .capability-list.capability-list--five {
+    grid-template-columns: 1fr;
+  }
+
+  .capability-list.capability-list--five > .capability-card,
+  .capability-list.capability-list--five > .capability-card:nth-child(4),
+  .capability-list.capability-list--five > .capability-card:nth-child(5) {
+    grid-column: auto;
+  }
+}
+
+/* preview-only:start */
 .preview-banner {
   position: fixed;
   top: 0;
@@ -2573,6 +2614,7 @@ body:has(.preview-banner) {
 body:has(.preview-banner) .site-header {
   top: var(--preview-offset, 2.4rem);
 }
+/* preview-only:end */
 
 .chronicles-card-grid {
   display: grid;
