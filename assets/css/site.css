@@ -2545,6 +2545,11 @@ main.legal-page.section--reading h2 {
   line-height: 1.5;
 }
 
+.chronicles-deck:empty,
+.chronicles-card-deck:empty {
+  display: none;
+}
+
 .chronicles-card-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

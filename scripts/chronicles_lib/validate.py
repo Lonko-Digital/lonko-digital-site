@@ -100,9 +100,9 @@ def validate_articles(
         else:
             errors.append(f"{prefix}missing required field: slug")
 
+        # Deck is optional. Some articles open directly into the body.
         for field_name, value in (
             ("title", article.title),
-            ("deck", article.deck),
             ("topic", article.topic),
             ("content_type", article.content_type),
             ("author", article.author),
