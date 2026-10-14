@@ -1,6 +1,8 @@
 ---
 author: Lonko Digital
 content_type: News
+dateModified: '2026-10-14'
+datePublished: '2026-10-14'
 hero_alt: "A marketing decision-maker reviewing a printed Local Services Ads billing statement at her desk, circling a specific line item with a pen, laptop open beside her — illustrating the moment a business owner checks a bill against Google's new missed-call billing rule."
 hero_image: assets/local-services-ads-new-billing-rules-what-changed-hero-1600x900.png
 imagery_family: photography
@@ -8,6 +10,7 @@ meta_description: Google folded Local Services Ads into Google Ads and now charg
 og_description: Google folded Local Services Ads into Google Ads and now charges for missed calls over 20 seconds. What changed, what stays the same, what to check.
 og_title: "Google Local Services Ads: New Billing Rules and the Google Ads Migration (2026)"
 placement:
+  featured: true
   sections:
   - owners
 related:
@@ -18,14 +21,14 @@ slug: local-services-ads-new-billing-rules-what-changed
 social_alt: "Banner reading '20 Seconds Now Decide What You Pay For' over a photo of a marketing decision-maker circling a line item on a printed billing statement at her desk, with the Lonko Digital logo in the bottom right."
 social_image: assets/local-services-ads-new-billing-rules-what-changed-social-1200x628.png
 sources: []
-status: draft
+status: published
 tags:
 - Local Services Ads
 - Performance Max
 - Google Ads
 - Google Verified
 title: "Google Changed How Local Services Ads Bills You for Calls. Here's What Actually Shifted."
-topic: Google Ads
+topic: Marketing
 ---
 
 Every advertising platform you use has a quiet rulebook for what you're actually paying for. A "click." A "lead." A "conversion." Most days that rulebook sits in the background and you never think about it. Then the platform rewrites a line in it, and your bill changes before you've decided anything.
