@@ -125,9 +125,9 @@
       a.innerHTML =
         '<a class="chronicles-card-link" href="' + (e.url || ("../" + e.slug + "/")) + '">' +
         '<div class="chronicles-card-body">' +
-        '<p class="chronicles-card-meta">' + (e.content_type || "") + " · " + (e.topic || "") + " · " + (e.datePublished || "") + "</p>" +
+        '<p class="chronicles-card-meta">' + [e.content_type, e.topic, e.datePublished].filter(Boolean).join(" · ") + "</p>" +
         "<h3 class=\"chronicles-card-title\">" + escapeHtml(e.title || "") + "</h3>" +
-        "<p class=\"chronicles-card-deck\">" + escapeHtml(e.deck || "") + "</p>" +
+        (e.deck ? "<p class=\"chronicles-card-deck\">" + escapeHtml(e.deck) + "</p>" : "") +
         "</div></a>";
       resultsRoot.appendChild(a);
     });

@@ -230,10 +230,10 @@ def _meta_line(article: Article) -> str:
     parts = [
         escape_text(article.content_type),
         escape_text(article.topic),
-        escape_text(article.datePublished),
+        escape_text(article.datePublished) if article.datePublished else "",
         f"{article.reading_time} min read",
     ]
-    return " · ".join(parts)
+    return " · ".join(part for part in parts if part)
 
 
 def story_card(
@@ -1204,9 +1204,9 @@ CHRONICLES_JS = r"""(function () {
       a.innerHTML =
         '<a class="chronicles-card-link" href="' + (e.url || ("../" + e.slug + "/")) + '">' +
         '<div class="chronicles-card-body">' +
-        '<p class="chronicles-card-meta">' + (e.content_type || "") + " · " + (e.topic || "") + " · " + (e.datePublished || "") + "</p>" +
+        '<p class="chronicles-card-meta">' + [e.content_type, e.topic, e.datePublished].filter(Boolean).join(" · ") + "</p>" +
         "<h3 class=\"chronicles-card-title\">" + escapeHtml(e.title || "") + "</h3>" +
-        "<p class=\"chronicles-card-deck\">" + escapeHtml(e.deck || "") + "</p>" +
+        (e.deck ? "<p class=\"chronicles-card-deck\">" + escapeHtml(e.deck) + "</p>" : "") +
         "</div></a>";
       resultsRoot.appendChild(a);
     });
