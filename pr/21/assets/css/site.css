@@ -2590,32 +2590,6 @@ main.legal-page.section--reading h2 {
   }
 }
 
-/* preview-only:start */
-.preview-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  margin: 0;
-  padding: 0.55rem 1rem;
-  background: #7a1f1f;
-  color: #fff;
-  text-align: center;
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-body:has(.preview-banner) {
-  padding-top: var(--preview-offset, 2.4rem);
-}
-
-body:has(.preview-banner) .site-header {
-  top: var(--preview-offset, 2.4rem);
-}
-/* preview-only:end */
-
 .chronicles-card-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
