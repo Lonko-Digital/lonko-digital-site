@@ -11,8 +11,10 @@
 
 **COMPLETE for Alex + ChatGPT visual review.**
 
-Five primary portfolio screenshots, package README, approved logo on public site, truthful Google/LinkedIn public status wording, and README live-status correction are ready.  
+Five primary portfolio screenshots, package README, approved logo on public site, and README live-status correction are ready.  
 **Not committed. Not published to LinkedIn. No GTM changes.**
+
+**Product-status correction (October 16, 2026):** The LinkedIn Ads wording in section 9 is superseded. LinkedIn Ads integration is under development. Live API data delivery has not yet been validated.
 
 ---
 
@@ -89,13 +91,9 @@ True **390×844** viewport (not a desktop resize). Compact header with approved 
 
 ## 9. Public LinkedIn status wording
 
-Updated from “In development” to:
+An earlier version of this note recorded a public LinkedIn Ads label and supporting copy that described a completed private live-API validation and an operating read-only reporting integration. That note also said the public pages and Terms label language had been updated to match.
 
-**Built & Live-Validated — Private Integration**
-
-Supporting copy: read-only LinkedIn Ads campaign/performance reporting; evidence-driven intelligence; live API delivery validated privately; **not** a public SaaS offering on the company site.
-
-Touched: `index.html`, `about/index.html`, `terms/index.html` (label language).
+**Superseded, October 16, 2026.** That description is not the current product status. LinkedIn Ads integration is under development. Live API data delivery has not yet been validated. It is not connected, available to customers, or production-ready. The earlier description must not be reused as current website, schema, or portfolio copy.
 
 ---
 
@@ -105,7 +103,7 @@ Updated to:
 
 **Built — Live Validation in Progress**
 
-Does **not** claim the same completed live-delivery proof posture as LinkedIn. Remains private / not available on the public website.
+This note's Google Ads label stays separate from LinkedIn Ads. LinkedIn Ads integration is under development. Live API data delivery has not yet been validated. The Google Ads work recorded here remains private and is not available on the public website.
 
 ---
 

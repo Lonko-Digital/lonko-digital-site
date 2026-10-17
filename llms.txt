@@ -7,7 +7,7 @@ Lonko Digital is an early-stage company. This website is informational and does 
 ## What exists today
 
 - Google Ads: Private Reference Implementation (private, not publicly available)
-- LinkedIn Ads: In Development
+- LinkedIn Ads: In Development. Live API data delivery has not yet been validated.
 - Additional marketing intelligence capabilities: Roadmap
 
 ## Contact
