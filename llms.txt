@@ -6,7 +6,7 @@ Lonko Digital is an early-stage company. This website is informational and does 
 
 ## What exists today
 
-- Paid growth: Building. Google Ads is a private reference implementation under continued validation. LinkedIn Ads is in development. Meta Ads is planned. None of these is available to customers.
+- Paid growth: Building. Google Ads is a private reference implementation under continued private validation. LinkedIn Ads integration is under development. Live API data delivery has not yet been validated. Status: In Development. Meta Ads is planned. None of these is available to customers.
 - Search, AI discovery and market research: Planned
 - Analytics and tracking: Planned
 - Web, conversion and lifecycle: Planned

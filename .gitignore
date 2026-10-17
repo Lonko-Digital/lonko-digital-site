@@ -30,9 +30,6 @@ bridge/smoke-package/
 preview-dist/
 .preview-worktree/
 
-# Local production-page build (scripts/build_production_site.py). Not deployed.
-build/
-
 # Python
 __pycache__/
 *.pyc
