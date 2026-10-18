@@ -1,6 +1,8 @@
 ---
 author: Lonko Digital
 content_type: Analysis
+dateModified: '2026-10-18'
+datePublished: '2026-10-18'
 hero_alt: "A small-business owner leaning back in a wooden chair on a sunlit covered porch, one arm draped over the chair back, holding a printed one-page comparison sheet at a relaxed reading distance, laptop closed beside him — illustrating a calm, low-stakes evaluation of a new advertising option rather than an urgent reaction to it."
 hero_image: assets/chatgpt-ads-small-business-what-changed-hero-1600x900.png
 imagery_family: photography
@@ -16,7 +18,7 @@ seo_title: "ChatGPT Ads for Small Business: What's Proven, What's Not (2026)"
 slug: chatgpt-ads-small-business-what-changed
 social_alt: "Banner reading 'The $50,000 Minimum Is Gone. Is It Worth Testing?' over a photo of a small-business owner leaning back in a chair on a sunlit porch holding a printed comparison sheet, with the Lonko Digital logo in the bottom right."
 social_image: assets/chatgpt-ads-small-business-what-changed-social-1200x628.png
-status: draft
+status: published
 title: "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven."
 topic: AI & Technology
 ---
