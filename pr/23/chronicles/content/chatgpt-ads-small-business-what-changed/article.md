@@ -85,3 +85,4 @@ Every new advertising channel asks you to decide with incomplete information. Ju
 - [Reimagining advertising with AI](https://openai.com/index/reimagining-advertising-with-ai/) — OpenAI, Sept 16, 2026
 - [ChatGPT Ads are now open to small businesses as OpenAI builds a full self-serve ad platform](https://the-decoder.com/chatgpt-ads-are-now-open-to-small-businesses-as-openai-builds-a-full-self-serve-ad-platform/) — The Decoder, May 6, 2026
 - [Letter to OpenAI on AI chatbot advertising](https://www.markey.senate.gov/imo/media/doc/ai_chatbot_ad_letter.pdf) — Sen. Edward J. Markey, Jan 22, 2026
+- [OpenAI projects $2.5 billion in ad revenue this year and $100 billion by 2030](https://www.emarketer.com/content/openai-projects--2-5-billion-ad-revenues-this-year--100-billion-by-2030) — eMarketer, 2026
