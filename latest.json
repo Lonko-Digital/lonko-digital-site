@@ -1,27 +1,27 @@
 {
-  "slug": "local-services-ads-new-billing-rules-what-changed",
-  "url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/",
-  "expected_title": "Google Changed How Local Services Ads Bills You for Calls. Here's What Actually Shifted.",
+  "slug": "chatgpt-ads-small-business-what-changed",
+  "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+  "expected_title": "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven.",
   "observed_h1": [
-    "Google Changed How Local Services Ads Bills You for Calls. Here's What Actually Shifted."
+    "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven."
   ],
-  "verified_at": "2026-10-14T05:40:41Z",
-  "github_actions_run_id": "38517867117",
-  "production_commit": "8515b7fc53c3d441f95d6019cfec2c631ebc6a9d",
+  "verified_at": "2026-10-18T18:36:28Z",
+  "github_actions_run_id": "39154870929",
+  "production_commit": "029204802943fab4e7e33d85cc1487f4321848a2",
   "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "http_status": 200,
-  "final_url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/",
-  "response_bytes": 27700,
-  "response_body_sha256": "e10fef9867dbe9039cb2f05a4f96f3404ef397f8ba361f9f30fefa5d34cce8ec",
-  "fetch_attempt": 3,
+  "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+  "response_bytes": 26460,
+  "response_body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
+  "fetch_attempt": 4,
   "fetch_attempts": [
     {
       "user_agent": "LonkoChroniclesVerifier/1.0",
       "http_status": 200,
-      "final_url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/",
-      "bytes": 27700,
-      "body_sha256": "e10fef9867dbe9039cb2f05a4f96f3404ef397f8ba361f9f30fefa5d34cce8ec",
+      "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+      "bytes": 26460,
+      "body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -34,9 +34,9 @@
     {
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
       "http_status": 200,
-      "final_url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/",
-      "bytes": 27700,
-      "body_sha256": "e10fef9867dbe9039cb2f05a4f96f3404ef397f8ba361f9f30fefa5d34cce8ec",
+      "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+      "bytes": 26460,
+      "body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -48,24 +48,16 @@
     }
   ],
   "hero": {
-    "url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/assets/local-services-ads-new-billing-rules-what-changed-hero-1600x900.png",
-    "final_url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/assets/local-services-ads-new-billing-rules-what-changed-hero-1600x900.png",
+    "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-hero-1600x900.png",
+    "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-hero-1600x900.png",
     "http_status": 200,
     "content_type": "image/png",
     "pass": true
   },
-  "supporting_assets": [
-    {
-      "url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
-      "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
-      "http_status": 200,
-      "content_type": "image/png",
-      "pass": true
-    }
-  ],
+  "supporting_assets": [],
   "og_image": {
-    "url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/assets/local-services-ads-new-billing-rules-what-changed-social-1200x628.png",
-    "final_url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/assets/local-services-ads-new-billing-rules-what-changed-social-1200x628.png",
+    "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-social-1200x628.png",
+    "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-social-1200x628.png",
     "http_status": 200,
     "content_type": "image/png",
     "pass": true

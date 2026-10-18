@@ -1,0 +1,98 @@
+{
+  "slug": "chatgpt-ads-small-business-what-changed",
+  "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+  "expected_title": "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven.",
+  "observed_h1": [
+    "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven."
+  ],
+  "verified_at": "2026-10-18T18:36:28Z",
+  "github_actions_run_id": "39154870929",
+  "production_commit": "029204802943fab4e7e33d85cc1487f4321848a2",
+  "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
+  "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
+  "http_status": 200,
+  "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+  "response_bytes": 26460,
+  "response_body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
+  "fetch_attempt": 4,
+  "fetch_attempts": [
+    {
+      "user_agent": "LonkoChroniclesVerifier/1.0",
+      "http_status": 200,
+      "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+      "bytes": 26460,
+      "body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "max-age=600",
+        "server": "GitHub.com",
+        "x-cache": "MISS",
+        "age": "0",
+        "via": "1.1 varnish"
+      }
+    },
+    {
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "http_status": 200,
+      "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
+      "bytes": 26460,
+      "body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "max-age=600",
+        "server": "GitHub.com",
+        "x-cache": "HIT",
+        "age": "0",
+        "via": "1.1 varnish"
+      }
+    }
+  ],
+  "hero": {
+    "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-hero-1600x900.png",
+    "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-hero-1600x900.png",
+    "http_status": 200,
+    "content_type": "image/png",
+    "pass": true
+  },
+  "supporting_assets": [],
+  "og_image": {
+    "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-social-1200x628.png",
+    "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-social-1200x628.png",
+    "http_status": 200,
+    "content_type": "image/png",
+    "pass": true
+  },
+  "sitemap_url": "https://lonkodigital.com/sitemap-chronicles.xml",
+  "sources_heading_count": 1,
+  "hygiene_hits": [],
+  "checks_performed": [
+    "h1_pass",
+    "canonical_pass",
+    "indexable_pass",
+    "preview_hygiene_pass",
+    "schema_pass",
+    "breadcrumb_schema_pass",
+    "hero_pass",
+    "supporting_assets_pass",
+    "og_metadata_pass",
+    "og_image_pass",
+    "sitemap_pass",
+    "content_hygiene_pass",
+    "tracking_foundation_pass"
+  ],
+  "overall_definition": "PASS means every required automated test in this verifier passed. FAIL means one or more of those tests failed. The result is scoped to the checks listed in checks_performed.",
+  "h1_pass": true,
+  "canonical_pass": true,
+  "indexable_pass": true,
+  "preview_hygiene_pass": true,
+  "schema_pass": true,
+  "breadcrumb_schema_pass": true,
+  "hero_pass": true,
+  "supporting_assets_pass": true,
+  "og_metadata_pass": true,
+  "og_image_pass": true,
+  "sitemap_pass": true,
+  "content_hygiene_pass": true,
+  "tracking_foundation_pass": true,
+  "overall": "PASS"
+}
