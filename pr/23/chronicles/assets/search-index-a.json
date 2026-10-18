@@ -1,5 +1,16 @@
 [
   {
+    "slug": "chatgpt-ads-small-business-what-changed",
+    "title": "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven.",
+    "deck": "",
+    "topic": "AI & Technology",
+    "tags": [],
+    "content_type": "Analysis",
+    "datePublished": "2026-10-18",
+    "url": "/chronicles/chatgpt-ads-small-business-what-changed/",
+    "is_fixture": false
+  },
+  {
     "slug": "local-services-ads-new-billing-rules-what-changed",
     "title": "Google Changed How Local Services Ads Bills You for Calls. Here's What Actually Shifted.",
     "deck": "",
@@ -56,17 +67,6 @@
     "content_type": "News",
     "datePublished": "2026-09-22",
     "url": "/chronicles/google-ads-ai-max-migration-what-changed/",
-    "is_fixture": false
-  },
-  {
-    "slug": "chatgpt-ads-small-business-what-changed",
-    "title": "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven.",
-    "deck": "",
-    "topic": "AI & Technology",
-    "tags": [],
-    "content_type": "Analysis",
-    "datePublished": "",
-    "url": "/chronicles/chatgpt-ads-small-business-what-changed/",
     "is_fixture": false
   }
 ]
