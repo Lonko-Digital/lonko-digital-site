@@ -1,27 +1,27 @@
 {
-  "slug": "chatgpt-ads-small-business-what-changed",
-  "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
-  "expected_title": "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven.",
+  "slug": "meta-product-browsing-opt-out",
+  "url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/",
+  "expected_title": "Your Ads Are About to Send Customers Somewhere New First. Here's What to Check Before October 28.",
   "observed_h1": [
-    "OpenAI Opened ChatGPT Ads to Every Business. Here's What's Real and What's Still Unproven."
+    "Your Ads Are About to Send Customers Somewhere New First. Here's What to Check Before October 28."
   ],
-  "verified_at": "2026-10-18T18:36:28Z",
-  "github_actions_run_id": "39154870929",
-  "production_commit": "029204802943fab4e7e33d85cc1487f4321848a2",
+  "verified_at": "2026-10-23T12:50:01Z",
+  "github_actions_run_id": "39956254090",
+  "production_commit": "0b47e4d9259c5db7782cd7a5bf2f8eabc4b15aba",
   "verifier_script_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "workflow_commit": "acda80b312a0319968008df90092d9eb938d792b",
   "http_status": 200,
-  "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
-  "response_bytes": 26460,
-  "response_body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
-  "fetch_attempt": 4,
+  "final_url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/",
+  "response_bytes": 31237,
+  "response_body_sha256": "514b98f4bf296b32cd03b5651a01158dd7c766f1be9c47531370fd55191f7cce",
+  "fetch_attempt": 3,
   "fetch_attempts": [
     {
       "user_agent": "LonkoChroniclesVerifier/1.0",
       "http_status": 200,
-      "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
-      "bytes": 26460,
-      "body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
+      "final_url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/",
+      "bytes": 31237,
+      "body_sha256": "514b98f4bf296b32cd03b5651a01158dd7c766f1be9c47531370fd55191f7cce",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -34,9 +34,9 @@
     {
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
       "http_status": 200,
-      "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/",
-      "bytes": 26460,
-      "body_sha256": "5c68ba185d1d3554e90861603f65df6efb6bfaee49f16e37f54cd64fef50f942",
+      "final_url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/",
+      "bytes": 31237,
+      "body_sha256": "514b98f4bf296b32cd03b5651a01158dd7c766f1be9c47531370fd55191f7cce",
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "max-age=600",
@@ -48,16 +48,38 @@
     }
   ],
   "hero": {
-    "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-hero-1600x900.png",
-    "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-hero-1600x900.png",
+    "url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/assets/meta-product-browsing-opt-out-hero-1600x900.png",
+    "final_url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/assets/meta-product-browsing-opt-out-hero-1600x900.png",
     "http_status": 200,
     "content_type": "image/png",
     "pass": true
   },
-  "supporting_assets": [],
+  "supporting_assets": [
+    {
+      "url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/assets/local-services-ads-new-billing-rules-what-changed-hero-1600x900.png",
+      "final_url": "https://lonkodigital.com/chronicles/local-services-ads-new-billing-rules-what-changed/assets/local-services-ads-new-billing-rules-what-changed-hero-1600x900.png",
+      "http_status": 200,
+      "content_type": "image/png",
+      "pass": true
+    },
+    {
+      "url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-hero-1600x900.png",
+      "final_url": "https://lonkodigital.com/chronicles/google-conversion-lift-small-business-eligibility/assets/google-conversion-lift-small-business-eligibility-hero-1600x900.png",
+      "http_status": 200,
+      "content_type": "image/png",
+      "pass": true
+    },
+    {
+      "url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
+      "final_url": "https://lonkodigital.com/chronicles/google-ads-ai-max-migration-what-changed/assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png",
+      "http_status": 200,
+      "content_type": "image/png",
+      "pass": true
+    }
+  ],
   "og_image": {
-    "url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-social-1200x628.png",
-    "final_url": "https://lonkodigital.com/chronicles/chatgpt-ads-small-business-what-changed/assets/chatgpt-ads-small-business-what-changed-social-1200x628.png",
+    "url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/assets/meta-product-browsing-opt-out-social-1200x628.png",
+    "final_url": "https://lonkodigital.com/chronicles/meta-product-browsing-opt-out/assets/meta-product-browsing-opt-out-social-1200x628.png",
     "http_status": 200,
     "content_type": "image/png",
     "pass": true
