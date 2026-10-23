@@ -131,6 +131,17 @@ def main() -> int:
 
         article = load_article(pkg)
         html = render_article_page(article, arts)
+        article.body += '\n\n[About](/about/) [Notes](/chronicles/#notes-heading) [External](https://example.com/) [Protocol](//example.com/)\n'
+        linked_html = render_article_page(article, arts)
+        for expected in ('href="../../about/"', 'href="../../chronicles/#notes-heading"',
+                         'href="https://example.com/"', 'href="//example.com/"'):
+            if expected not in linked_html:
+                failures.append(f"preview link resolution: {expected}")
+        os.environ.pop("CHRONICLES_PREVIEW", None)
+        production_html = render_article_page(article, arts)
+        if 'href="/about/"' not in production_html:
+            failures.append("production authored link changed")
+        os.environ["CHRONICLES_PREVIEW"] = "1"
         # Undated drafts must stay undated in schema, social metadata and byline.
         for forbidden in ('"datePublished"', '"dateModified"',
                           'article:published_time', 'article:modified_time', '<time '):

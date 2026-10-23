@@ -392,6 +392,18 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     article = apply_preview_date_overlay(article)
     depth = 2
     body_html = markdown_to_html(article.body)
+    # Hosted previews live below /pr/<number>/, rather than the host root.
+    # Preserve authored site paths in production and resolve them inside the
+    # preview tree without rewriting the frozen Markdown package.
+    from chronicles_lib.preview import preview_mode_enabled
+
+    if preview_mode_enabled():
+        body_html = re.sub(
+            r'(<a\b[^>]*\bhref=["\'])/(?!/)',
+            r'\1../../',
+            body_html,
+            flags=re.IGNORECASE,
+        )
     # Frozen editorial bodies may carry their own visible "Sources & Further Reading"
     # section. Mark those links for the shared GA4 source-click event without
     # duplicating or rewriting the authored source section.
