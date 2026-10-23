@@ -2,7 +2,9 @@
 title: Your Ads Are About to Send Customers Somewhere New First. Here's What to Check Before October 28.
 deck: ''
 slug: meta-product-browsing-opt-out
-status: draft
+status: published
+datePublished: 2026-10-23
+dateModified: 2026-10-22
 content_type: Analysis
 schema_type: Article
 topic: Marketing
