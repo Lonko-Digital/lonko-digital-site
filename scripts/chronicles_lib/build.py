@@ -773,7 +773,7 @@ def render_index(
     </div>
 """
 
-    title = "Lonko Chronicles | Marketing Intelligence Editorial"
+    title = "Lonko Chronicles | Marketing News and Analysis"
     if not is_home:
         title = f"Lonko Chronicles | Page {page_num}"
 
@@ -855,7 +855,7 @@ def render_index(
     head = head_open(
         depth=depth,
         title=title,
-        description="Lonko Chronicles — evidence-led editorial on marketing intelligence, AI, SEO, and growth.",
+        description="Lonko Chronicles: evidence-led analysis of Google Ads, Meta, LinkedIn and AI search changes, and what each one means for your business and budget.",
         canonical=canonical,
         og_image_width=fb_dims[0] if fb_dims else None,
         og_image_height=fb_dims[1] if fb_dims else None,

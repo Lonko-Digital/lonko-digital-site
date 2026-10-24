@@ -72,6 +72,7 @@ jobs:
         run: |
           python scripts/test_site_entity_faq.py
           python scripts/test_public_image_delivery.py
+          python scripts/test_b5_metadata.py
 
       - name: Production contract validation
         # Unset preview mode — production contract must not soft-certify via draft overlay.
