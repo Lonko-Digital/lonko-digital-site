@@ -773,9 +773,9 @@ def render_index(
     </div>
 """
 
-    title = "Lonko Chronicles — Marketing Intelligence Editorial"
+    title = "Lonko Chronicles | Marketing Intelligence Editorial"
     if not is_home:
-        title = f"Lonko Chronicles — Page {page_num}"
+        title = f"Lonko Chronicles | Page {page_num}"
 
     canonical = f"{SITE}/chronicles/" if is_home else f"{SITE}/chronicles/page/{page_num}/"
     collection_schema = {

@@ -55,7 +55,9 @@ jobs:
         run: python scripts/test_chronicles_ga4_foundation.py
 
       - name: Validate entity and visible FAQ fidelity
-        run: python scripts/test_site_entity_faq.py
+        run: |
+          python scripts/test_site_entity_faq.py
+          python scripts/test_public_image_delivery.py
 
       - name: Validate production contract v2
         run: python scripts/test_chronicles_production_contract_v2.py
