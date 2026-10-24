@@ -408,6 +408,9 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     # section. Mark those links for the shared GA4 source-click event without
     # duplicating or rewriting the authored source section.
     body_html = _mark_body_source_links(body_html)
+    from chronicles_lib.faq import faq_schema
+
+    visible_faq = faq_schema(body_html)
     # Preserve authored image attributes, alt text, location and original fallback.
     def body_picture(match: re.Match) -> str:
         tag = match.group()
@@ -634,6 +637,8 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         json_ld_blocks=[
             json.dumps(schema, ensure_ascii=False, indent=2),
             json.dumps(breadcrumbs, ensure_ascii=False, indent=2),
+            *([json.dumps(visible_faq, ensure_ascii=False, indent=2).replace("<", "\\u003c")]
+              if visible_faq else []),
         ],
         extra_head=date_meta + chronicles_notes_styles(depth),
     )
@@ -768,9 +773,9 @@ def render_index(
     </div>
 """
 
-    title = "Lonko Chronicles — Marketing Intelligence Editorial"
+    title = "Lonko Chronicles | Marketing News and Analysis"
     if not is_home:
-        title = f"Lonko Chronicles — Page {page_num}"
+        title = f"Lonko Chronicles | Page {page_num}"
 
     canonical = f"{SITE}/chronicles/" if is_home else f"{SITE}/chronicles/page/{page_num}/"
     collection_schema = {
@@ -850,7 +855,7 @@ def render_index(
     head = head_open(
         depth=depth,
         title=title,
-        description="Lonko Chronicles — evidence-led editorial on marketing intelligence, AI, SEO, and growth.",
+        description="Lonko Chronicles: evidence-led analysis of Google Ads, Meta, LinkedIn and AI search changes, and what each one means for your business and budget.",
         canonical=canonical,
         og_image_width=fb_dims[0] if fb_dims else None,
         og_image_height=fb_dims[1] if fb_dims else None,
@@ -963,7 +968,6 @@ def write_sitemaps(published: list[Article], total_pages: int) -> None:
         f"{SITE}/",
         f"{SITE}/about/",
         f"{SITE}/insights/",
-        f"{SITE}/chronicles/",
         f"{SITE}/contact/",
         f"{SITE}/privacy/",
         f"{SITE}/terms/",

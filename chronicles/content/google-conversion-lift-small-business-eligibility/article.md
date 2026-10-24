@@ -9,14 +9,14 @@ content_type: Analysis
 schema_type: Article
 topic: Marketing
 author: Lonko Digital
-seo_title: 'Google''s Conversion Lift Expansion: Does Your Small Business Qualify? | Lonko'
+seo_title: "Google Conversion Lift: Can Small Businesses Qualify?"
 meta_description: Google opened self-serve ad-impact testing to more advertisers, but the eligibility bar is steep. Here's what small businesses need to know.
 og_title: 'Google''s Conversion Lift Expansion: Does Your Small Business Qualify? | Lonko'
 og_description: Google opened self-serve ad-impact testing to more advertisers, but the eligibility bar is steep. Here's what small businesses need to know.
 hero_image: assets/google-conversion-lift-small-business-eligibility-hero-1600x900.png
 social_alt: "Lonko Chronicles social banner: Google's Conversion Lift eligibility gap for small businesses."
 social_image: assets/google-conversion-lift-small-business-eligibility-social-1200x628.png
-hero_alt: A small shop owner stands near a velvet-rope line, looking toward dashboard screens just beyond it, representing the eligibility gap in Google's new ad-measurement tool.
+hero_alt: "Small shop owner behind a velvet rope looking toward ad measurement dashboards just out of reach"
 imagery_family: photography
 placement:
   featured: false
@@ -44,7 +44,7 @@ That's the campaign-level bar. There's a separate, account-level one too. Google
 
 Compare those campaign-level numbers against where small businesses actually are. LocalIQ's 2026 small-business marketing report found that 52% of SMBs run their entire monthly marketing budget, not just one campaign, under $1,000. Half have no employees dedicated to marketing at all. For a meaningful share of Lonko's audience, a single campaign clearing a $5,000 budget threshold isn't a stretch goal for next quarter. It's a different budget tier entirely.
 
-<figure><img src="assets/google-conversion-lift-small-business-eligibility-chart-budget-threshold-comparison.png" alt="Bar comparison: Google&#x27;s $5,000 minimum Conversion Lift campaign budget, budget period unspecified in Google&#x27;s documentation, versus the 52% of small businesses whose entire monthly marketing budget is under $1,000." width="2400" height="1534" loading="lazy" decoding="async"><figcaption><em>Context: Google lists a $5,000 minimum campaign budget for the study but does not specify the budget period in the cited documentation. LocalIQ's under-$1,000 figure represents total monthly marketing budget.</em></figcaption></figure>
+<figure><img src="assets/google-conversion-lift-small-business-eligibility-chart-budget-threshold-comparison.png" alt="Chart: $5,000 Conversion Lift minimum vs 52% of small businesses spending under $1,000 a month" width="2400" height="1534" loading="lazy" decoding="async"><figcaption><em>Context: Google lists a $5,000 minimum campaign budget for the study but does not specify the budget period in the cited documentation. LocalIQ's under-$1,000 figure represents total monthly marketing budget.</em></figcaption></figure>
 
 That doesn't make the announcement meaningless for smaller advertisers. It means the practical question isn't "should I run a Conversion Lift study." For most small businesses right now, the honest answer is you don't yet qualify. The useful question is what to do instead.
 

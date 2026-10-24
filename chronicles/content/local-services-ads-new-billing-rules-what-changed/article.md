@@ -3,7 +3,7 @@ author: Lonko Digital
 content_type: News
 dateModified: '2026-10-14'
 datePublished: '2026-10-14'
-hero_alt: "A marketing decision-maker reviewing a printed Local Services Ads billing statement at her desk, circling a specific line item with a pen, laptop open beside her — illustrating the moment a business owner checks a bill against Google's new missed-call billing rule."
+hero_alt: "Business owner at her desk circling a line on a printed Google Local Services Ads billing statement"
 hero_image: assets/local-services-ads-new-billing-rules-what-changed-hero-1600x900.png
 imagery_family: photography
 meta_description: Google folded Local Services Ads into Google Ads and now charges for missed calls over 20 seconds. What changed, what stays the same, what to check.
@@ -16,7 +16,7 @@ placement:
 related:
 - google-ads-ai-max-migration-what-changed
 schema_type: NewsArticle
-seo_title: "Google Local Services Ads: New Billing Rules and the Google Ads Migration (2026)"
+seo_title: "Google Local Services Ads: New Billing Rules (2026)"
 slug: local-services-ads-new-billing-rules-what-changed
 social_alt: "Banner reading '20 Seconds Now Decide What You Pay For' over a photo of a marketing decision-maker circling a line item on a printed billing statement at her desk, with the Lonko Digital logo in the bottom right."
 social_image: assets/local-services-ads-new-billing-rules-what-changed-social-1200x628.png

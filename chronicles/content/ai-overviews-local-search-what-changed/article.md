@@ -15,7 +15,7 @@ og_title: "AI Overviews & Local Search for Small Businesses | Lonko"
 og_description: "Ahrefs found AI Overviews correlated with 58% lower CTR for position-one pages. See what local-search data means for small businesses."
 social_image: assets/ai-overviews-local-search-what-changed-social-1200x628.png
 hero_image: assets/ai-overviews-local-search-what-changed-hero-1600x900.png
-hero_alt: "A homeowner researching a question at his kitchen table beside a closed laptop, next to a second panel of the same homeowner greeting a local service professional who has just arrived at his front door — illustrating the difference between an informational search and a local-intent search."
+hero_alt: "Homeowner researching at his kitchen table, then greeting a local service pro at his front door"
 imagery_family: photography
 sources: []
 placement:
@@ -46,7 +46,7 @@ Whitespark, a company that specializes in local search, studied three US cities 
 - On **informational** searches — the "how do I" and "what is" kind — AI Overviews appeared in 92% of the informational queries in Whitespark's sample.
 - On **hybrid** searches, which mix a real need with a question, AI Overviews appeared 97% of the time.
 
-![Bar chart comparing how often Google shows a Local Pack versus an AI Overview across local-intent, informational, and hybrid searches — Local Pack dominates local-intent queries at 93%, while AI Overviews dominate informational (92%) and hybrid (97%) queries.](assets/ai-overviews-local-search-what-changed-chart-local-pack-vs-ai-overview.png)
+![Chart: Local Pack on 93% of local searches; AI Overviews on 92% of informational, 97% of hybrid](assets/ai-overviews-local-search-what-changed-chart-local-pack-vs-ai-overview.png)
 *Source: Whitespark, 540-query local-search study (2025) — 3 US cities, 6 local industries. Not a universal average.*
 
 Across the full set of local-business-type queries Whitespark tested — combining all three intent types — AI Overviews appeared 68% of the time. That's a real number, but it describes their specific 540-query sample across three cities, not "68% of all local searches everywhere." The intent breakdown is the part worth remembering, because it's the part that actually tells you what to expect.

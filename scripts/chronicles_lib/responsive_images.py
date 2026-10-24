@@ -1,8 +1,10 @@
 """Build delivery derivatives without changing approved package masters."""
 from pathlib import Path
+import re
 from PIL import Image
 
 HERO_WIDTHS = (480, 800, 1200, 1600)
+HERO_BYTE_BUDGET = 200_000
 
 
 def derivative_path(rel: str, width: int) -> str:
@@ -27,6 +29,8 @@ def generate_images(package: Path, destination: Path, hero: str | None) -> None:
                 target = destination / derivative_path(rel, candidate)
                 target.parent.mkdir(parents=True, exist_ok=True)
                 rendered.save(target, "WEBP", quality=82, method=6, lossless=rel != hero)
+                if rel == hero and target.stat().st_size >= HERO_BYTE_BUDGET:
+                    raise ValueError(f"Hero WebP exceeds 200 KB delivery budget: {target.name}")
 
 
 def picture(img: str, rel: str, destination: Path, href, sizes: str) -> str:
@@ -38,6 +42,20 @@ def picture(img: str, rel: str, destination: Path, href, sizes: str) -> str:
         suffix = derivative.stem.removeprefix(f"{path.stem}-")
         if suffix.isdigit():
             candidates.append((int(suffix), derivative.relative_to(destination).as_posix()))
+    # Reserve layout space for cards and older inline visuals as well as heroes.
+    # Read real dimensions; never guess or change approved image bytes/alt text.
+    intrinsic = destination / rel
+    if not intrinsic.is_file() and candidates:
+        intrinsic = destination / max(candidates)[1]
+    if intrinsic.is_file() and re.search(r"<img\b", img):
+        with Image.open(intrinsic) as source:
+            width, height = source.size
+        additions = ""
+        if not re.search(r"\bwidth\s*=", img):
+            additions += f' width="{width}"'
+        if not re.search(r"\bheight\s*=", img):
+            additions += f' height="{height}"'
+        img = re.sub(r"<img\b", "<img" + additions, img, count=1)
     if not candidates:
         return img
     srcset = ", ".join(f"{href(candidate)} {width}w" for width, candidate in sorted(candidates))

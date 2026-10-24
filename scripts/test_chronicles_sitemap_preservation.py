@@ -25,6 +25,12 @@ def main():
         dates = {e.findtext("sm:loc", namespaces=namespace): e.findtext("sm:lastmod", namespaces=namespace) for e in entries}
         assert dates["https://lonkodigital.com/insights/clicks-but-no-leads/"] == "2026-10-08"
         assert dates["https://lonkodigital.com/insights/one-good-week-isnt-a-trend/"] == "2026-10-07"
+        assert "https://lonkodigital.com/chronicles/" not in dates
+        chronicles = ET.fromstring((root / "sitemap-chronicles.xml").read_text())
+        chron_urls = [e.findtext("sm:loc", namespaces=namespace)
+                      for e in chronicles.findall("sm:url", namespace)]
+        assert chron_urls.count("https://lonkodigital.com/chronicles/") == 1
+        assert set(dates).isdisjoint(chron_urls)
     print("SITEMAP DATE PRESERVATION / REBUILD IDEMPOTENCE: PASS")
     return 0
 

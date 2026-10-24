@@ -94,6 +94,11 @@ schema:
   breadcrumb: "Home → Chronicles → article title"
   image: "Included when hero_image present (hero URL; social may also appear)"
   dates: "datePublished + dateModified from front matter"
+  faq: >
+    Optional FAQPage is derived only from a visible H2 FAQ, FAQs, Frequently
+    asked questions, or Quick answers section with H3 questions and visible
+    answers. Question and answer text must match the rendered content exactly.
+    No FAQ section means no FAQPage; never fabricate questions or answers.
 
 placement:
   topic:

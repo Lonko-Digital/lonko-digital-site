@@ -4,7 +4,7 @@ content_type: News
 dateModified: '2026-09-22'
 datePublished: '2026-09-22'
 deck: A closer look at what's actually changing in your Google Ads account this month, what's been pushed to 2027, what it actually does differently, and how to check your own account in five minutes.
-hero_alt: A contractor glances at a phone notification while sitting in a truck cab at a job site — Lonko Chronicles article on the Google Ads AI Max migration.
+hero_alt: "Contractor in a truck cab at a job site glancing at a phone notification"
 hero_image: assets/google-ads-ai-max-migration-what-changed-hero-1600x900.png
 imagery_family: photography
 meta_description: Google delayed its DSA migration to AI Max until 2027 — but Broad Match and Automatically Created Assets are already converting. Here's what to check in your account.

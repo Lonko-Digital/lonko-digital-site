@@ -15,7 +15,7 @@ og_title: 'Meta Product Browsing: How to Opt Out Before Oct 28'
 og_description: Meta says it will auto-enable Product Browsing on existing Facebook and Instagram ads Oct 28, 2026. What changes, who's affected, and how to opt out.
 hero_image: assets/meta-product-browsing-opt-out-hero-1600x900.png
 social_image: assets/meta-product-browsing-opt-out-social-1200x628.png
-hero_alt: A small-business owner mid-task at a packing table, taping a shipping box, glancing at her phone's glow, representing the ads-to-checkout moment Meta is changing before October 28.
+hero_alt: "Small business owner taping a shipping box at a packing table while checking her phone"
 social_alt: Banner reading 'Your Ads Are About to Change. Check This Before October 28.' over a photo of a small-business owner packing a shipping box and glancing at her phone, with the Lonko Digital logo in the bottom right.
 imagery_family: photography
 placement:
