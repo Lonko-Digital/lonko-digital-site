@@ -68,6 +68,9 @@ jobs:
       - name: Responsive images and related-card regression
         run: python scripts/test_chronicles_responsive_images.py
 
+      - name: Entity and visible FAQ regression
+        run: python scripts/test_site_entity_faq.py
+
       - name: Production contract validation
         # Unset preview mode — production contract must not soft-certify via draft overlay.
         run: python scripts/test_chronicles_production_contract_v2.py

@@ -408,6 +408,9 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
     # section. Mark those links for the shared GA4 source-click event without
     # duplicating or rewriting the authored source section.
     body_html = _mark_body_source_links(body_html)
+    from chronicles_lib.faq import faq_schema
+
+    visible_faq = faq_schema(body_html)
     # Preserve authored image attributes, alt text, location and original fallback.
     def body_picture(match: re.Match) -> str:
         tag = match.group()
@@ -634,6 +637,8 @@ def render_article_page(article: Article, corpus: list[Article]) -> str:
         json_ld_blocks=[
             json.dumps(schema, ensure_ascii=False, indent=2),
             json.dumps(breadcrumbs, ensure_ascii=False, indent=2),
+            *([json.dumps(visible_faq, ensure_ascii=False, indent=2).replace("<", "\\u003c")]
+              if visible_faq else []),
         ],
         extra_head=date_meta + chronicles_notes_styles(depth),
     )
@@ -963,7 +968,6 @@ def write_sitemaps(published: list[Article], total_pages: int) -> None:
         f"{SITE}/",
         f"{SITE}/about/",
         f"{SITE}/insights/",
-        f"{SITE}/chronicles/",
         f"{SITE}/contact/",
         f"{SITE}/privacy/",
         f"{SITE}/terms/",
